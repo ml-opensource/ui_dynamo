@@ -31,53 +31,53 @@ class AppStoryBook extends StatelessWidget {
               title: Text('Composite'),
               pages: [
                 buildAlertsPage(),
-                StoryBookPage(
-                  key: ValueKey('cells'),
-                  title: Text('Cells'),
-                  widgets: [
-                    StoryBookWidget(
-                        childBuilder: (context) => WidgetContainer(
-                              title: 'Main Cell Widget',
-                              children: <Widget>[
-                                MainCell(
-                                  title: props(context).text(
-                                      'Main Title', 'Go Home',
-                                      group: groupMainCell),
-                                  subtitle: props(context).text(
-                                      'Main Subtitle', 'This goes home good',
-                                      group: groupMainCell),
-                                  iconText: 'H',
-                                  count: props(context).integer(
-                                      'Item Count', 10,
-                                      group: groupMainCell),
-                                  isFlipped: props(context).boolean(
-                                      'Flip Layout', false,
-                                      group: groupMainCell),
-                                )
-                              ],
-                            )),
-                    StoryBookWidget(
-                        childBuilder: (context) => WidgetContainer(
-                              title: 'Main Cell Widget With Long Text',
-                              children: <Widget>[
-                                MainCell(
-                                  title: 'Live Life',
-                                  subtitle:
-                                      'In porttitor mauris dui, pellentesque egestas justo rutrum a. Praesent eu congue justo. Mauris vulputate tempor augue a luctus. Nullam elementum, elit eu pretium convallis, purus sapien lobortis libero, eget congue diam erat suscipit ipsum. In hac habitasse platea dictumst. Vestibulum tincidunt nisi in elit mattis commodo. Duis eu placerat nibh. Nulla magna magna, tristique sed sapien imperdiet, porttitor pulvinar libero. Mauris nec vehicula velit, a maximus ligula. Morbi in purus et eros placerat faucibus non fermentum lorem. Nunc sit amet felis eu mi scelerisque aliquam a imperdiet justo. Nulla facilisi. Proin commodo facilisis sapien vel aliquam. Cras quis nisi quam. Fusce vitae arcu non arcu cursus aliquam vitae non turpis. Integer hendrerit efficitur commodo.',
-                                  iconText: 'L',
-                                  count: props(context).integer(
-                                      'Long Text Count', 12,
-                                      group: groupMainCellLong),
-                                )
-                              ],
-                            )),
-                  ],
-                )
+                buildCellsPage(),
+                buildMainCellListPage(),
               ])
         ],
       ),
     );
   }
+
+  StoryBookPage buildCellsPage() => StoryBookPage(
+        key: ValueKey('cells'),
+        title: Text('Cells'),
+        widgets: [
+          StoryBookWidget(
+            childBuilder: (context) => WidgetContainer(
+              title: 'Main Cell Widget',
+              children: <Widget>[
+                MainCell(
+                  title: props(context)
+                      .text('Main Title', 'Go Home', group: groupMainCell),
+                  subtitle: props(context).text(
+                      'Main Subtitle', 'This goes home good',
+                      group: groupMainCell),
+                  iconText: 'H',
+                  count: props(context)
+                      .integer('Item Count', 10, group: groupMainCell),
+                  isFlipped: props(context)
+                      .boolean('Flip Layout', false, group: groupMainCell),
+                )
+              ],
+            ),
+          ),
+          StoryBookWidget(
+              childBuilder: (context) => WidgetContainer(
+                    title: 'Main Cell Widget With Long Text',
+                    children: <Widget>[
+                      MainCell(
+                        title: 'Live Life',
+                        subtitle:
+                            'In porttitor mauris dui, pellentesque egestas justo rutrum a. Praesent eu congue justo. Mauris vulputate tempor augue a luctus. Nullam elementum, elit eu pretium convallis, purus sapien lobortis libero, eget congue diam erat suscipit ipsum. In hac habitasse platea dictumst. Vestibulum tincidunt nisi in elit mattis commodo. Duis eu placerat nibh. Nulla magna magna, tristique sed sapien imperdiet, porttitor pulvinar libero. Mauris nec vehicula velit, a maximus ligula. Morbi in purus et eros placerat faucibus non fermentum lorem. Nunc sit amet felis eu mi scelerisque aliquam a imperdiet justo. Nulla facilisi. Proin commodo facilisis sapien vel aliquam. Cras quis nisi quam. Fusce vitae arcu non arcu cursus aliquam vitae non turpis. Integer hendrerit efficitur commodo.',
+                        iconText: 'L',
+                        count: props(context).integer('Long Text Count', 12,
+                            group: groupMainCellLong),
+                      )
+                    ],
+                  )),
+        ],
+      );
 
   StoryBookPage buildAlertsPage() => StoryBookPage(
         key: ValueKey('alerts'),
@@ -185,6 +185,46 @@ Nunc ac pulvinar nunc. Sed blandit mauris sed aliquam lobortis. Vivamus viverra 
                         """)
                     ],
                   )),
+        ],
+      );
+
+  StoryBookPage buildMainCellListPage() => StoryBookPage(
+        title: Text('Main Cell List'),
+        key: ValueKey('main-cell-list'),
+        widgets: [
+          StoryBookWidget(
+            childBuilder: (context) => MainCellList(
+              shrinkWrap: true,
+              items: [
+                MainCellItem('A', 'Item 1', 'Item Subtitle', 10),
+                MainCellItem('B', 'Item 2', 'Item Subtitle', 20),
+              ],
+            ),
+          ),
+          StoryBookWidget(
+            childBuilder: (context) => PropTable(
+              title: 'Main Cell Props',
+              items: [
+                PropTableItem(
+                    name: 'Icon Text',
+                    description:
+                        'Specify a single text character to display as avatar.',
+                    defaultValue: ''),
+                PropTableItem(
+                    name: 'Title',
+                    description: 'Title for Cell',
+                    defaultValue: ''),
+                PropTableItem(
+                    name: 'Subtitle',
+                    description: 'Subtitle for Cell',
+                    defaultValue: ''),
+                PropTableItem(
+                    name: 'Count',
+                    description: 'displays a counter for the cell.',
+                    defaultValue: '0'),
+              ],
+            ),
+          )
         ],
       );
 }

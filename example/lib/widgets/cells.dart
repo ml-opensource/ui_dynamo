@@ -43,3 +43,37 @@ class MainCell extends StatelessWidget {
     );
   }
 }
+
+class MainCellItem {
+  final String iconText;
+  final String title;
+  final String subtitle;
+  final int count;
+
+  MainCellItem(this.iconText, this.title, this.subtitle, this.count);
+}
+
+class MainCellList extends StatelessWidget {
+  final List<MainCellItem> items;
+  final bool shrinkWrap;
+
+  const MainCellList({Key key, this.items, this.shrinkWrap = false})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      shrinkWrap: shrinkWrap,
+      itemCount: items.length,
+      itemBuilder: (context, int) {
+        final item = items[int];
+        return MainCell(
+          title: item.title,
+          subtitle: item.subtitle,
+          iconText: item.iconText,
+          count: item.count,
+        );
+      },
+    );
+  }
+}
