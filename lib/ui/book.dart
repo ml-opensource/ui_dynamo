@@ -91,25 +91,23 @@ class StoryBookPageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MediaQueryChooser(
-      child: Expanded(
-        child: Builder(
-          builder: (context) => Padding(
-            padding: EdgeInsets.only(left: 16.0, right: 16.0),
-            child: ListView(
-              children: <Widget>[
-                ...selectedPage.widgets.map((e) => Column(
-                      children: <Widget>[
-                        SizedBox(
-                          height: 16.0,
-                        ),
-                        e.childBuilder(context),
-                      ],
-                    )),
-                SizedBox(
-                  height: 16,
-                ),
-              ],
-            ),
+      child: Builder(
+        builder: (context) => Padding(
+          padding: EdgeInsets.only(left: 16.0, right: 16.0),
+          child: ListView(
+            children: <Widget>[
+              ...selectedPage.widgets.map((e) => Column(
+                    children: <Widget>[
+                      SizedBox(
+                        height: 16.0,
+                      ),
+                      e.childBuilder(context),
+                    ],
+                  )),
+              SizedBox(
+                height: 16,
+              ),
+            ],
           ),
         ),
       ),

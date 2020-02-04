@@ -50,16 +50,21 @@ class _MediaQueryChooserState extends State<MediaQueryChooser> {
             ),
           ],
         ),
-        Container(
-          decoration: currentDeviceSelected != null
-              ? BoxDecoration(
-                  border: Border.all(color: Theme.of(context).accentColor),
-                )
-              : null,
-          constraints: currentDeviceSelected != null
-              ? BoxConstraints.tight(currentMediaQuery.size)
-              : null,
-          child: MediaQuery(data: currentMediaQuery, child: widget.child),
+        Expanded(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: SingleChildScrollView(
+              child: Container(
+                decoration: currentDeviceSelected != null
+                    ? BoxDecoration(
+                        border: Border.all(color: Theme.of(context).accentColor),
+                      )
+                    : null,
+                constraints: BoxConstraints.tight(currentMediaQuery.size),
+                child: MediaQuery(data: currentMediaQuery, child: widget.child),
+              ),
+            ),
+          ),
         ),
       ],
     );
