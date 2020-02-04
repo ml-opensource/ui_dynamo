@@ -24,6 +24,7 @@ class _ToolbarPaneState extends State<ToolbarPane> {
         children: <Widget>[
           Divider(
             thickness: 2,
+            height: 2,
           ),
           Row(
             children: <Widget>[

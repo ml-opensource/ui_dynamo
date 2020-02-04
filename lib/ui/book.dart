@@ -73,17 +73,20 @@ class _StoryBookState extends State<StoryBook> {
         body: (selectedPage != null)
             ? Builder(
                 builder: (context) => Padding(
-                  padding: EdgeInsets.all(16.0),
+                  padding: EdgeInsets.only(left: 16.0, right: 16.0),
                   child: ListView(
                     children: <Widget>[
                       ...selectedPage.widgets.map((e) => Column(
                             children: <Widget>[
                               SizedBox(
-                                height: 32.0,
+                                height: 16.0,
                               ),
                               e.childBuilder(context),
                             ],
-                          ))
+                          )),
+                      SizedBox(
+                        height: 16,
+                      ),
                     ],
                   ),
                 ),
