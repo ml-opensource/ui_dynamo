@@ -6,9 +6,13 @@ enum ToastMode { Success, Error, Warning }
 class AppToast extends StatelessWidget {
   final String message;
   final ToastMode toastMode;
+  final VoidCallback onClose;
 
   const AppToast(
-      {Key key, @required this.message, this.toastMode = ToastMode.Success})
+      {Key key,
+      @required this.message,
+      this.onClose,
+      this.toastMode = ToastMode.Success})
       : super(key: key);
 
   Icon iconForMode() {
@@ -36,9 +40,17 @@ class AppToast extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.only(
+            left: 8.0, right: 16.0, top: 8.0, bottom: 8.0),
         child: Row(
           children: <Widget>[
+            IconButton(
+              icon: Icon(Icons.close),
+              onPressed: onClose,
+            ),
+            SizedBox(
+              width: 16.0,
+            ),
             Expanded(
               child: Text(
                 message,

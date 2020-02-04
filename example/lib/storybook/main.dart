@@ -236,6 +236,7 @@ Nunc ac pulvinar nunc. Sed blandit mauris sed aliquam lobortis. Vivamus viverra 
   StoryBookPage buildToastPage() => StoryBookPage(
           title: Text('Toasts'),
           key: ValueKey('toasts-page'),
+          icon: Icon(Icons.check_circle),
           widgets: [
             StoryBookWidget(
               childBuilder: (context) => WidgetContainer(
@@ -252,6 +253,7 @@ Nunc ac pulvinar nunc. Sed blandit mauris sed aliquam lobortis. Vivamus viverra 
                     child: Container(
                       constraints: BoxConstraints(maxWidth: 300),
                       child: AppToast(
+                        onClose: actions(context).onPressed('Close Toast'),
                         message: props(context)
                             .text('Toast Message', 'This message'),
                         toastMode: props(context).valueSelector(
@@ -271,6 +273,10 @@ Nunc ac pulvinar nunc. Sed blandit mauris sed aliquam lobortis. Vivamus viverra 
               ),
             ),
             StoryBookWidget(
+              childBuilder: (context) => Text(
+                  "Toast is a powerful widget that displays a status notification in the UI."),
+            ),
+            StoryBookWidget(
                 childBuilder: (context) => PropTable(
                       items: [
                         PropTableItem(
@@ -281,6 +287,12 @@ Nunc ac pulvinar nunc. Sed blandit mauris sed aliquam lobortis. Vivamus viverra 
                           name: 'Mode',
                           description: 'Displays a different UI mode',
                           defaultValue: ToastMode.Success.toString(),
+                        ),
+                        PropTableItem(
+                          name: 'OnClose',
+                          description:
+                              'Closes the Toast before the scheduled timeout',
+                          defaultValue: 'null',
                         )
                       ],
                     ))
