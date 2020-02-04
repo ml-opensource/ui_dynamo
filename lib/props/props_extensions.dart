@@ -2,6 +2,7 @@ import 'dart:core';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_storybook/props/props_models.dart';
 import 'package:provider/provider.dart';
 
 abstract class PropHandle<T> {
@@ -32,6 +33,14 @@ class NumberPropHandle extends PropHandle<num> {
 
 class BooleanPropHandle extends PropHandle<bool> {
   const BooleanPropHandle(String label, bool value, String groupId)
+      : super(label, value, groupId);
+
+  @override
+  String get textValue => value.toString();
+}
+
+class RangePropHandle extends PropHandle<Range> {
+  RangePropHandle(String label, Range value, String groupId)
       : super(label, value, groupId);
 
   @override
@@ -131,6 +140,13 @@ class PropsProvider extends ChangeNotifier {
         newValue);
   }
 
+  void rangeChanged(RangePropHandle prop, double newValue) {
+    _valueChanged(
+        prop,
+        (label, value, groupId) => RangePropHandle(label, value, groupId),
+        prop.value.copyWith(currentValue: newValue));
+  }
+
   T _value<T>(
       String label,
       T defaultValue,
@@ -166,6 +182,14 @@ class PropsProvider extends ChangeNotifier {
       defaultValue,
       (label, value, groupId) => BooleanPropHandle(label, value, groupId),
       group);
+
+  /// Builds a range slider.
+  double range(String label, Range defaultRange, {PropGroup group}) => _value(
+          label,
+          defaultRange,
+          (label, value, groupId) => RangePropHandle(label, value, groupId),
+          group)
+      .currentValue;
 }
 
 PropsProvider props(BuildContext context) =>

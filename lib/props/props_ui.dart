@@ -44,6 +44,13 @@ class PropsDisplay extends StatelessWidget {
                     maxWidth: maxWidth,
                     prop: prop,
                   );
+                } else if (prop is RangePropHandle) {
+                  return RangePropField(
+                    prop: prop,
+                    rangeChanged: (prop, value) {
+                      props.rangeChanged(prop, value);
+                    },
+                  );
                 } else {
                   return Text('Invalid prop handle type found');
                 }
@@ -139,4 +146,28 @@ class CheckablePropField extends StatelessWidget {
           ],
         ),
       );
+}
+
+class RangePropField extends StatelessWidget {
+  final RangePropHandle prop;
+  final Function(RangePropHandle, double) rangeChanged;
+
+  const RangePropField(
+      {Key key, @required this.prop, @required this.rangeChanged})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        Text(prop.label),
+        Slider(
+          value: prop.value.currentValue,
+          max: prop.value.max,
+          min: prop.value.min,
+          onChanged: (value) => rangeChanged(prop, value),
+        ),
+      ],
+    );
+  }
 }
