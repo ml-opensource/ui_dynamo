@@ -5,48 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_storybook/props/props_models.dart';
 import 'package:provider/provider.dart';
 
-abstract class PropHandle<T> {
-  final String label;
-  final T value;
-  final String groupId;
-
-  const PropHandle(this.label, this.value, this.groupId);
-
-  String get textValue;
-}
-
-class TextPropHandle extends PropHandle<String> {
-  const TextPropHandle(String label, String value, String groupId)
-      : super(label, value, groupId);
-
-  @override
-  String get textValue => value;
-}
-
-class NumberPropHandle extends PropHandle<num> {
-  const NumberPropHandle(String label, num value, String groupId)
-      : super(label, value, groupId);
-
-  @override
-  String get textValue => value.toString();
-}
-
-class BooleanPropHandle extends PropHandle<bool> {
-  const BooleanPropHandle(String label, bool value, String groupId)
-      : super(label, value, groupId);
-
-  @override
-  String get textValue => value.toString();
-}
-
-class RangePropHandle extends PropHandle<Range> {
-  RangePropHandle(String label, Range value, String groupId)
-      : super(label, value, groupId);
-
-  @override
-  String get textValue => value.toString();
-}
-
 class PropGroup {
   final String label;
   final String groupId;
@@ -147,6 +105,13 @@ class PropsProvider extends ChangeNotifier {
         prop.value.copyWith(currentValue: newValue));
   }
 
+  void valueChanged<T>(PropValuesHandle<T> prop, T newValue) {
+    _valueChanged(
+        prop,
+        (label, value, groupId) => PropValuesHandle(label, value, groupId),
+        prop.value.copyWith(selectedValue: newValue));
+  }
+
   T _value<T>(
       String label,
       T defaultValue,
@@ -190,6 +155,16 @@ class PropsProvider extends ChangeNotifier {
           (label, value, groupId) => RangePropHandle(label, value, groupId),
           group)
       .currentValue;
+
+  T valueSelector<T>(String label, PropValues<T> defaultValues,
+          {PropGroup group}) =>
+      _value<dynamic>(
+              label,
+              defaultValues,
+              (label, value, groupId) =>
+                  PropValuesHandle<T>(label, value, groupId),
+              group)
+          .selectedValue;
 }
 
 PropsProvider props(BuildContext context) =>

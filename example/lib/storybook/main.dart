@@ -4,6 +4,7 @@ import 'package:flutter_storybook/flutter_storybook.dart';
 
 import '../title_widgets.dart';
 import '../widgets/cells.dart';
+import '../widgets/toast.dart';
 
 final groupMainCell = PropGroup('Main Cell', 'mainCell');
 final groupMainCellLong = PropGroup('Main Cell Long', 'mainCellLong');
@@ -25,6 +26,7 @@ class AppStoryBook extends StatelessWidget {
               pages: [
                 buildTextStylePage(),
                 buildButtonsPage(),
+                buildToastPage(),
               ]),
           StoryBookFolder(
               key: ValueKey('composite'),
@@ -71,9 +73,11 @@ class AppStoryBook extends StatelessWidget {
                         subtitle:
                             'In porttitor mauris dui, pellentesque egestas justo rutrum a. Praesent eu congue justo. Mauris vulputate tempor augue a luctus. Nullam elementum, elit eu pretium convallis, purus sapien lobortis libero, eget congue diam erat suscipit ipsum. In hac habitasse platea dictumst. Vestibulum tincidunt nisi in elit mattis commodo. Duis eu placerat nibh. Nulla magna magna, tristique sed sapien imperdiet, porttitor pulvinar libero. Mauris nec vehicula velit, a maximus ligula. Morbi in purus et eros placerat faucibus non fermentum lorem. Nunc sit amet felis eu mi scelerisque aliquam a imperdiet justo. Nulla facilisi. Proin commodo facilisis sapien vel aliquam. Cras quis nisi quam. Fusce vitae arcu non arcu cursus aliquam vitae non turpis. Integer hendrerit efficitur commodo.',
                         iconText: 'L',
-                        count: props(context).range('Long Text Count',
-                            Range(min: 1, max: 20, currentValue: 1),
-                            group: groupMainCellLong).toInt(),
+                        count: props(context)
+                            .range('Long Text Count',
+                                Range(min: 1, max: 20, currentValue: 1),
+                                group: groupMainCellLong)
+                            .toInt(),
                       )
                     ],
                   )),
@@ -228,4 +232,31 @@ Nunc ac pulvinar nunc. Sed blandit mauris sed aliquam lobortis. Vivamus viverra 
           ),
         ],
       );
+
+  StoryBookPage buildToastPage() => StoryBookPage(
+          title: Text('Toasts'),
+          key: ValueKey('toasts-page'),
+          widgets: [
+            StoryBookWidget(
+              childBuilder: (context) => WidgetContainer(
+                title: 'Toast',
+                children: <Widget>[
+                  AppToast(
+                    message:
+                        props(context).text('Toast Message', 'This message'),
+                    toastMode: props(context).valueSelector(
+                        'Toast Mode',
+                        PropValues<ToastMode>(
+                          selectedValue: ToastMode.Success,
+                          values: <ToastMode>[
+                            ToastMode.Success,
+                            ToastMode.Error,
+                            ToastMode.Warning,
+                          ],
+                        )),
+                  ),
+                ],
+              ),
+            ),
+          ]);
 }

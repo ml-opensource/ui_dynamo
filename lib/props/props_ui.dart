@@ -51,6 +51,13 @@ class PropsDisplay extends StatelessWidget {
                       props.rangeChanged(prop, value);
                     },
                   );
+                } else if (prop is PropValuesHandle) {
+                  return ValueSelectorField(
+                    prop: prop,
+                    valueChanged: (prop, value) {
+                      props.valueChanged(prop, value);
+                    },
+                  );
                 } else {
                   return Text('Invalid prop handle type found');
                 }
@@ -166,6 +173,40 @@ class RangePropField extends StatelessWidget {
           max: prop.value.max,
           min: prop.value.min,
           onChanged: (value) => rangeChanged(prop, value),
+        ),
+      ],
+    );
+  }
+}
+
+class ValueSelectorField<T> extends StatelessWidget {
+  final PropValuesHandle<T> prop;
+  final Function(PropValuesHandle<T>, T) valueChanged;
+
+  const ValueSelectorField(
+      {Key key, @required this.prop, @required this.valueChanged})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(prop.label),
+            DropdownButton(
+              value: prop.value.selectedValue,
+              onChanged: (value) => valueChanged(prop, value),
+              items: [
+                ...prop.value.values.map((e) => DropdownMenuItem(
+                      value: e,
+                      child: Text("${e}"),
+                    )),
+              ],
+            )
+          ],
         ),
       ],
     );
