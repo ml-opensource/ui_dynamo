@@ -47,7 +47,7 @@ class AppStoryBook extends StatelessWidget {
         widgets: [
           StoryBookWidget(
             childBuilder: (context) => WidgetContainer(
-              title: 'Main Cell Widget',
+              title: Text('Main Cell Widget'),
               children: <Widget>[
                 MainCell(
                   title: props(context)
@@ -66,7 +66,7 @@ class AppStoryBook extends StatelessWidget {
           ),
           StoryBookWidget(
               childBuilder: (context) => WidgetContainer(
-                    title: 'Main Cell Widget With Long Text',
+                    title: Text('Main Cell Widget With Long Text'),
                     children: <Widget>[
                       MainCell(
                         title: 'Live Life',
@@ -239,24 +239,50 @@ Nunc ac pulvinar nunc. Sed blandit mauris sed aliquam lobortis. Vivamus viverra 
           widgets: [
             StoryBookWidget(
               childBuilder: (context) => WidgetContainer(
-                title: 'Toast',
+                cardBackgroundColor: Colors.grey,
+                title: Text(
+                  'Toast',
+                  style: TextStyle(color: Colors.white),
+                ),
                 children: <Widget>[
-                  AppToast(
-                    message:
-                        props(context).text('Toast Message', 'This message'),
-                    toastMode: props(context).valueSelector(
-                        'Toast Mode',
-                        PropValues<ToastMode>(
-                          selectedValue: ToastMode.Success,
-                          values: <ToastMode>[
-                            ToastMode.Success,
-                            ToastMode.Error,
-                            ToastMode.Warning,
-                          ],
-                        )),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  Center(
+                    child: Container(
+                      constraints: BoxConstraints(maxWidth: 300),
+                      child: AppToast(
+                        message: props(context)
+                            .text('Toast Message', 'This message'),
+                        toastMode: props(context).valueSelector(
+                            'Toast Mode',
+                            PropValues<ToastMode>(
+                              selectedValue: ToastMode.Success,
+                              values: <ToastMode>[
+                                ToastMode.Success,
+                                ToastMode.Error,
+                                ToastMode.Warning,
+                              ],
+                            )),
+                      ),
+                    ),
                   ),
                 ],
               ),
             ),
+            StoryBookWidget(
+                childBuilder: (context) => PropTable(
+                      items: [
+                        PropTableItem(
+                            name: 'Message',
+                            description: 'Displays a message for this toast',
+                            defaultValue: ''),
+                        PropTableItem(
+                          name: 'Mode',
+                          description: 'Displays a different UI mode',
+                          defaultValue: ToastMode.Success.toString(),
+                        )
+                      ],
+                    ))
           ]);
 }

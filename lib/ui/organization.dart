@@ -60,23 +60,30 @@ class ExpandableWidgetSection extends StatelessWidget {
 
 class WidgetContainer extends StatelessWidget {
   final List<Widget> children;
-  final String title;
+  final Widget title;
+  final Color cardBackgroundColor;
 
   const WidgetContainer(
-      {Key key, @required this.title, @required this.children})
+      {Key key,
+      @required this.title,
+      @required this.children,
+      this.cardBackgroundColor})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: cardBackgroundColor,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Text(
-              title,
-              style: TextStyle(fontSize: 26),
+            DefaultTextStyle.merge(
+              style: TextStyle(
+                fontSize: 26,
+              ),
+              child: title,
             ),
             ...children,
           ],

@@ -11,25 +11,44 @@ class AppToast extends StatelessWidget {
       {Key key, @required this.message, this.toastMode = ToastMode.Success})
       : super(key: key);
 
-  IconData iconForMode() {
+  Icon iconForMode() {
     switch (toastMode) {
       case ToastMode.Error:
-        return Icons.error;
+        return Icon(
+          Icons.error,
+          color: Colors.red,
+        );
       case ToastMode.Warning:
-        return Icons.warning;
+        return Icon(
+          Icons.warning,
+          color: Colors.yellow,
+        );
       case ToastMode.Success:
       default:
-        return Icons.check_circle;
+        return Icon(
+          Icons.check_circle,
+          color: Colors.green,
+        );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        Text(message),
-        Icon(iconForMode()),
-      ],
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+          children: <Widget>[
+            Expanded(
+              child: Text(
+                message,
+                style: TextStyle(fontSize: 16.0),
+              ),
+            ),
+            iconForMode(),
+          ],
+        ),
+      ),
     );
   }
 }

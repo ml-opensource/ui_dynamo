@@ -21,7 +21,7 @@ class StoryBookDrawer extends StatelessWidget {
       child: ListView(
         children: <Widget>[
           DrawerHeader(
-            child: DefaultTextStyle(
+            child: DefaultTextStyle.merge(
               child: data.title,
               style: TextStyle(fontSize: 20),
             ),
