@@ -293,7 +293,7 @@ Nunc ac pulvinar nunc. Sed blandit mauris sed aliquam lobortis. Vivamus viverra 
                           description:
                               'Closes the Toast before the scheduled timeout',
                           defaultValue: 'null',
-                        )
+                        ),
                       ],
                     ))
           ]);

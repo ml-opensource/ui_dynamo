@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_storybook/actions/actions_extensions.dart';
+import 'package:flutter_storybook/mediaquery/mediaquery.dart';
 import 'package:flutter_storybook/models.dart';
 import 'package:flutter_storybook/props/props_extensions.dart';
 import 'package:flutter_storybook/ui/drawer.dart';
@@ -69,29 +70,48 @@ class _StoryBookState extends State<StoryBook> {
             onSelectPage: (folder, page) => _selectPage(page, folder, context),
           ),
         ),
+        resizeToAvoidBottomPadding: true,
         bottomNavigationBar: ToolbarPane(),
         body: (selectedPage != null)
-            ? Builder(
-                builder: (context) => Padding(
-                  padding: EdgeInsets.only(left: 16.0, right: 16.0),
-                  child: ListView(
-                    children: <Widget>[
-                      ...selectedPage.widgets.map((e) => Column(
-                            children: <Widget>[
-                              SizedBox(
-                                height: 16.0,
-                              ),
-                              e.childBuilder(context),
-                            ],
-                          )),
-                      SizedBox(
-                        height: 16,
-                      ),
-                    ],
-                  ),
-                ),
-              )
+            ? StoryBookPageWidget(selectedPage: selectedPage)
             : _StoryBookHomePage(),
+      ),
+    );
+  }
+}
+
+class StoryBookPageWidget extends StatelessWidget {
+  const StoryBookPageWidget({
+    Key key,
+    @required this.selectedPage,
+  }) : super(key: key);
+
+  final StoryBookPage selectedPage;
+
+  @override
+  Widget build(BuildContext context) {
+    return MediaQueryChooser(
+      child: Expanded(
+        child: Builder(
+          builder: (context) => Padding(
+            padding: EdgeInsets.only(left: 16.0, right: 16.0),
+            child: ListView(
+              children: <Widget>[
+                ...selectedPage.widgets.map((e) => Column(
+                      children: <Widget>[
+                        SizedBox(
+                          height: 16.0,
+                        ),
+                        e.childBuilder(context),
+                      ],
+                    )),
+                SizedBox(
+                  height: 16,
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -104,33 +124,35 @@ class _StoryBookHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(32.0),
-      child: Center(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Icon(
-              Icons.book,
-              size: 100,
-              color: Colors.deepPurple,
-            ),
-            SizedBox(
-              height: 16,
-            ),
-            Text(
-              'Welcome to Flutter Storybook. ',
-              style: TextStyle(fontSize: 30),
-            ),
-            Text.rich(
-              TextSpan(children: [
-                TextSpan(text: 'Click on a '),
-                WidgetSpan(child: Icon(Icons.folder)),
-                TextSpan(text: ' to select a page to preview.')
-              ]),
-              style: TextStyle(fontSize: 25),
-            ),
-          ],
+    return MediaQueryChooser(
+      child: Padding(
+        padding: const EdgeInsets.all(32.0),
+        child: Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Icon(
+                Icons.book,
+                size: 100,
+                color: Colors.deepPurple,
+              ),
+              SizedBox(
+                height: 16,
+              ),
+              Text(
+                'Welcome to Flutter Storybook. ',
+                style: TextStyle(fontSize: 30),
+              ),
+              Text.rich(
+                TextSpan(children: [
+                  TextSpan(text: 'Click on a '),
+                  WidgetSpan(child: Icon(Icons.folder)),
+                  TextSpan(text: ' to select a page to preview.')
+                ]),
+                style: TextStyle(fontSize: 25),
+              ),
+            ],
+          ),
         ),
       ),
     );
