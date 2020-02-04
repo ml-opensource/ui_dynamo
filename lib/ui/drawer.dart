@@ -21,7 +21,10 @@ class StoryBookDrawer extends StatelessWidget {
       child: ListView(
         children: <Widget>[
           DrawerHeader(
-            child: data.title,
+            child: DefaultTextStyle(
+              child: data.title,
+              style: TextStyle(fontSize: 20),
+            ),
             decoration: BoxDecoration(
               color: Theme.of(context).primaryColor,
             ),
