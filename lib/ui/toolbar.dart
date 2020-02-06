@@ -30,6 +30,11 @@ class _ToolbarPaneState extends State<ToolbarPane> {
             children: <Widget>[
               Expanded(
                 child: TabBar(
+                  onTap: (index) {
+                    setState(() {
+                      toolbarOpen = true;
+                    });
+                  },
                   isScrollable: true,
                   tabs: [
                     Tab(
@@ -53,17 +58,41 @@ class _ToolbarPaneState extends State<ToolbarPane> {
               ),
             ],
           ),
-          Container(
-            height: toolbarOpen ? MediaQuery.of(context).size.height / 4 : 0,
-            color: Theme.of(context).scaffoldBackgroundColor,
-            child: TabBarView(
-              children: <Widget>[
-                ActionsDisplay(),
-                PropsDisplay(),
-              ],
+          Draggable(
+            axis: Axis.vertical,
+            feedback: Text('DRAGGING'),
+            dragAnchor: DragAnchor.pointer,
+            child: Container(
+              height: toolbarOpen ? MediaQuery.of(context).size.height / 4 : 0,
+              color: Theme.of(context).scaffoldBackgroundColor,
+              child: TabBarView(
+                children: <Widget>[
+                  ActionsDisplay(),
+                  PropsDisplay(),
+                ],
+              ),
             ),
           )
         ],
+      ),
+    );
+  }
+}
+
+class EmptyToolbarView extends StatelessWidget {
+  final Widget text;
+
+  const EmptyToolbarView({
+    Key key,
+    @required this.text,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: text,
       ),
     );
   }

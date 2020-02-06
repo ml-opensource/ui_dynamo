@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_storybook/flutter_storybook.dart';
+import 'package:flutter_storybook/ui/toolbar.dart';
 import 'package:provider/provider.dart';
 
 class PropsDisplay extends StatelessWidget {
@@ -10,6 +11,22 @@ class PropsDisplay extends StatelessWidget {
       child: Consumer<PropsProvider>(
         builder: (context, props, child) {
           final propsList = props.propAndGroups();
+          if (propsList.length == 0) {
+            return EmptyToolbarView(
+              text: Text.rich(
+                TextSpan(
+                  children: [
+                    TextSpan(
+                        text: 'No Props Found. Start by adding them using '),
+                    TextSpan(
+                        text: 'props(context)',
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                  ],
+                  style: TextStyle(fontSize: 16.0),
+                ),
+              ),
+            );
+          }
           final maxWidth = BoxConstraints.loose(Size.fromWidth(350));
           return ListView.separated(
               padding: EdgeInsets.all(16.0),

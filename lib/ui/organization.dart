@@ -18,37 +18,43 @@ class ExpandableWidgetSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Row(
           children: <Widget>[
             Expanded(
-              child: ExpansionTile(
-                initiallyExpanded: initiallyExpanded,
-                title: Text(
-                  title,
-                  style: TextStyle(fontSize: 26),
+              child: Theme(
+                data: theme.copyWith(
+                  dividerColor: theme.cardColor,
                 ),
-                subtitle: (subtitle != null)
-                    ? Padding(
-                        padding: EdgeInsets.only(top: 8.0),
-                        child: Text(subtitle),
-                      )
-                    : null,
-                children: [
-                  Divider(
-                    thickness: 2.0,
-                    height: 32,
+                child: ExpansionTile(
+                  initiallyExpanded: initiallyExpanded,
+                  title: Text(
+                    title,
+                    style: TextStyle(fontSize: 26),
                   ),
-                  SizedBox(
-                    height: 16.0,
-                  ),
-                  ...children,
-                  SizedBox(
-                    height: 16.0,
-                  ),
-                ],
+                  subtitle: (subtitle != null)
+                      ? Padding(
+                          padding: EdgeInsets.only(top: 8.0),
+                          child: Text(subtitle),
+                        )
+                      : null,
+                  children: [
+                    Divider(
+                      thickness: 1.0,
+                      color: theme.dividerColor,
+                    ),
+                    SizedBox(
+                      height: 16.0,
+                    ),
+                    ...children,
+                    SizedBox(
+                      height: 16.0,
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
