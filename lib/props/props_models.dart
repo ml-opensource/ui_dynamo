@@ -114,3 +114,12 @@ class PropValuesHandle<T> extends PropHandle<PropValues<T>> {
   @override
   String get textValue => value.toString();
 }
+
+class RadioValuesHandle<T> extends PropHandle<PropValues<T>> {
+  RadioValuesHandle(String label, PropValues<T> value, String groupId)
+      : super(label, value, groupId);
+
+  @override
+  String get textValue => value.toString();
+}
+

@@ -108,7 +108,14 @@ class PropsProvider extends ChangeNotifier {
   void valueChanged<T>(PropValuesHandle<T> prop, T newValue) {
     _valueChanged(
         prop,
-        (label, value, groupId) => PropValuesHandle(label, value, groupId),
+        (label, value, groupId) => PropValuesHandle<T>(label, value, groupId),
+        prop.value.copyWith(selectedValue: newValue));
+  }
+
+  void radioChanged<T>(RadioValuesHandle<T> prop, T newValue) {
+    _valueChanged(
+        prop,
+            (label, value, groupId) => RadioValuesHandle<T>(label, value, groupId),
         prop.value.copyWith(selectedValue: newValue));
   }
 
@@ -164,6 +171,16 @@ class PropsProvider extends ChangeNotifier {
               (label, value, groupId) =>
                   PropValuesHandle<T>(label, value, groupId),
               group)
+          .selectedValue;
+
+  T radios<T>(String label, PropValues<T> defaultValues,
+      {PropGroup group}) =>
+      _value<dynamic>(
+          label,
+          defaultValues,
+              (label, value, groupId) =>
+              RadioValuesHandle<T>(label, value, groupId),
+          group)
           .selectedValue;
 }
 

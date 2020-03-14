@@ -38,17 +38,25 @@ class _MediaQueryChooserState extends State<MediaQueryChooser> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            if (currentDeviceSelected != null)
-              Text(deviceDisplay(
-                  currentDeviceSelected, deviceSizes[currentDeviceSelected])),
-            MediaChooserButton(
-              deviceSelected: _deviceSelected,
-              selectedDeviceName: currentDeviceSelected,
-            ),
-          ],
+        Card(
+          margin: EdgeInsets.only(bottom: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              bottomRight: Radius.circular(8.0),
+            )
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              if (currentDeviceSelected != null)
+                Text(deviceDisplay(
+                    currentDeviceSelected, deviceSizes[currentDeviceSelected])),
+              MediaChooserButton(
+                deviceSelected: _deviceSelected,
+                selectedDeviceName: currentDeviceSelected,
+              ),
+            ],
+          ),
         ),
         Expanded(
           child: SingleChildScrollView(
@@ -57,7 +65,8 @@ class _MediaQueryChooserState extends State<MediaQueryChooser> {
               child: Container(
                 decoration: currentDeviceSelected != null
                     ? BoxDecoration(
-                        border: Border.all(color: Theme.of(context).accentColor),
+                        border:
+                            Border.all(color: Theme.of(context).accentColor),
                       )
                     : null,
                 constraints: BoxConstraints.tight(currentMediaQuery.size),

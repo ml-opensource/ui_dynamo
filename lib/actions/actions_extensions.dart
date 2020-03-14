@@ -27,7 +27,11 @@ class ActionsProvider extends ChangeNotifier {
   }
 
   GestureTapCallback onPressed(String buttonName) {
-    return () => this.add(ActionType('Tap $buttonName'));
+    return () => this.add(ActionType('$buttonName: Tap'));
+  }
+
+  ValueChanged<T> valueChanged<T>(String widgetName) {
+    return (value) => this.add(ActionType('$widgetName: Value changed $value'));
   }
 }
 

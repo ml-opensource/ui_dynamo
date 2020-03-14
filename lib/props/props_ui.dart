@@ -75,6 +75,13 @@ class PropsDisplay extends StatelessWidget {
                       props.valueChanged(prop, value);
                     },
                   );
+                } else if (prop is RadioValuesHandle) {
+                  return RadioSelectorField(
+                    prop: prop,
+                    valueChanged: (prop, value) {
+                      props.radioChanged(prop, value);
+                    },
+                  );
                 } else {
                   return Text('Invalid prop handle type found');
                 }
@@ -223,6 +230,41 @@ class ValueSelectorField<T> extends StatelessWidget {
                     )),
               ],
             )
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class RadioSelectorField<T> extends StatelessWidget {
+  final RadioValuesHandle<T> prop;
+  final Function(RadioValuesHandle<T>, T) valueChanged;
+
+  const RadioSelectorField(
+      {Key key, @required this.prop, @required this.valueChanged})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(prop.label),
+            ...prop.value.values.map((e) => Container(
+                  constraints: BoxConstraints(maxWidth: 300),
+                  child: RadioListTile(
+                    title: Text(e.toString()),
+                    groupValue: prop.value.selectedValue,
+                    onChanged: (value) {
+                      valueChanged(prop, value);
+                    },
+                    value: e,
+                  ),
+                )),
           ],
         ),
       ],

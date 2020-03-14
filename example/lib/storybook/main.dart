@@ -1,3 +1,4 @@
+import 'package:example/widgets/radios.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_storybook/flutter_storybook.dart';
@@ -27,6 +28,7 @@ class AppStoryBook extends StatelessWidget {
                 buildTextStylePage(),
                 buildButtonsPage(),
                 buildToastPage(),
+                buildRadiosPage(),
               ]),
           StoryBookFolder(
               key: ValueKey('composite'),
@@ -269,6 +271,26 @@ Nunc ac pulvinar nunc. Sed blandit mauris sed aliquam lobortis. Vivamus viverra 
                       ),
                     ),
                   ),
+                  Center(
+                    child: Container(
+                      constraints: BoxConstraints(maxWidth: 300),
+                      child: AppToast(
+                        onClose: actions(context).onPressed('Close Toast 2'),
+                        message: props(context)
+                            .text('Toast 2 Message', 'This message'),
+                        toastMode: props(context).radios(
+                            'Toast Mode 2',
+                            PropValues<ToastMode>(
+                              selectedValue: ToastMode.Success,
+                              values: <ToastMode>[
+                                ToastMode.Success,
+                                ToastMode.Error,
+                                ToastMode.Warning,
+                              ],
+                            )),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -297,4 +319,35 @@ Nunc ac pulvinar nunc. Sed blandit mauris sed aliquam lobortis. Vivamus viverra 
                       ],
                     ))
           ]);
+
+  StoryBookPage buildRadiosPage() => StoryBookPage(
+        key: ValueKey("radios"),
+        title: Text("Radios"),
+        icon: Icon(Icons.radio_button_checked),
+        widgets: [
+          StoryBookWidget(
+            childBuilder: (context) =>
+                WidgetContainer(title: Text("Plain Radios"), children: [
+              RadioGroup(
+                valueChanged: (value) {
+                  actions(context).valueChanged("Plain Radio")(value);
+                  final props2 = props(context);
+                  props2.radioChanged(
+                      props2.retrievePropByLabel("Radios"), value);
+                },
+                selectedValue: props(context).radios(
+                    "Radios",
+                    PropValues<String>(
+                      selectedValue: "Yellow",
+                      values: [
+                        "Yellow",
+                        "Red",
+                        "Green",
+                      ],
+                    )),
+              ),
+            ]),
+          ),
+        ],
+      );
 }
