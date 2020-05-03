@@ -17,14 +17,14 @@ class StoryBookWidget {
 }
 
 class StoryBookWidgetList extends StoryBookWidget {
-  final List<StoryBookWidget> widgets;
+  final List<Widget> Function(BuildContext context) widgets;
 
   StoryBookWidgetList(this.widgets)
       : super((context) => Padding(
             padding: EdgeInsets.only(left: 16.0, right: 16.0),
             child: ListView(
               children: <Widget>[
-                ...widgets.map((e) => e.childBuilder(context)),
+                ...widgets(context),
               ],
             )));
 }
