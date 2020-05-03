@@ -1,4 +1,6 @@
+import 'package:example/pages/company_listing.dart';
 import 'package:example/pages/main_page.dart';
+import 'package:example/pages/person_detail.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
@@ -28,7 +30,20 @@ MaterialApp buildApp() => MaterialApp(
       ),
       routes: {
         '/home': (context) => MainPage(),
+        '/company': (context) => CompanyListing(),
       },
+      onGenerateRoute: (settings) {
+        if (settings.name == '/detail') {
+          final PersonDetailArguments args = settings.arguments;
+          return MaterialPageRoute(
+            builder: (context) => PersonDetail(
+              item: args.item,
+            ),
+          );
+        }
+        return null;
+      },
+      initialRoute: "/home",
       home: MainPage(),
     );
 

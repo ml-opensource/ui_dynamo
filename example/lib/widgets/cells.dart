@@ -7,6 +7,7 @@ class MainCell extends StatelessWidget {
   final String subtitle;
   final int count;
   final bool isFlipped;
+  final GestureTapCallback onTap;
 
   const MainCell(
       {Key key,
@@ -14,7 +15,8 @@ class MainCell extends StatelessWidget {
       @required this.title,
       @required this.subtitle,
       @required this.count,
-      this.isFlipped = false})
+      this.isFlipped = false,
+      this.onTap})
       : super(key: key);
 
   @override
@@ -27,6 +29,7 @@ class MainCell extends StatelessWidget {
           title: Text(title),
           subtitle: Text(subtitle),
           trailing: isFlipped ? buildCircleAvatar() : buildText(),
+          onTap: this.onTap,
         ),
       ),
     );
@@ -56,8 +59,9 @@ class MainCellItem {
 class MainCellList extends StatelessWidget {
   final List<MainCellItem> items;
   final bool shrinkWrap;
+  final Function(MainCellItem) onTap;
 
-  const MainCellList({Key key, this.items, this.shrinkWrap = false})
+  const MainCellList({Key key, this.items, this.shrinkWrap = false, this.onTap})
       : super(key: key);
 
   @override
@@ -72,6 +76,7 @@ class MainCellList extends StatelessWidget {
           subtitle: item.subtitle,
           iconText: item.iconText,
           count: item.count,
+          onTap: () => this.onTap(item),
         );
       },
     );
