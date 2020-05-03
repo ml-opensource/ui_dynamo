@@ -30,16 +30,14 @@ class _StoryBookState extends State<StoryBook> {
           (element) => element.key == _selectedFolderKey,
           orElse: () => null);
       if (folder != null) {
-        return folder.pages.firstWhere(
-            (element) => element.key == _selectedPageKey,
-            orElse: () => null);
+        return folder.pageFromKey(_selectedPageKey);
       }
     }
     return null;
   }
 
   void _selectPage(
-      StoryBookPage page, StoryBookFolder folder, BuildContext context) {
+      StoryBookPage page, StoryBookItem folder, BuildContext context) {
     setState(() {
       _selectedPageKey = page.key;
       _selectedFolderKey = folder.key;

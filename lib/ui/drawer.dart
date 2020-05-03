@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_storybook/ui/widgets/folder.dart';
 import 'package:flutter_storybook/ui/widgets/page.dart';
 
 import '../models.dart';
 
 class StoryBookDrawer extends StatelessWidget {
   final StoryBookData data;
-  final Function(StoryBookFolder, StoryBookPage) onSelectPage;
+  final Function(StoryBookItem, StoryBookPage) onSelectPage;
   final StoryBookPage selectedPage;
 
   const StoryBookDrawer({
@@ -37,10 +36,6 @@ class StoryBookDrawer extends StatelessWidget {
     );
   }
 
-  Iterable<Widget> buildSidebar() =>
-      data.items.map((folder) => StoryBookFolderWidget(
-            folder: folder,
-            selectedPage: selectedPage,
-            onSelectPage: onSelectPage,
-          ));
+  Iterable<Widget> buildSidebar() => data.items
+      .map((folder) => folder.buildWidget(selectedPage, onSelectPage));
 }

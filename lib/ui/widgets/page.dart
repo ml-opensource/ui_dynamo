@@ -1,51 +1,53 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_storybook/ui/widgets/folder.dart';
+import 'package:flutter_storybook/flutter_storybook.dart';
 import 'package:flutter_storybook/ui/widgets/widget.dart';
 
-class StoryBookPage {
-  final Key key;
-  final Widget title;
-  final Icon icon;
-
+class StoryBookPage extends StoryBookItem {
   /// Returns the widgets to render in a page. These are loaded when page clicked.
   final StoryBookWidget widget;
 
   StoryBookPage(
-      {@required this.key,
-      @required this.title,
-      this.icon,
-      @required this.widget});
+      {@required Key key,
+      @required Widget title,
+      Icon icon,
+      @required this.widget})
+      : super(key, title, icon);
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is StoryBookPage &&
+      super == other &&
+          other is StoryBookPage &&
           runtimeType == other.runtimeType &&
-          key == other.key &&
-          title == other.title &&
-          icon == other.icon &&
           widget == other.widget;
 
   @override
-  int get hashCode =>
-      key.hashCode ^ title.hashCode ^ icon.hashCode ^ widget.hashCode;
+  int get hashCode => super.hashCode ^ widget.hashCode;
 
   build(BuildContext context) => widget.childBuilder(context);
+
+  @override
+  StoryBookPage pageFromKey(Key key) => this;
+
+  @override
+  Widget buildWidget(StoryBookPage selectedPage,
+      Function(StoryBookItem p1, StoryBookPage p2) onSelectPage) {
+    return StoryBookPageWidget(
+      page: this,
+      selectedPage: selectedPage,
+      onSelectPage: (page) => onSelectPage(page, page),
+    );
+  }
 }
 
 class StoryBookPageWidget extends StatelessWidget {
-  final StoryBookFolder folder;
   final StoryBookPage page;
   final StoryBookPage selectedPage;
-  final Function(StoryBookFolder, StoryBookPage) onSelectPage;
+  final Function(StoryBookPage) onSelectPage;
 
   const StoryBookPageWidget(
-      {Key key,
-      @required this.page,
-      this.selectedPage,
-      this.onSelectPage,
-      @required this.folder})
+      {Key key, @required this.page, this.selectedPage, this.onSelectPage})
       : super(key: key);
 
   @override
@@ -53,6 +55,6 @@ class StoryBookPageWidget extends StatelessWidget {
         leading: page.icon ?? Icon(Icons.book),
         title: page.title,
         selected: selectedPage != null && selectedPage == page,
-        onTap: () => onSelectPage(folder, page),
+        onTap: () => onSelectPage(page),
       );
 }

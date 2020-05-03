@@ -1,39 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_storybook/models.dart';
 import 'package:flutter_storybook/ui/widgets/page.dart';
 
-class StoryBookFolder {
-  final Key key;
-  final Widget title;
-  final Icon icon;
-
+class StoryBookFolder extends StoryBookItem {
   final List<StoryBookPage> pages;
 
   StoryBookFolder(
-      {@required this.key,
-      @required this.title,
+      {@required Key key,
+      @required Widget title,
       this.pages = const [],
-      this.icon});
+      Icon icon})
+      : super(key, title, icon);
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is StoryBookFolder &&
+      super == other &&
+          other is StoryBookFolder &&
           runtimeType == other.runtimeType &&
-          key == other.key &&
-          title == other.title &&
-          icon == other.icon &&
           pages == other.pages;
 
   @override
-  int get hashCode =>
-      key.hashCode ^ title.hashCode ^ icon.hashCode ^ pages.hashCode;
+  int get hashCode => super.hashCode ^ pages.hashCode;
+
+  @override
+  StoryBookPage pageFromKey(Key key) =>
+      pages.firstWhere((element) => element.key == key, orElse: () => null);
+
+  @override
+  Widget buildWidget(StoryBookPage selectedPage,
+          Function(StoryBookItem p1, StoryBookPage p2) onSelectPage) =>
+      StoryBookFolderWidget(
+        folder: this,
+        selectedPage: selectedPage,
+        onSelectPage: onSelectPage,
+      );
 }
 
 class StoryBookFolderWidget extends StatelessWidget {
   final StoryBookFolder folder;
   final StoryBookPage selectedPage;
-  final Function(StoryBookFolder, StoryBookPage) onSelectPage;
+  final Function(StoryBookItem, StoryBookPage) onSelectPage;
 
   const StoryBookFolderWidget(
       {Key key,
@@ -49,10 +57,10 @@ class StoryBookFolderWidget extends StatelessWidget {
         initiallyExpanded: folder.pages.contains(selectedPage),
         children: <Widget>[
           ...folder.pages.map((page) => StoryBookPageWidget(
-              page: page,
-              selectedPage: selectedPage,
-              onSelectPage: onSelectPage,
-              folder: folder))
+                page: page,
+                selectedPage: selectedPage,
+                onSelectPage: (page) => onSelectPage(folder, page),
+              ))
         ],
       );
 }

@@ -21,6 +21,11 @@ class AppStoryBook extends StatelessWidget {
       data: StoryBookData(
         title: Text('Example Storybook'),
         items: [
+          StoryBookPage(
+            key: ValueKey('app'),
+            title: Text('App'),
+            widget: StoryBookWidget(childBuilder: (context) => Text('Hello')),
+          ),
           StoryBookFolder(
               key: ValueKey('titles'),
               title: Text('Widgets'),
