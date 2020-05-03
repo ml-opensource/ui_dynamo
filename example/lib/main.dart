@@ -1,18 +1,9 @@
+import 'package:example/pages/main_page.dart';
 import 'package:flutter/material.dart';
-
-import 'storybook/main.dart';
 
 void main() => runApp(MyApp());
 
-class MyApp extends StatelessWidget {
-  final Widget home;
-
-  const MyApp({Key key, @required this.home}) : super(key: key);
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
+MaterialApp buildApp() => MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
         // This is the theme of your application.
@@ -35,7 +26,18 @@ class MyApp extends StatelessWidget {
           textTheme: ButtonTextTheme.primary,
         ),
       ),
-      home: AppStoryBook(),
+      routes: {
+        '/home': (context) => MainPage(),
+      },
+      home: MainPage(),
     );
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key key}) : super(key: key);
+
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return buildApp();
   }
 }

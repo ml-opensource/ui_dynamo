@@ -1,10 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-class MediaQueryChooser extends StatefulWidget {
-  final Widget child;
+typedef MediaWidgetBuilder = Widget Function(BuildContext, MediaQueryData);
 
-  const MediaQueryChooser({Key key, @required this.child}) : super(key: key);
+class MediaQueryChooser extends StatefulWidget {
+  final MediaWidgetBuilder builder;
+  final bool shouldScroll;
+
+  const MediaQueryChooser(
+      {Key key, @required this.builder, this.shouldScroll = true})
+      : super(key: key);
+
+  factory MediaQueryChooser.mediaQuery({
+    WidgetBuilder builder,
+  }) =>
+      MediaQueryChooser(
+        builder: (context, data) =>
+            MediaQuery(data: data, child: builder(context)),
+      );
 
   @override
   _MediaQueryChooserState createState() => _MediaQueryChooserState();
@@ -41,10 +54,9 @@ class _MediaQueryChooserState extends State<MediaQueryChooser> {
         Card(
           margin: EdgeInsets.only(bottom: 16),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-              bottomRight: Radius.circular(8.0),
-            )
-          ),
+              borderRadius: BorderRadius.only(
+            bottomRight: Radius.circular(8.0),
+          )),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
@@ -59,21 +71,23 @@ class _MediaQueryChooserState extends State<MediaQueryChooser> {
           ),
         ),
         Expanded(
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: SingleChildScrollView(
-              child: Container(
-                decoration: currentDeviceSelected != null
-                    ? BoxDecoration(
-                        border:
-                            Border.all(color: Theme.of(context).accentColor),
-                      )
-                    : null,
-                constraints: BoxConstraints.tight(currentMediaQuery.size),
-                child: MediaQuery(data: currentMediaQuery, child: widget.child),
-              ),
-            ),
-          ),
+          child: !widget.shouldScroll
+              ? widget.builder(context, currentMediaQuery)
+              : SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: SingleChildScrollView(
+                    child: Container(
+                      decoration: currentDeviceSelected != null
+                          ? BoxDecoration(
+                              border: Border.all(
+                                  color: Theme.of(context).accentColor),
+                            )
+                          : null,
+                      constraints: BoxConstraints.tight(currentMediaQuery.size),
+                      child: widget.builder(context, currentMediaQuery),
+                    ),
+                  ),
+                ),
         ),
       ],
     );

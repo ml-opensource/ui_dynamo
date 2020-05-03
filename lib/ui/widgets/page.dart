@@ -6,6 +6,7 @@ import 'package:flutter_storybook/ui/widgets/widget.dart';
 class StoryBookPage extends StoryBookItem {
   /// Returns the widgets to render in a page. These are loaded when page clicked.
   final StoryBookWidget widget;
+  bool shouldScroll = true;
 
   StoryBookPage(
       {@required Key key,
@@ -36,7 +37,7 @@ class StoryBookPage extends StoryBookItem {
           key: key ?? ValueKey(title),
           title: Text(title),
           icon: icon,
-          widget: StoryBookWidget(child));
+          widget: StoryBookWidget.widgetBuilder(child));
 
   @override
   bool operator ==(Object other) =>
@@ -49,7 +50,8 @@ class StoryBookPage extends StoryBookItem {
   @override
   int get hashCode => super.hashCode ^ widget.hashCode;
 
-  build(BuildContext context) => widget.childBuilder(context);
+  build(BuildContext context, MediaQueryData data) =>
+      widget.builder(context, data);
 
   @override
   StoryBookPage pageFromKey(Key key) => this;

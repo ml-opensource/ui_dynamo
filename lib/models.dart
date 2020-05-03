@@ -44,4 +44,10 @@ class StoryBookData {
 
   @override
   int get hashCode => title.hashCode ^ items.hashCode;
+
+  StoryBookData merge({List<StoryBookItem> items = const [], Widget title}) =>
+      StoryBookData(title: title ?? this.title, items: [
+        ...items,
+        ...this.items,
+      ]);
 }

@@ -1,3 +1,4 @@
+import 'package:example/main.dart';
 import 'package:example/widgets/radios.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -10,6 +11,8 @@ import '../widgets/toast.dart';
 final groupMainCell = PropGroup('Main Cell', 'mainCell');
 final groupMainCellLong = PropGroup('Main Cell Long', 'mainCellLong');
 
+void main() => runApp(AppStoryBook());
+
 class AppStoryBook extends StatelessWidget {
   const AppStoryBook({
     Key key,
@@ -17,14 +20,11 @@ class AppStoryBook extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StoryBook(
+    return StoryBook.withApp(
+      buildApp(),
       data: StoryBookData(
         title: Text('Example Storybook'),
         items: [
-          StoryBookPage.of(
-            title: 'App',
-            child: (context) => Text('Hello'),
-          ),
           StoryBookFolder.of(title: 'Widgets', pages: [
             buildTextStylePage(),
             buildButtonsPage(),
