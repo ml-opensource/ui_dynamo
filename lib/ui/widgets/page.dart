@@ -14,6 +14,30 @@ class StoryBookPage extends StoryBookItem {
       @required this.widget})
       : super(key, title, icon);
 
+  factory StoryBookPage.list({
+    Key key,
+    @required String title,
+    Icon icon,
+    @required List<Widget> Function(BuildContext context) widgets,
+  }) =>
+      StoryBookPage(
+          key: key ?? ValueKey(title),
+          title: Text(title),
+          icon: icon,
+          widget: StoryBookWidgetList(widgets));
+
+  factory StoryBookPage.of({
+    Key key,
+    @required String title,
+    Icon icon,
+    @required Widget Function(BuildContext context) child,
+  }) =>
+      StoryBookPage(
+          key: key ?? ValueKey(title),
+          title: Text(title),
+          icon: icon,
+          widget: StoryBookWidget(child));
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
