@@ -52,7 +52,6 @@ class _MediaQueryChooserState extends State<MediaQueryChooser> {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Card(
-          margin: EdgeInsets.only(bottom: 16),
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
             bottomRight: Radius.circular(8.0),
