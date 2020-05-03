@@ -40,9 +40,6 @@ class StoryBoard extends StatefulWidget {
   /// Callback for when the scale of the canvas changes
   final ValueChanged<double> scaleChanged;
 
-  /// Override the default app bar of the storyboard
-  final AppBar customAppBar;
-
   const StoryBoard({
     Key key,
     @required this.child,
@@ -52,7 +49,6 @@ class StoryBoard extends StatefulWidget {
     this.offsetChanged,
     this.initialScale,
     this.scaleChanged,
-    this.customAppBar,
   }) : super(key: key);
 
   @override
@@ -85,65 +81,73 @@ class StoryboardController extends State<StoryBoard> {
     final base = widget.child;
     final _size = widget.screenSize;
     if (!widget.enabled) return base;
-    return Scaffold(
-      appBar: widget?.customAppBar ??
-          AppBar(
-            title: Text('Storyboard'),
-            actions: [
-              IconButton(
-                icon: Icon(Icons.remove),
-                onPressed: () => updateScale(_scale - 0.01),
+    return Stack(
+      children: [
+        Scaffold(
+          body: GestureDetector(
+            onPanUpdate: (panDetails) => updateOffset(panDetails.delta),
+            behavior: HitTestBehavior.opaque,
+            child: Container(
+              width: double.infinity,
+              height: double.infinity,
+              child: OverflowBox(
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    if (base?.home != null)
+                      _addChild(
+                        base,
+                        base.home,
+                        Offset(0, 10),
+                        'Home',
+                      ),
+                    if (base?.initialRoute != null)
+                      _addChild(
+                        base,
+                        base.routes[base.initialRoute](context),
+                        Offset(base?.home != null ? _size.width + _kSpacing : 0,
+                            10),
+                        'Initial Route',
+                      ),
+                    if (base?.routes != null) ...[
+                      for (var r = 0; r < base.routes.keys.length; r++)
+                        _addChild(
+                          base,
+                          base.routes[base.routes.keys.toList()[r]](context),
+                          Offset((_size.width + _kSpacing) * r,
+                              (_size.height + _kSpacing) + 40),
+                          base.routes.keys.toList()[r],
+                        ),
+                    ]
+                  ],
+                ),
               ),
-              InkWell(
-                child: Center(child: Text('${(_scale * 100).round()}%')),
-                onTap: () => updateScale(1),
-              ),
-              IconButton(
-                icon: Icon(Icons.add),
-                onPressed: () => updateScale(_scale + 0.01),
-              ),
-            ],
-          ),
-      body: GestureDetector(
-        onPanUpdate: (panDetails) => updateOffset(panDetails.delta),
-        behavior: HitTestBehavior.opaque,
-        child: Container(
-          width: double.infinity,
-          height: double.infinity,
-          child: OverflowBox(
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                if (base?.home != null)
-                  _addChild(
-                    base,
-                    base.home,
-                    Offset(0, 10),
-                    'Home',
-                  ),
-                if (base?.initialRoute != null)
-                  _addChild(
-                    base,
-                    base.routes[base.initialRoute](context),
-                    Offset(
-                        base?.home != null ? _size.width + _kSpacing : 0, 10),
-                    'Initial Route',
-                  ),
-                if (base?.routes != null) ...[
-                  for (var r = 0; r < base.routes.keys.length; r++)
-                    _addChild(
-                      base,
-                      base.routes[base.routes.keys.toList()[r]](context),
-                      Offset((_size.width + _kSpacing) * r,
-                          (_size.height + _kSpacing) + 40),
-                      base.routes.keys.toList()[r],
-                    ),
-                ]
-              ],
             ),
           ),
         ),
-      ),
+        Column(
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                IconButton(
+                  icon: Icon(Icons.remove),
+                  onPressed: () => updateScale(_scale - 0.01),
+                ),
+                InkWell(
+                  child: Center(child: Text('${(_scale * 100).round()}%')),
+                  onTap: () => updateScale(1),
+                ),
+                IconButton(
+                  icon: Icon(Icons.add),
+                  onPressed: () => updateScale(_scale + 0.01),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
     );
   }
 
