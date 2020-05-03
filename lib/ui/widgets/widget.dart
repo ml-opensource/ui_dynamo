@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 class StoryBookWidget {
   final WidgetBuilder childBuilder;
 
-  StoryBookWidget({@required this.childBuilder});
+  StoryBookWidget(this.childBuilder);
 
   @override
   bool operator ==(Object other) =>
@@ -20,12 +20,11 @@ class StoryBookWidgetList extends StoryBookWidget {
   final List<StoryBookWidget> widgets;
 
   StoryBookWidgetList(this.widgets)
-      : super(
-            childBuilder: (context) => Padding(
-                padding: EdgeInsets.only(left: 16.0, right: 16.0),
-                child: ListView(
-                  children: <Widget>[
-                    ...widgets.map((e) => e.childBuilder(context)),
-                  ],
-                )));
+      : super((context) => Padding(
+            padding: EdgeInsets.only(left: 16.0, right: 16.0),
+            child: ListView(
+              children: <Widget>[
+                ...widgets.map((e) => e.childBuilder(context)),
+              ],
+            )));
 }

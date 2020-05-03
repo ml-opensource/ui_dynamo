@@ -24,7 +24,7 @@ class AppStoryBook extends StatelessWidget {
           StoryBookPage(
             key: ValueKey('app'),
             title: Text('App'),
-            widget: StoryBookWidget(childBuilder: (context) => Text('Hello')),
+            widget: StoryBookWidget((context) => Text('Hello')),
           ),
           StoryBookFolder(
               key: ValueKey('titles'),
@@ -54,7 +54,7 @@ class AppStoryBook extends StatelessWidget {
         widget: StoryBookWidgetList(
           [
             StoryBookWidget(
-              childBuilder: (context) => WidgetContainer(
+              (context) => WidgetContainer(
                 title: Text('Main Cell Widget'),
                 children: <Widget>[
                   MainCell(
@@ -72,25 +72,24 @@ class AppStoryBook extends StatelessWidget {
                 ],
               ),
             ),
+            StoryBookWidget((context) => WidgetContainer(
+                  title: Text('Main Cell Widget With Long Text'),
+                  children: <Widget>[
+                    MainCell(
+                      title: 'Live Life',
+                      subtitle:
+                          'In porttitor mauris dui, pellentesque egestas justo rutrum a. Praesent eu congue justo. Mauris vulputate tempor augue a luctus. Nullam elementum, elit eu pretium convallis, purus sapien lobortis libero, eget congue diam erat suscipit ipsum. In hac habitasse platea dictumst. Vestibulum tincidunt nisi in elit mattis commodo. Duis eu placerat nibh. Nulla magna magna, tristique sed sapien imperdiet, porttitor pulvinar libero. Mauris nec vehicula velit, a maximus ligula. Morbi in purus et eros placerat faucibus non fermentum lorem. Nunc sit amet felis eu mi scelerisque aliquam a imperdiet justo. Nulla facilisi. Proin commodo facilisis sapien vel aliquam. Cras quis nisi quam. Fusce vitae arcu non arcu cursus aliquam vitae non turpis. Integer hendrerit efficitur commodo.',
+                      iconText: 'L',
+                      count: props(context)
+                          .range('Long Text Count',
+                              Range(min: 1, max: 20, currentValue: 1),
+                              group: groupMainCellLong)
+                          .toInt(),
+                    )
+                  ],
+                )),
             StoryBookWidget(
-                childBuilder: (context) => WidgetContainer(
-                      title: Text('Main Cell Widget With Long Text'),
-                      children: <Widget>[
-                        MainCell(
-                          title: 'Live Life',
-                          subtitle:
-                              'In porttitor mauris dui, pellentesque egestas justo rutrum a. Praesent eu congue justo. Mauris vulputate tempor augue a luctus. Nullam elementum, elit eu pretium convallis, purus sapien lobortis libero, eget congue diam erat suscipit ipsum. In hac habitasse platea dictumst. Vestibulum tincidunt nisi in elit mattis commodo. Duis eu placerat nibh. Nulla magna magna, tristique sed sapien imperdiet, porttitor pulvinar libero. Mauris nec vehicula velit, a maximus ligula. Morbi in purus et eros placerat faucibus non fermentum lorem. Nunc sit amet felis eu mi scelerisque aliquam a imperdiet justo. Nulla facilisi. Proin commodo facilisis sapien vel aliquam. Cras quis nisi quam. Fusce vitae arcu non arcu cursus aliquam vitae non turpis. Integer hendrerit efficitur commodo.',
-                          iconText: 'L',
-                          count: props(context)
-                              .range('Long Text Count',
-                                  Range(min: 1, max: 20, currentValue: 1),
-                                  group: groupMainCellLong)
-                              .toInt(),
-                        )
-                      ],
-                    )),
-            StoryBookWidget(
-              childBuilder: (context) => PropTable(
+              (context) => PropTable(
                 title: Text('Main Cell Props'),
                 items: [
                   PropTableItem(
@@ -118,48 +117,46 @@ class AppStoryBook extends StatelessWidget {
         icon: Icon(Icons.error),
         widget: StoryBookWidgetList(
           [
-            StoryBookWidget(
-                childBuilder: (context) => ExpandableWidgetSection(
-                      initiallyExpanded: true,
-                      title: 'Network Alert',
-                      children: <Widget>[
-                        AlertDialog(
-                          title: Text('Network Error'),
-                          content: Text('Something went wrong'),
-                          actions: <Widget>[
-                            FlatButton(
-                              child: Text('Ok'),
-                              onPressed:
-                                  actions(context).onPressed('Alert Ok Button'),
-                            ),
-                          ],
-                        )
+            StoryBookWidget((context) => ExpandableWidgetSection(
+                  initiallyExpanded: true,
+                  title: 'Network Alert',
+                  children: <Widget>[
+                    AlertDialog(
+                      title: Text('Network Error'),
+                      content: Text('Something went wrong'),
+                      actions: <Widget>[
+                        FlatButton(
+                          child: Text('Ok'),
+                          onPressed:
+                              actions(context).onPressed('Alert Ok Button'),
+                        ),
                       ],
-                    )),
-            StoryBookWidget(
-                childBuilder: (context) => ExpandableWidgetSection(
-                      initiallyExpanded: true,
-                      title: 'Confirmation Dialog',
-                      children: <Widget>[
-                        AlertDialog(
-                          title: Text('Are you sure you want to get Pizza?'),
-                          content: Text('You can always order later'),
-                          actions: <Widget>[
-                            FlatButton(
-                              child: Text('Yes'),
-                              color: Theme.of(context).accentColor,
-                              onPressed: actions(context)
-                                  .onPressed('Alert Yes Button'),
-                            ),
-                            FlatButton(
-                              child: Text('No'),
-                              onPressed:
-                                  actions(context).onPressed('Alert No Button'),
-                            ),
-                          ],
-                        )
+                    )
+                  ],
+                )),
+            StoryBookWidget((context) => ExpandableWidgetSection(
+                  initiallyExpanded: true,
+                  title: 'Confirmation Dialog',
+                  children: <Widget>[
+                    AlertDialog(
+                      title: Text('Are you sure you want to get Pizza?'),
+                      content: Text('You can always order later'),
+                      actions: <Widget>[
+                        FlatButton(
+                          child: Text('Yes'),
+                          color: Theme.of(context).accentColor,
+                          onPressed:
+                              actions(context).onPressed('Alert Yes Button'),
+                        ),
+                        FlatButton(
+                          child: Text('No'),
+                          onPressed:
+                              actions(context).onPressed('Alert No Button'),
+                        ),
                       ],
-                    ))
+                    )
+                  ],
+                ))
           ],
         ),
       );
@@ -169,24 +166,22 @@ class AppStoryBook extends StatelessWidget {
         title: Text('Button States'),
         widget: StoryBookWidgetList(
           [
+            StoryBookWidget((context) => RaisedButton(
+                  onPressed: actions(context).onPressed('Primary'),
+                  child: Text('Primary'),
+                )),
             StoryBookWidget(
-                childBuilder: (context) => RaisedButton(
-                      onPressed: actions(context).onPressed('Primary'),
-                      child: Text('Primary'),
-                    )),
-            StoryBookWidget(
-              childBuilder: (context) => RaisedButton(
+              (context) => RaisedButton(
                 onPressed: null,
                 child: Text('Disabled'),
               ),
             ),
-            StoryBookWidget(
-                childBuilder: (BuildContext context) => RaisedButton(
-                      onPressed: actions(context).onPressed('Secondary'),
-                      child: Text('Secondary'),
-                      color: Colors.blue,
-                      textColor: Colors.white,
-                    ))
+            StoryBookWidget((BuildContext context) => RaisedButton(
+                  onPressed: actions(context).onPressed('Secondary'),
+                  child: Text('Secondary'),
+                  color: Colors.blue,
+                  textColor: Colors.white,
+                ))
           ],
         ),
       );
@@ -195,33 +190,30 @@ class AppStoryBook extends StatelessWidget {
         key: ValueKey('titles'),
         title: Text('Text Style Widgets'),
         widget: StoryBookWidgetList([
-          StoryBookWidget(
-              childBuilder: (context) => ExpandableWidgetSection(
+          StoryBookWidget((context) => ExpandableWidgetSection(
+              initiallyExpanded: true,
+              title: 'Header 1',
+              children: [mainTitle('H1')])),
+          StoryBookWidget((context) => ExpandableWidgetSection(
                   initiallyExpanded: true,
-                  title: 'Header 1',
-                  children: [mainTitle('H1')])),
-          StoryBookWidget(
-              childBuilder: (context) => ExpandableWidgetSection(
-                      initiallyExpanded: true,
-                      title: 'Other Headers',
-                      children: <Widget>[
-                        subTitle('H2'),
-                        h3('H3'),
-                      ])),
-          StoryBookWidget(
-              childBuilder: (context) => ExpandableWidgetSection(
-                    title: 'Body Content',
-                    subtitle: 'This is content most used in decriptions',
-                    children: [
-                      body("""
+                  title: 'Other Headers',
+                  children: <Widget>[
+                    subTitle('H2'),
+                    h3('H3'),
+                  ])),
+          StoryBookWidget((context) => ExpandableWidgetSection(
+                title: 'Body Content',
+                subtitle: 'This is content most used in decriptions',
+                children: [
+                  body("""
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce suscipit iaculis velit, et ornare diam. Etiam molestie purus nec mollis malesuada. Etiam luctus, dolor eget mattis posuere, mauris turpis ullamcorper dolor, quis maximus ante erat ullamcorper tellus. Quisque sem tellus, interdum quis turpis sit amet, accumsan aliquet mi. Aliquam feugiat sapien sit amet metus tristique aliquet. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Pellentesque dignissim quam id augue efficitur varius. Phasellus sed arcu a nibh cursus fringilla blandit ac purus. Fusce diam erat, tristique eget venenatis a, gravida quis metus.
 
 Curabitur viverra, leo et mollis gravida, arcu diam iaculis turpis, ac sollicitudin magna ipsum nec dolor. Fusce a porttitor nisl, ut tempor quam. Nam quis lorem magna. Phasellus facilisis laoreet varius. Nullam eget leo sit amet enim faucibus euismod. Nullam tempus diam et velit eleifend, eu eleifend arcu tristique. Ut vitae luctus leo. Suspendisse aliquam velit nibh, eget scelerisque tellus condimentum vitae. Quisque pharetra iaculis suscipit.
 
 Nunc ac pulvinar nunc. Sed blandit mauris sed aliquam lobortis. Vivamus viverra mauris diam, vel dignissim ante ultrices et. Curabitur congue fermentum dolor, eget vestibulum ligula dignissim facilisis. Etiam tortor felis, cursus eget tortor nec, molestie facilisis nunc. Suspendisse elementum venenatis justo a blandit. Maecenas molestie eros sed mauris auctor, nec imperdiet sem feugiat. Fusce dignissim cursus fermentum. Curabitur in nisi nisi. In auctor, nibh eu pretium fringilla, metus erat tempor augue, sagittis facilisis quam erat sit amet ante. Aliquam tincidunt enim in augue tempor vulputate. Quisque tincidunt erat non nisi mattis convallis. In tellus sem, elementum eu libero vitae, iaculis ullamcorper sem. Aenean luctus neque eu enim porttitor lacinia. Ut tempor egestas enim, nec fringilla mauris sollicitudin sed.
                         """)
-                    ],
-                  )),
+                ],
+              )),
         ]),
       );
 
@@ -230,7 +222,7 @@ Nunc ac pulvinar nunc. Sed blandit mauris sed aliquam lobortis. Vivamus viverra 
         key: ValueKey('main-cell-list'),
         widget: StoryBookWidgetList([
           StoryBookWidget(
-            childBuilder: (context) => MainCellList(
+            (context) => MainCellList(
               shrinkWrap: true,
               items: [
                 MainCellItem('A', 'Item 1', 'Item Subtitle', 10),
@@ -247,7 +239,7 @@ Nunc ac pulvinar nunc. Sed blandit mauris sed aliquam lobortis. Vivamus viverra 
         icon: Icon(Icons.check_circle),
         widget: StoryBookWidgetList([
           StoryBookWidget(
-            childBuilder: (context) => WidgetContainer(
+            (context) => WidgetContainer(
               cardBackgroundColor: Colors.grey,
               title: Text(
                 'Toast',
@@ -301,29 +293,28 @@ Nunc ac pulvinar nunc. Sed blandit mauris sed aliquam lobortis. Vivamus viverra 
             ),
           ),
           StoryBookWidget(
-            childBuilder: (context) => Text(
+            (context) => Text(
                 "Toast is a powerful widget that displays a status notification in the UI."),
           ),
-          StoryBookWidget(
-              childBuilder: (context) => PropTable(
-                    items: [
-                      PropTableItem(
-                          name: 'Message',
-                          description: 'Displays a message for this toast',
-                          defaultValue: ''),
-                      PropTableItem(
-                        name: 'Mode',
-                        description: 'Displays a different UI mode',
-                        defaultValue: ToastMode.Success.toString(),
-                      ),
-                      PropTableItem(
-                        name: 'OnClose',
-                        description:
-                            'Closes the Toast before the scheduled timeout',
-                        defaultValue: 'null',
-                      ),
-                    ],
-                  ))
+          StoryBookWidget((context) => PropTable(
+                items: [
+                  PropTableItem(
+                      name: 'Message',
+                      description: 'Displays a message for this toast',
+                      defaultValue: ''),
+                  PropTableItem(
+                    name: 'Mode',
+                    description: 'Displays a different UI mode',
+                    defaultValue: ToastMode.Success.toString(),
+                  ),
+                  PropTableItem(
+                    name: 'OnClose',
+                    description:
+                        'Closes the Toast before the scheduled timeout',
+                    defaultValue: 'null',
+                  ),
+                ],
+              ))
         ]),
       );
 
@@ -334,7 +325,7 @@ Nunc ac pulvinar nunc. Sed blandit mauris sed aliquam lobortis. Vivamus viverra 
         widget: StoryBookWidgetList(
           [
             StoryBookWidget(
-              childBuilder: (context) =>
+              (context) =>
                   WidgetContainer(title: Text("Plain Radios"), children: [
                 RadioGroup(
                   valueChanged: (value) {
