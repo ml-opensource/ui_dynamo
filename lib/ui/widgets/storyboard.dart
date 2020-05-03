@@ -62,7 +62,7 @@ class StoryboardController extends State<StoryBoard> {
   @override
   void initState() {
     _scale = widget.initialScale;
-    _scale ??= 0.75;
+    _scale ??= 1.0;
     _offset = widget.initialOffset;
     _offset ??= Offset(10, -40);
     super.initState();
