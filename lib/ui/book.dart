@@ -6,6 +6,8 @@ import 'package:flutter_storybook/models.dart';
 import 'package:flutter_storybook/props/props_extensions.dart';
 import 'package:flutter_storybook/ui/drawer.dart';
 import 'package:flutter_storybook/ui/toolbar.dart';
+import 'package:flutter_storybook/ui/widgets/folder.dart';
+import 'package:flutter_storybook/ui/widgets/page.dart';
 import 'package:provider/provider.dart';
 
 class StoryBook extends StatefulWidget {
@@ -24,7 +26,7 @@ class _StoryBookState extends State<StoryBook> {
 
   StoryBookPage selectedPageFromWidget() {
     if (_selectedFolderKey != null && _selectedPageKey != null) {
-      final folder = widget.data.folders.firstWhere(
+      final folder = widget.data.items.firstWhere(
           (element) => element.key == _selectedFolderKey,
           orElse: () => null);
       if (folder != null) {
@@ -73,15 +75,15 @@ class _StoryBookState extends State<StoryBook> {
         resizeToAvoidBottomPadding: true,
         bottomNavigationBar: ToolbarPane(),
         body: (selectedPage != null)
-            ? StoryBookPageWidget(selectedPage: selectedPage)
+            ? StoryBookPageWrapperWidget(selectedPage: selectedPage)
             : _StoryBookHomePage(),
       ),
     );
   }
 }
 
-class StoryBookPageWidget extends StatelessWidget {
-  const StoryBookPageWidget({
+class StoryBookPageWrapperWidget extends StatelessWidget {
+  const StoryBookPageWrapperWidget({
     Key key,
     @required this.selectedPage,
   }) : super(key: key);
@@ -92,24 +94,7 @@ class StoryBookPageWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return MediaQueryChooser(
       child: Builder(
-        builder: (context) => Padding(
-          padding: EdgeInsets.only(left: 16.0, right: 16.0),
-          child: ListView(
-            children: <Widget>[
-              ...selectedPage.widgets.map((e) => Column(
-                    children: <Widget>[
-                      SizedBox(
-                        height: 16.0,
-                      ),
-                      e.childBuilder(context),
-                    ],
-                  )),
-              SizedBox(
-                height: 16,
-              ),
-            ],
-          ),
-        ),
+        builder: (context) => selectedPage.build(context),
       ),
     );
   }

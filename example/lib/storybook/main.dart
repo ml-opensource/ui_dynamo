@@ -20,7 +20,7 @@ class AppStoryBook extends StatelessWidget {
     return StoryBook(
       data: StoryBookData(
         title: Text('Example Storybook'),
-        folders: [
+        items: [
           StoryBookFolder(
               key: ValueKey('titles'),
               title: Text('Widgets'),
@@ -46,149 +46,155 @@ class AppStoryBook extends StatelessWidget {
   StoryBookPage buildCellsPage() => StoryBookPage(
         key: ValueKey('cells'),
         title: Text('Cells'),
-        widgets: [
-          StoryBookWidget(
-            childBuilder: (context) => WidgetContainer(
-              title: Text('Main Cell Widget'),
-              children: <Widget>[
-                MainCell(
-                  title: props(context)
-                      .text('Main Title', 'Go Home', group: groupMainCell),
-                  subtitle: props(context).text(
-                      'Main Subtitle', 'This goes home good',
-                      group: groupMainCell),
-                  iconText: 'H',
-                  count: props(context)
-                      .integer('Item Count', 10, group: groupMainCell),
-                  isFlipped: props(context)
-                      .boolean('Flip Layout', false, group: groupMainCell),
-                )
-              ],
-            ),
-          ),
-          StoryBookWidget(
+        widget: StoryBookWidgetList(
+          [
+            StoryBookWidget(
               childBuilder: (context) => WidgetContainer(
-                    title: Text('Main Cell Widget With Long Text'),
-                    children: <Widget>[
-                      MainCell(
-                        title: 'Live Life',
-                        subtitle:
-                            'In porttitor mauris dui, pellentesque egestas justo rutrum a. Praesent eu congue justo. Mauris vulputate tempor augue a luctus. Nullam elementum, elit eu pretium convallis, purus sapien lobortis libero, eget congue diam erat suscipit ipsum. In hac habitasse platea dictumst. Vestibulum tincidunt nisi in elit mattis commodo. Duis eu placerat nibh. Nulla magna magna, tristique sed sapien imperdiet, porttitor pulvinar libero. Mauris nec vehicula velit, a maximus ligula. Morbi in purus et eros placerat faucibus non fermentum lorem. Nunc sit amet felis eu mi scelerisque aliquam a imperdiet justo. Nulla facilisi. Proin commodo facilisis sapien vel aliquam. Cras quis nisi quam. Fusce vitae arcu non arcu cursus aliquam vitae non turpis. Integer hendrerit efficitur commodo.',
-                        iconText: 'L',
-                        count: props(context)
-                            .range('Long Text Count',
-                                Range(min: 1, max: 20, currentValue: 1),
-                                group: groupMainCellLong)
-                            .toInt(),
-                      )
-                    ],
-                  )),
-          StoryBookWidget(
-            childBuilder: (context) => PropTable(
-              title: 'Main Cell Props',
-              items: [
-                PropTableItem(
-                    name: 'Icon Text',
-                    description:
-                        'Specify a single text character to display as avatar.',
-                    defaultValue: ''),
-                PropTableItem(
-                    name: 'Title',
-                    description: 'Title for Cell',
-                    defaultValue: ''),
-                PropTableItem(
-                    name: 'Subtitle',
-                    description: 'Subtitle for Cell',
-                    defaultValue: ''),
-                PropTableItem(
-                    name: 'Count',
-                    description: 'displays a counter for the cell.',
-                    defaultValue: '0'),
-              ],
+                title: Text('Main Cell Widget'),
+                children: <Widget>[
+                  MainCell(
+                    title: props(context)
+                        .text('Main Title', 'Go Home', group: groupMainCell),
+                    subtitle: props(context).text(
+                        'Main Subtitle', 'This goes home good',
+                        group: groupMainCell),
+                    iconText: 'H',
+                    count: props(context)
+                        .integer('Item Count', 10, group: groupMainCell),
+                    isFlipped: props(context)
+                        .boolean('Flip Layout', false, group: groupMainCell),
+                  )
+                ],
+              ),
             ),
-          ),
-        ],
+            StoryBookWidget(
+                childBuilder: (context) => WidgetContainer(
+                      title: Text('Main Cell Widget With Long Text'),
+                      children: <Widget>[
+                        MainCell(
+                          title: 'Live Life',
+                          subtitle:
+                              'In porttitor mauris dui, pellentesque egestas justo rutrum a. Praesent eu congue justo. Mauris vulputate tempor augue a luctus. Nullam elementum, elit eu pretium convallis, purus sapien lobortis libero, eget congue diam erat suscipit ipsum. In hac habitasse platea dictumst. Vestibulum tincidunt nisi in elit mattis commodo. Duis eu placerat nibh. Nulla magna magna, tristique sed sapien imperdiet, porttitor pulvinar libero. Mauris nec vehicula velit, a maximus ligula. Morbi in purus et eros placerat faucibus non fermentum lorem. Nunc sit amet felis eu mi scelerisque aliquam a imperdiet justo. Nulla facilisi. Proin commodo facilisis sapien vel aliquam. Cras quis nisi quam. Fusce vitae arcu non arcu cursus aliquam vitae non turpis. Integer hendrerit efficitur commodo.',
+                          iconText: 'L',
+                          count: props(context)
+                              .range('Long Text Count',
+                                  Range(min: 1, max: 20, currentValue: 1),
+                                  group: groupMainCellLong)
+                              .toInt(),
+                        )
+                      ],
+                    )),
+            StoryBookWidget(
+              childBuilder: (context) => PropTable(
+                title: 'Main Cell Props',
+                items: [
+                  PropTableItem(
+                      name: 'Icon Text',
+                      description:
+                          'Specify a single text character to display as avatar.',
+                      defaultValue: ''),
+                  PropTableItem(
+                      name: 'Title',
+                      description: 'Title for Cell',
+                      defaultValue: ''),
+                  PropTableItem(
+                      name: 'Subtitle',
+                      description: 'Subtitle for Cell',
+                      defaultValue: ''),
+                  PropTableItem(
+                      name: 'Count',
+                      description: 'displays a counter for the cell.',
+                      defaultValue: '0'),
+                ],
+              ),
+            ),
+          ],
+        ),
       );
 
   StoryBookPage buildAlertsPage() => StoryBookPage(
         key: ValueKey('alerts'),
         title: Text('Alerts'),
         icon: Icon(Icons.error),
-        widgets: [
-          StoryBookWidget(
-              childBuilder: (context) => ExpandableWidgetSection(
-                    initiallyExpanded: true,
-                    title: 'Network Alert',
-                    children: <Widget>[
-                      AlertDialog(
-                        title: Text('Network Error'),
-                        content: Text('Something went wrong'),
-                        actions: <Widget>[
-                          FlatButton(
-                            child: Text('Ok'),
-                            onPressed:
-                                actions(context).onPressed('Alert Ok Button'),
-                          ),
-                        ],
-                      )
-                    ],
-                  )),
-          StoryBookWidget(
-              childBuilder: (context) => ExpandableWidgetSection(
-                    initiallyExpanded: true,
-                    title: 'Confirmation Dialog',
-                    children: <Widget>[
-                      AlertDialog(
-                        title: Text('Are you sure you want to get Pizza?'),
-                        content: Text('You can always order later'),
-                        actions: <Widget>[
-                          FlatButton(
-                            child: Text('Yes'),
-                            color: Theme.of(context).accentColor,
-                            onPressed:
-                                actions(context).onPressed('Alert Yes Button'),
-                          ),
-                          FlatButton(
-                            child: Text('No'),
-                            onPressed:
-                                actions(context).onPressed('Alert No Button'),
-                          ),
-                        ],
-                      )
-                    ],
-                  ))
-        ],
+        widget: StoryBookWidgetList(
+          [
+            StoryBookWidget(
+                childBuilder: (context) => ExpandableWidgetSection(
+                      initiallyExpanded: true,
+                      title: 'Network Alert',
+                      children: <Widget>[
+                        AlertDialog(
+                          title: Text('Network Error'),
+                          content: Text('Something went wrong'),
+                          actions: <Widget>[
+                            FlatButton(
+                              child: Text('Ok'),
+                              onPressed:
+                                  actions(context).onPressed('Alert Ok Button'),
+                            ),
+                          ],
+                        )
+                      ],
+                    )),
+            StoryBookWidget(
+                childBuilder: (context) => ExpandableWidgetSection(
+                      initiallyExpanded: true,
+                      title: 'Confirmation Dialog',
+                      children: <Widget>[
+                        AlertDialog(
+                          title: Text('Are you sure you want to get Pizza?'),
+                          content: Text('You can always order later'),
+                          actions: <Widget>[
+                            FlatButton(
+                              child: Text('Yes'),
+                              color: Theme.of(context).accentColor,
+                              onPressed: actions(context)
+                                  .onPressed('Alert Yes Button'),
+                            ),
+                            FlatButton(
+                              child: Text('No'),
+                              onPressed:
+                                  actions(context).onPressed('Alert No Button'),
+                            ),
+                          ],
+                        )
+                      ],
+                    ))
+          ],
+        ),
       );
 
   StoryBookPage buildButtonsPage() => StoryBookPage(
         key: ValueKey('buttons'),
         title: Text('Button States'),
-        widgets: [
-          StoryBookWidget(
+        widget: StoryBookWidgetList(
+          [
+            StoryBookWidget(
+                childBuilder: (context) => RaisedButton(
+                      onPressed: actions(context).onPressed('Primary'),
+                      child: Text('Primary'),
+                    )),
+            StoryBookWidget(
               childBuilder: (context) => RaisedButton(
-                    onPressed: actions(context).onPressed('Primary'),
-                    child: Text('Primary'),
-                  )),
-          StoryBookWidget(
-            childBuilder: (context) => RaisedButton(
-              onPressed: null,
-              child: Text('Disabled'),
+                onPressed: null,
+                child: Text('Disabled'),
+              ),
             ),
-          ),
-          StoryBookWidget(
-              childBuilder: (BuildContext context) => RaisedButton(
-                    onPressed: actions(context).onPressed('Secondary'),
-                    child: Text('Secondary'),
-                    color: Colors.blue,
-                    textColor: Colors.white,
-                  ))
-        ],
+            StoryBookWidget(
+                childBuilder: (BuildContext context) => RaisedButton(
+                      onPressed: actions(context).onPressed('Secondary'),
+                      child: Text('Secondary'),
+                      color: Colors.blue,
+                      textColor: Colors.white,
+                    ))
+          ],
+        ),
       );
 
   StoryBookPage buildTextStylePage() => StoryBookPage(
         key: ValueKey('titles'),
         title: Text('Text Style Widgets'),
-        widgets: [
+        widget: StoryBookWidgetList([
           StoryBookWidget(
               childBuilder: (context) => ExpandableWidgetSection(
                   initiallyExpanded: true,
@@ -216,13 +222,13 @@ Nunc ac pulvinar nunc. Sed blandit mauris sed aliquam lobortis. Vivamus viverra 
                         """)
                     ],
                   )),
-        ],
+        ]),
       );
 
   StoryBookPage buildMainCellListPage() => StoryBookPage(
         title: Text('Main Cell List'),
         key: ValueKey('main-cell-list'),
-        widgets: [
+        widget: StoryBookWidgetList([
           StoryBookWidget(
             childBuilder: (context) => MainCellList(
               shrinkWrap: true,
@@ -232,122 +238,125 @@ Nunc ac pulvinar nunc. Sed blandit mauris sed aliquam lobortis. Vivamus viverra 
               ],
             ),
           ),
-        ],
+        ]),
       );
 
   StoryBookPage buildToastPage() => StoryBookPage(
-          title: Text('Toasts'),
-          key: ValueKey('toasts-page'),
-          icon: Icon(Icons.check_circle),
-          widgets: [
-            StoryBookWidget(
-              childBuilder: (context) => WidgetContainer(
-                cardBackgroundColor: Colors.grey,
-                title: Text(
-                  'Toast',
-                  style: TextStyle(color: Colors.white),
-                ),
-                children: <Widget>[
-                  SizedBox(
-                    height: 16,
-                  ),
-                  Center(
-                    child: Container(
-                      constraints: BoxConstraints(maxWidth: 300),
-                      child: AppToast(
-                        onClose: actions(context).onPressed('Close Toast'),
-                        message: props(context)
-                            .text('Toast Message', 'This message'),
-                        toastMode: props(context).valueSelector(
-                            'Toast Mode',
-                            PropValues<ToastMode>(
-                              selectedValue: ToastMode.Success,
-                              values: <ToastMode>[
-                                ToastMode.Success,
-                                ToastMode.Error,
-                                ToastMode.Warning,
-                              ],
-                            )),
-                      ),
-                    ),
-                  ),
-                  Center(
-                    child: Container(
-                      constraints: BoxConstraints(maxWidth: 300),
-                      child: AppToast(
-                        onClose: actions(context).onPressed('Close Toast 2'),
-                        message: props(context)
-                            .text('Toast 2 Message', 'This message'),
-                        toastMode: props(context).radios(
-                            'Toast Mode 2',
-                            PropValues<ToastMode>(
-                              selectedValue: ToastMode.Success,
-                              values: <ToastMode>[
-                                ToastMode.Success,
-                                ToastMode.Error,
-                                ToastMode.Warning,
-                              ],
-                            )),
-                      ),
-                    ),
-                  ),
-                ],
+        title: Text('Toasts'),
+        key: ValueKey('toasts-page'),
+        icon: Icon(Icons.check_circle),
+        widget: StoryBookWidgetList([
+          StoryBookWidget(
+            childBuilder: (context) => WidgetContainer(
+              cardBackgroundColor: Colors.grey,
+              title: Text(
+                'Toast',
+                style: TextStyle(color: Colors.white),
               ),
+              children: <Widget>[
+                SizedBox(
+                  height: 16,
+                ),
+                Center(
+                  child: Container(
+                    constraints: BoxConstraints(maxWidth: 300),
+                    child: AppToast(
+                      onClose: actions(context).onPressed('Close Toast'),
+                      message:
+                          props(context).text('Toast Message', 'This message'),
+                      toastMode: props(context).valueSelector(
+                          'Toast Mode',
+                          PropValues<ToastMode>(
+                            selectedValue: ToastMode.Success,
+                            values: <ToastMode>[
+                              ToastMode.Success,
+                              ToastMode.Error,
+                              ToastMode.Warning,
+                            ],
+                          )),
+                    ),
+                  ),
+                ),
+                Center(
+                  child: Container(
+                    constraints: BoxConstraints(maxWidth: 300),
+                    child: AppToast(
+                      onClose: actions(context).onPressed('Close Toast 2'),
+                      message: props(context)
+                          .text('Toast 2 Message', 'This message'),
+                      toastMode: props(context).radios(
+                          'Toast Mode 2',
+                          PropValues<ToastMode>(
+                            selectedValue: ToastMode.Success,
+                            values: <ToastMode>[
+                              ToastMode.Success,
+                              ToastMode.Error,
+                              ToastMode.Warning,
+                            ],
+                          )),
+                    ),
+                  ),
+                ),
+              ],
             ),
-            StoryBookWidget(
-              childBuilder: (context) => Text(
-                  "Toast is a powerful widget that displays a status notification in the UI."),
-            ),
-            StoryBookWidget(
-                childBuilder: (context) => PropTable(
-                      items: [
-                        PropTableItem(
-                            name: 'Message',
-                            description: 'Displays a message for this toast',
-                            defaultValue: ''),
-                        PropTableItem(
-                          name: 'Mode',
-                          description: 'Displays a different UI mode',
-                          defaultValue: ToastMode.Success.toString(),
-                        ),
-                        PropTableItem(
-                          name: 'OnClose',
-                          description:
-                              'Closes the Toast before the scheduled timeout',
-                          defaultValue: 'null',
-                        ),
-                      ],
-                    ))
-          ]);
+          ),
+          StoryBookWidget(
+            childBuilder: (context) => Text(
+                "Toast is a powerful widget that displays a status notification in the UI."),
+          ),
+          StoryBookWidget(
+              childBuilder: (context) => PropTable(
+                    items: [
+                      PropTableItem(
+                          name: 'Message',
+                          description: 'Displays a message for this toast',
+                          defaultValue: ''),
+                      PropTableItem(
+                        name: 'Mode',
+                        description: 'Displays a different UI mode',
+                        defaultValue: ToastMode.Success.toString(),
+                      ),
+                      PropTableItem(
+                        name: 'OnClose',
+                        description:
+                            'Closes the Toast before the scheduled timeout',
+                        defaultValue: 'null',
+                      ),
+                    ],
+                  ))
+        ]),
+      );
 
   StoryBookPage buildRadiosPage() => StoryBookPage(
         key: ValueKey("radios"),
         title: Text("Radios"),
         icon: Icon(Icons.radio_button_checked),
-        widgets: [
-          StoryBookWidget(
-            childBuilder: (context) =>
-                WidgetContainer(title: Text("Plain Radios"), children: [
-              RadioGroup(
-                valueChanged: (value) {
-                  actions(context).valueChanged("Plain Radio")(value);
-                  final props2 = props(context);
-                  props2.radioChanged(
-                      props2.retrievePropByLabel("Radios"), value);
-                },
-                selectedValue: props(context).radios(
-                    "Radios",
-                    PropValues<String>(
-                      selectedValue: "Yellow",
-                      values: [
-                        "Yellow",
-                        "Red",
-                        "Green",
-                      ],
-                    )),
-              ),
-            ]),
-          ),
-        ],
+        widget: StoryBookWidgetList(
+          [
+            StoryBookWidget(
+              childBuilder: (context) =>
+                  WidgetContainer(title: Text("Plain Radios"), children: [
+                RadioGroup(
+                  valueChanged: (value) {
+                    actions(context).valueChanged("Plain Radio")(value);
+                    final _props = props(context);
+                    _props.radioChanged(
+                        _props.retrievePropByLabel("Radios"), value);
+                  },
+                  selectedValue: props(context).radios(
+                      "Radios",
+                      PropValues<String>(
+                        selectedValue: "Yellow",
+                        values: [
+                          "Yellow",
+                          "Red",
+                          "Green",
+                        ],
+                      )),
+                ),
+              ]),
+            ),
+          ],
+        ),
       );
 }

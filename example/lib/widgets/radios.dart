@@ -14,6 +14,20 @@ class RadioGroup extends StatefulWidget {
 }
 
 class _RadioGroupState extends State<RadioGroup> {
+  String _selectedValue;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedValue = widget.selectedValue;
+  }
+
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -21,20 +35,27 @@ class _RadioGroupState extends State<RadioGroup> {
       children: <Widget>[
         Radio(
           value: "Yellow",
-          groupValue: widget.selectedValue,
-          onChanged: widget.valueChanged,
+          groupValue: _selectedValue,
+          onChanged: _valueChanged,
         ),
         Radio(
           value: "Red",
-          groupValue: widget.selectedValue,
-          onChanged: widget.valueChanged,
+          groupValue: _selectedValue,
+          onChanged: _valueChanged,
         ),
         Radio(
           value: "Green",
-          groupValue: widget.selectedValue,
-          onChanged: widget.valueChanged,
+          groupValue: _selectedValue,
+          onChanged: _valueChanged,
         ),
       ],
     );
+  }
+
+  void _valueChanged(value) {
+    widget.valueChanged(value);
+    setState(() {
+      _selectedValue = value;
+    });
   }
 }

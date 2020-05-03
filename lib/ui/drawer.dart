@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_storybook/ui/widgets/folder.dart';
+import 'package:flutter_storybook/ui/widgets/page.dart';
 
 import '../models.dart';
 
@@ -29,23 +31,16 @@ class StoryBookDrawer extends StatelessWidget {
               color: Theme.of(context).primaryColor,
             ),
           ),
-          ...data.folders.map((folder) => ExpansionTile(
-                leading: folder.icon ?? Icon(Icons.folder),
-                title: folder.title,
-                initiallyExpanded: folder.pages.contains(selectedPage),
-                children: <Widget>[
-                  ...folder.pages.map((page) => ListTile(
-                        leading: page.icon ?? Icon(Icons.book),
-                        title: page.title,
-                        selected: selectedPage != null && selectedPage == page,
-                        onTap: () {
-                          onSelectPage(folder, page);
-                        },
-                      ))
-                ],
-              ))
+          ...buildSidebar()
         ],
       ),
     );
   }
+
+  Iterable<Widget> buildSidebar() =>
+      data.items.map((folder) => StoryBookFolderWidget(
+            folder: folder,
+            selectedPage: selectedPage,
+            onSelectPage: onSelectPage,
+          ));
 }

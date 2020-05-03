@@ -12,6 +12,8 @@ class PropGroup {
   const PropGroup(this.label, this.groupId);
 }
 
+typedef PropConstructor<T> = PropHandle<T> Function(String label, T value, String groupId);
+
 class PropsProvider extends ChangeNotifier {
   final List<PropHandle> props = [];
   final List<PropGroup> groups = [];
@@ -30,7 +32,7 @@ class PropsProvider extends ChangeNotifier {
     return propGroups;
   }
 
-  PropHandle retrievePropByLabel(String label) =>
+  PropHandle<T> retrievePropByLabel<T>(String label) =>
       props.firstWhere((element) => element.label == label, orElse: () => null);
 
   PropGroup retrieveGroupById(String groupId) => groups
@@ -64,7 +66,7 @@ class PropsProvider extends ChangeNotifier {
 
   void _valueChanged<T>(
       PropHandle<T> prop,
-      Function(String label, T value, String groupId) propConstructor,
+      PropConstructor<T> propConstructor,
       T newValue) {
     final existing = retrievePropByLabel(prop.label);
     if (existing == null) {
@@ -122,7 +124,7 @@ class PropsProvider extends ChangeNotifier {
   T _value<T>(
       String label,
       T defaultValue,
-      Function(String label, T value, String groupId) propConstructor,
+      PropConstructor<T> propConstructor,
       PropGroup group) {
     final existing = retrievePropByLabel(label);
     final retrievedGroup = retrieveOrAddGroup(group);
