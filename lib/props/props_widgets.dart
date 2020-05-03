@@ -9,16 +9,19 @@ class PropTableItem {
   PropTableItem(
       {@required this.name,
       @required this.description,
-      @required this.defaultValue});
+      this.defaultValue = ''});
 }
 
 class PropTable extends StatelessWidget {
   final rowPadding = const EdgeInsets.only(top: 12.0, bottom: 12.0);
 
   final List<PropTableItem> items;
-  final String title;
+  final Widget title;
 
-  const PropTable({Key key, @required this.items, this.title = 'Props'})
+  static const defaultTextStyle = TextStyle(fontSize: 24);
+
+  const PropTable(
+      {Key key, @required this.items, this.title = const Text('Props')})
       : super(key: key);
 
   @override
@@ -29,10 +32,7 @@ class PropTable extends StatelessWidget {
       children: <Widget>[
         Padding(
           padding: const EdgeInsets.only(bottom: 8.0),
-          child: Text(
-            this.title,
-            style: TextStyle(fontSize: 24),
-          ),
+          child: DefaultTextStyle.merge(style: defaultTextStyle, child: this.title),
         ),
         Card(
           child: Padding(

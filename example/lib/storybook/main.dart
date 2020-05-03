@@ -91,21 +91,16 @@ class AppStoryBook extends StatelessWidget {
                     )),
             StoryBookWidget(
               childBuilder: (context) => PropTable(
-                title: 'Main Cell Props',
+                title: Text('Main Cell Props'),
                 items: [
                   PropTableItem(
                       name: 'Icon Text',
                       description:
                           'Specify a single text character to display as avatar.',
                       defaultValue: ''),
+                  PropTableItem(name: 'Title', description: 'Title for Cell'),
                   PropTableItem(
-                      name: 'Title',
-                      description: 'Title for Cell',
-                      defaultValue: ''),
-                  PropTableItem(
-                      name: 'Subtitle',
-                      description: 'Subtitle for Cell',
-                      defaultValue: ''),
+                      name: 'Subtitle', description: 'Subtitle for Cell'),
                   PropTableItem(
                       name: 'Count',
                       description: 'displays a counter for the cell.',
