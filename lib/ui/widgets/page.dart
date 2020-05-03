@@ -7,6 +7,7 @@ class StoryBookPage extends StoryBookItem {
   /// Returns the widgets to render in a page. These are loaded when page clicked.
   final StoryBookWidget widget;
   bool shouldScroll = true;
+  bool usesToolbar = true;
 
   StoryBookPage(
       {@required Key key,

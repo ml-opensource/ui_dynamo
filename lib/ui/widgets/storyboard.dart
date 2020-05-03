@@ -15,6 +15,7 @@ StoryBookPage storyboard(MaterialApp app, {@required String title}) {
   );
   // disable scrolling since our storyboard will handle it for us!
   page.shouldScroll = false;
+  page.usesToolbar = false;
   return page;
 }
 

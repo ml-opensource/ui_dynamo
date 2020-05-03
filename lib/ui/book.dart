@@ -95,7 +95,7 @@ class _StoryBookState extends State<StoryBook> {
             ),
           ),
           resizeToAvoidBottomPadding: true,
-          bottomNavigationBar: ToolbarPane(),
+          bottomNavigationBar: selectedPage.usesToolbar ? ToolbarPane() : null,
           body: (selectedPage != null)
               ? StoryBookPageWrapperWidget(selectedPage: selectedPage)
               : _StoryBookHomePage(),
