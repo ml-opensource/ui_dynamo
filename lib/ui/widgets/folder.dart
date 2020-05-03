@@ -13,6 +13,17 @@ class StoryBookFolder extends StoryBookItem {
       Icon icon})
       : super(key, title, icon);
 
+  factory StoryBookFolder.of({
+    Key key,
+    String title,
+    @required List<StoryBookPage> pages,
+  }) =>
+      StoryBookFolder(
+        key: key ?? ValueKey(title),
+        title: Text(title),
+        pages: pages,
+      );
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||

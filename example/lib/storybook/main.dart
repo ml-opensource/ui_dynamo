@@ -21,28 +21,21 @@ class AppStoryBook extends StatelessWidget {
       data: StoryBookData(
         title: Text('Example Storybook'),
         items: [
-          StoryBookPage(
-            key: ValueKey('app'),
-            title: Text('App'),
-            widget: StoryBookWidget((context) => Text('Hello')),
+          StoryBookPage.of(
+            title: 'App',
+            child: (context) => Text('Hello'),
           ),
-          StoryBookFolder(
-              key: ValueKey('titles'),
-              title: Text('Widgets'),
-              pages: [
-                buildTextStylePage(),
-                buildButtonsPage(),
-                buildToastPage(),
-                buildRadiosPage(),
-              ]),
-          StoryBookFolder(
-              key: ValueKey('composite'),
-              title: Text('Composite'),
-              pages: [
-                buildAlertsPage(),
-                buildCellsPage(),
-                buildMainCellListPage(),
-              ])
+          StoryBookFolder.of(title: 'Widgets', pages: [
+            buildTextStylePage(),
+            buildButtonsPage(),
+            buildToastPage(),
+            buildRadiosPage(),
+          ]),
+          StoryBookFolder.of(title: 'Composite', pages: [
+            buildAlertsPage(),
+            buildCellsPage(),
+            buildMainCellListPage(),
+          ]),
         ],
       ),
     );
