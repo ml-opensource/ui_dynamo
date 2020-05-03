@@ -90,8 +90,7 @@ class AppStoryBook extends StatelessWidget {
               PropTableItem(
                   name: 'Icon Text',
                   description:
-                      'Specify a single text character to display as avatar.',
-                  defaultValue: ''),
+                      'Specify a single text character to display as avatar.'),
               PropTableItem(name: 'Title', description: 'Title for Cell'),
               PropTableItem(name: 'Subtitle', description: 'Subtitle for Cell'),
               PropTableItem(
@@ -270,8 +269,7 @@ Nunc ac pulvinar nunc. Sed blandit mauris sed aliquam lobortis. Vivamus viverra 
             items: [
               PropTableItem(
                   name: 'Message',
-                  description: 'Displays a message for this toast',
-                  defaultValue: ''),
+                  description: 'Displays a message for this toast'),
               PropTableItem(
                 name: 'Mode',
                 description: 'Displays a different UI mode',
