@@ -194,6 +194,9 @@ class StoryboardController extends State<StoryBoard> {
                     onGenerateRoute: base.onGenerateRoute,
                     onGenerateInitialRoutes: base.onGenerateInitialRoutes,
                     onUnknownRoute: base.onUnknownRoute,
+                    themeMode: base.themeMode,
+                    theme: base.theme,
+                    darkTheme: base.darkTheme,
                     // patch when you use a home route with /, dont use child
                     home: child,
                   ),
