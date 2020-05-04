@@ -69,6 +69,9 @@ class _StoryBookState extends State<StoryBook> {
       darkTheme: widget.app.darkTheme,
       debugShowCheckedModeBanner: widget.app.debugShowCheckedModeBanner,
       themeMode: widget.app.themeMode,
+      onGenerateRoute: widget.app.onGenerateRoute,
+      onGenerateTitle: widget.app.onGenerateTitle,
+      onUnknownRoute: widget.app.onUnknownRoute,
       home: MultiProvider(
         providers: [
           ChangeNotifierProvider(
