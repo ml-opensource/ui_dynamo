@@ -8,7 +8,7 @@ import 'package:flutter_storybook/props/props_extensions.dart';
 import 'package:flutter_storybook/ui/drawer.dart';
 import 'package:flutter_storybook/ui/toolbar.dart';
 import 'package:flutter_storybook/ui/widgets/page.dart';
-import 'package:flutter_storybook/ui/widgets/storyboard.dart';
+import 'package:flutter_storybook/ui/widgets/storyboard/storyboard.dart';
 import 'package:provider/provider.dart';
 
 class StoryBook extends StatefulWidget {
@@ -95,7 +95,7 @@ class _StoryBookState extends State<StoryBook> {
             ),
           ),
           resizeToAvoidBottomPadding: true,
-          bottomNavigationBar: selectedPage.usesToolbar ? ToolbarPane() : null,
+          bottomNavigationBar: selectedPage?.usesToolbar == true ? ToolbarPane() : null,
           body: (selectedPage != null)
               ? StoryBookPageWrapperWidget(selectedPage: selectedPage)
               : _StoryBookHomePage(),

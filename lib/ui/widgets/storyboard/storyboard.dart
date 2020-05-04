@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_storybook/flutter_storybook.dart';
+import 'package:flutter_storybook/ui/widgets/storyboard/screen.dart';
 
 const _kSpacing = 40.0;
 
@@ -181,69 +182,13 @@ class StoryboardController extends State<StoryBoard> {
     return Positioned(
       top: _top,
       left: _left,
-      child: Transform.scale(
+      child: StoryboardScreen(
+        base: base,
+        child: child,
+        offset: offset,
+        screenSize: _size,
         scale: _scale,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SizedBox(
-              width: _size.width,
-              height: _size.height,
-              child: Material(
-                elevation: 4,
-                child: ClipRect(
-                  clipper: CustomRect(Offset(0, 0)),
-                  child: MaterialApp(
-                    debugShowCheckedModeBanner: false,
-                    routes: base.routes,
-                    onGenerateRoute: base.onGenerateRoute,
-                    onGenerateInitialRoutes: base.onGenerateInitialRoutes,
-                    onUnknownRoute: base.onUnknownRoute,
-                    themeMode: base.themeMode,
-                    theme: base.theme,
-                    darkTheme: base.darkTheme,
-                    // patch when you use a home route with /, dont use child
-                    home: child,
-                  ),
-                ),
-              ),
-            ),
-            if (label != null) Center(child: _addLabel(label)),
-          ],
-        ),
       ),
     );
-  }
-
-  Widget _addLabel(String label) => Container(
-        margin: EdgeInsetsDirectional.only(top: 10),
-        padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-        decoration: BoxDecoration(
-          color: Colors.black,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-          ),
-        ),
-      );
-}
-
-class CustomRect extends CustomClipper<Rect> {
-  final Offset offset;
-
-  CustomRect(this.offset);
-
-  @override
-  Rect getClip(Size size) {
-    return Rect.fromLTWH(offset.dx, offset.dy, size.width, size.height);
-  }
-
-  @override
-  bool shouldReclip(CustomRect oldClipper) {
-    return true;
   }
 }
