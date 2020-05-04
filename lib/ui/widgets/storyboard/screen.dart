@@ -11,6 +11,8 @@ class StoryboardScreen extends StatelessWidget {
   final String label;
   final Widget child;
   final String routeName;
+  final bool isFirst;
+  final bool isLast;
 
   const StoryboardScreen({
     Key key,
@@ -21,6 +23,8 @@ class StoryboardScreen extends StatelessWidget {
     this.label,
     @required this.child,
     this.routeName,
+    this.isFirst,
+    this.isLast,
   }) : super(key: key);
 
   @override

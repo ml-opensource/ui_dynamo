@@ -7,11 +7,15 @@ class DrawerProvider extends ChangeNotifier {
   Key _selectedFolderKey;
   Key _selectedPageKey;
 
-  void select(BuildContext context, Key folderKey, Key pageKey) {
+  void select(BuildContext context, Key folderKey, Key pageKey,
+      {bool popDrawer = false}) {
     _selectedFolderKey = folderKey;
     _selectedPageKey = pageKey;
     props(context).reset();
     actions(context).reset();
+    if (popDrawer) {
+      Navigator.of(context).pop();
+    }
     notifyListeners();
   }
 

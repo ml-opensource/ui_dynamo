@@ -30,12 +30,18 @@ class StoryBookLabel extends StatelessWidget {
                 fontSize: 20,
               ),
             ),
-            IconButton(
-              icon: Icon(Icons.smartphone),
-              onPressed: () {
-                drawer(context)
-                    .select(context, ValueKey('Routes'), ValueKey(routeName));
-              },
+            Visibility(
+              maintainSize: true,
+              maintainAnimation: true,
+              maintainState: true,
+              visible: routeName != null,
+              child: IconButton(
+                icon: Icon(Icons.smartphone),
+                onPressed: () {
+                  drawer(context)
+                      .select(context, ValueKey('Routes'), ValueKey(routeName));
+                },
+              ),
             )
           ],
         ),

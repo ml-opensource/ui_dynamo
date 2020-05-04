@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_storybook/flutter_storybook.dart';
 import 'package:flutter_storybook/ui/widgets/storyboard/screen.dart';
+import 'package:flutter_storybook/ui/widgets/storyboard/utils.dart';
 
 const _kSpacing = 80.0;
 
-StoryBookPage storyboard(MaterialApp app, {@required String title}) {
+StoryBookPage storyboard(MaterialApp app,
+    {@required String title, Map<String, List<String>> routesMapping}) {
   final page = StoryBookPage(
     key: ValueKey(title),
     title: Text(title),
@@ -12,6 +14,7 @@ StoryBookPage storyboard(MaterialApp app, {@required String title}) {
           child: app,
           screenSize: data.size,
           enabled: true,
+          routesMapping: routesMapping,
         )),
   );
   // disable scrolling since our storyboard will handle it for us!
@@ -42,6 +45,8 @@ class StoryBoard extends StatefulWidget {
   /// Callback for when the scale of the canvas changes
   final ValueChanged<double> scaleChanged;
 
+  final Map<String, List<String>> routesMapping;
+
   const StoryBoard({
     Key key,
     @required this.child,
@@ -51,6 +56,7 @@ class StoryBoard extends StatefulWidget {
     this.offsetChanged,
     this.initialScale,
     this.scaleChanged,
+    this.routesMapping,
   }) : super(key: key);
 
   @override
@@ -96,34 +102,29 @@ class StoryboardController extends State<StoryBoard> {
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
-                    if (base?.home != null)
+                    if (base?.home != null && widget.routesMapping == null)
                       _addChild(
                         base,
                         base.home,
                         '/',
+                        false,
+                        false,
                         Offset(0, 10),
                         'Home',
                       ),
-                    if (base?.initialRoute != null)
+                    if (base?.initialRoute != null &&
+                        widget.routesMapping == null)
                       _addChild(
                         base,
                         base.routes[base.initialRoute](context),
                         base.initialRoute,
+                        false,
+                        false,
                         Offset(base?.home != null ? _size.width + _kSpacing : 0,
                             10),
                         'Initial Route',
                       ),
-                    if (base?.routes != null) ...[
-                      for (var r = 0; r < base.routes.keys.length; r++)
-                        _addChild(
-                          base,
-                          base.routes[base.routes.keys.toList()[r]](context),
-                          base.routes.keys.toList()[r],
-                          Offset((_size.width + _kSpacing) * r,
-                              (_size.height + _kSpacing) + 40),
-                          base.routes.keys.toList()[r],
-                        ),
-                    ]
+                    ..._renderRoutes(),
                   ],
                 ),
               ),
@@ -138,7 +139,7 @@ class StoryboardController extends State<StoryBoard> {
               children: [
                 IconButton(
                   icon: Icon(Icons.remove),
-                  onPressed: () => updateScale(_scale - 0.01),
+                  onPressed: () => updateScale(_scale - 0.05),
                 ),
                 InkWell(
                   child: Center(child: Text('${(_scale * 100).round()}%')),
@@ -146,7 +147,7 @@ class StoryboardController extends State<StoryBoard> {
                 ),
                 IconButton(
                   icon: Icon(Icons.add),
-                  onPressed: () => updateScale(_scale + 0.01),
+                  onPressed: () => updateScale(_scale + 0.05),
                 ),
               ],
             ),
@@ -154,6 +155,116 @@ class StoryboardController extends State<StoryBoard> {
         ),
       ],
     );
+  }
+
+  Positioned _addChild(
+    MaterialApp base,
+    Widget child,
+    String routeName,
+    bool isFirst,
+    bool isLast, [
+    Offset offset = Offset.zero,
+    String label,
+  ]) {
+    return Positioned(
+      top: calculateTop(offset, _offset, _scale),
+      left: calculateLeft(offset, _offset, _scale),
+      child: StoryboardScreen(
+        base: widget.child,
+        child: child,
+        offset: offset,
+        screenSize: widget.screenSize,
+        scale: _scale,
+        label: label,
+        routeName: routeName,
+        isFirst: isFirst,
+        isLast: isLast,
+      ),
+    );
+  }
+
+  Positioned _addSectionStart(MaterialApp base,
+      [Offset offset = Offset.zero, String label]) {
+    return Positioned(
+      top: calculateTop(offset, _offset, _scale),
+      left: calculateLeft(offset, _offset, _scale),
+      child: StoryboardScreen(
+        base: widget.child,
+        isFirst: true,
+        isLast: false,
+        child: Material(
+          child: Container(
+            color: Colors.black,
+            child: Center(
+              child: DefaultTextStyle(
+                style: TextStyle(
+                  fontSize: 34.0,
+                  color: Colors.white,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('Flow'),
+                    Text(label),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+        offset: offset,
+        screenSize: widget.screenSize,
+        scale: _scale,
+        label: label,
+      ),
+    );
+  }
+
+  _renderRoutes() {
+    final List<Widget> routesList = [];
+    final base = widget.child;
+    final _size = widget.screenSize;
+    final mapping = widget.routesMapping;
+    if (mapping?.isNotEmpty == true) {
+      var index = 0;
+      mapping.entries.forEach((entry) {
+        var offsetIndex = 0;
+        routesList.add(_addSectionStart(
+          base,
+          Offset((_size.width + _kSpacing) * (offsetIndex),
+              ((_size.height + _kSpacing) + 40) * index),
+          entry.key,
+        ));
+        entry.value.forEach((route) {
+          routesList.add(_addChild(
+            base,
+            base.routes[route](context),
+            route,
+            false,
+            (offsetIndex == entry.value.length - 1),
+            Offset((_size.width + _kSpacing) * (offsetIndex + 1),
+                ((_size.height + _kSpacing) + 40) * index),
+            route,
+          ));
+          offsetIndex++;
+        });
+        index++;
+      });
+    } else if (base?.routes != null) {
+      for (var r = 0; r < base.routes.keys.length; r++) {
+        routesList.add(_addChild(
+          base,
+          base.routes[base.routes.keys.toList()[r]](context),
+          base.routes.keys.toList()[r],
+          false,
+          false,
+          Offset(
+              (_size.width + _kSpacing) * r, (_size.height + _kSpacing) + 40),
+          base.routes.keys.toList()[r],
+        ));
+      }
+    }
+    return routesList;
   }
 
   void updateOffset(Offset value) {
@@ -174,26 +285,5 @@ class StoryboardController extends State<StoryBoard> {
     if (widget?.scaleChanged != null) {
       widget.scaleChanged(_scale);
     }
-  }
-
-  Positioned _addChild(MaterialApp base, Widget child, String routeName,
-      [Offset offset = Offset.zero, String label]) {
-    final _top = _offset.dy + (_scale * offset.dy);
-    final _left = _offset.dx + (_scale * offset.dx);
-    final base = widget.child;
-    final _size = widget.screenSize;
-    return Positioned(
-      top: _top,
-      left: _left,
-      child: StoryboardScreen(
-        base: base,
-        child: child,
-        offset: offset,
-        screenSize: _size,
-        scale: _scale,
-        label: label,
-        routeName: routeName,
-      ),
-    );
   }
 }

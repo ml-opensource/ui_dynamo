@@ -22,6 +22,16 @@ class AppStoryBook extends StatelessWidget {
   Widget build(BuildContext context) {
     return StoryBook.withApp(
       buildApp(),
+      routesMapping: {
+        'home': [
+          '/home',
+          '/company',
+        ],
+        'home 2': [
+          '/home',
+          '/company',
+        ]
+      },
       data: StoryBookData(
         title: Text('Example Storybook'),
         items: [

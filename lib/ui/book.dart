@@ -16,11 +16,13 @@ class StoryBook extends StatefulWidget {
   final StoryBookData data;
   final MaterialApp app;
 
-  factory StoryBook.withApp(MaterialApp app, {@required StoryBookData data}) =>
+  factory StoryBook.withApp(MaterialApp app,
+          {@required StoryBookData data,
+          Map<String, List<String>> routesMapping}) =>
       StoryBook(
         app: app,
         data: data.merge(items: [
-          storyboard(app, title: 'Storyboard'),
+          storyboard(app, title: 'Storyboard', routesMapping: routesMapping),
           StoryBookFolder.of(
             title: 'Routes',
             pages: [
@@ -57,7 +59,7 @@ class _StoryBookState extends State<StoryBook> {
 
   void _selectPage(
       StoryBookPage page, StoryBookItem folder, BuildContext context) {
-    drawer(context).select(context, folder.key, page.key);
+    drawer(context).select(context, folder.key, page.key, popDrawer: true);
   }
 
   @override
