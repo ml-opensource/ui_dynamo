@@ -18,6 +18,6 @@ extension MaterialAppCopy on MaterialApp {
         debugShowMaterialGrid: debugShowMaterialGrid,
         showPerformanceOverlay: showPerformanceOverlay,
         showSemanticsDebugger: showSemanticsDebugger,
-        home: home,
+        home: Material(child: home),
       );
 }
