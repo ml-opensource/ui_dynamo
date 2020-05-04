@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_storybook/flutter_storybook.dart';
 import 'package:flutter_storybook/ui/widgets/storyboard/screen.dart';
 
-const _kSpacing = 40.0;
+const _kSpacing = 80.0;
 
 StoryBookPage storyboard(MaterialApp app, {@required String title}) {
   final page = StoryBookPage(
@@ -100,6 +100,7 @@ class StoryboardController extends State<StoryBoard> {
                       _addChild(
                         base,
                         base.home,
+                        '/',
                         Offset(0, 10),
                         'Home',
                       ),
@@ -107,6 +108,7 @@ class StoryboardController extends State<StoryBoard> {
                       _addChild(
                         base,
                         base.routes[base.initialRoute](context),
+                        base.initialRoute,
                         Offset(base?.home != null ? _size.width + _kSpacing : 0,
                             10),
                         'Initial Route',
@@ -116,6 +118,7 @@ class StoryboardController extends State<StoryBoard> {
                         _addChild(
                           base,
                           base.routes[base.routes.keys.toList()[r]](context),
+                          base.routes.keys.toList()[r],
                           Offset((_size.width + _kSpacing) * r,
                               (_size.height + _kSpacing) + 40),
                           base.routes.keys.toList()[r],
@@ -173,7 +176,7 @@ class StoryboardController extends State<StoryBoard> {
     }
   }
 
-  Positioned _addChild(MaterialApp base, Widget child,
+  Positioned _addChild(MaterialApp base, Widget child, String routeName,
       [Offset offset = Offset.zero, String label]) {
     final _top = _offset.dy + (_scale * offset.dy);
     final _left = _offset.dx + (_scale * offset.dx);
@@ -189,6 +192,7 @@ class StoryboardController extends State<StoryBoard> {
         screenSize: _size,
         scale: _scale,
         label: label,
+        routeName: routeName,
       ),
     );
   }

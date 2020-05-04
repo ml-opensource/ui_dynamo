@@ -24,11 +24,6 @@ class _RadioGroupState extends State<RadioGroup> {
 
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,

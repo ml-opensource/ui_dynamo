@@ -6,6 +6,7 @@ import 'package:flutter_storybook/mediaquery/mediaquery.dart';
 import 'package:flutter_storybook/models.dart';
 import 'package:flutter_storybook/props/props_extensions.dart';
 import 'package:flutter_storybook/ui/drawer.dart';
+import 'package:flutter_storybook/ui/drawer_provider.dart';
 import 'package:flutter_storybook/ui/toolbar.dart';
 import 'package:flutter_storybook/ui/widgets/page.dart';
 import 'package:flutter_storybook/ui/widgets/storyboard/storyboard.dart';
@@ -38,17 +39,17 @@ class StoryBook extends StatefulWidget {
 }
 
 class _StoryBookState extends State<StoryBook> {
-  Key _selectedFolderKey;
-  Key _selectedPageKey;
   bool isDrawerOpen = false;
 
-  StoryBookPage selectedPageFromWidget() {
-    if (_selectedFolderKey != null && _selectedPageKey != null) {
+  StoryBookPage selectedPageFromWidget(BuildContext context) {
+    final selectedFolderKey = drawer(context).folderKey;
+    final selectedPageKey = drawer(context).pageKey;
+    if (selectedFolderKey != null && selectedPageKey != null) {
       final folder = widget.data.items.firstWhere(
-          (element) => element.key == _selectedFolderKey,
+          (element) => element.key == selectedFolderKey,
           orElse: () => null);
       if (folder != null) {
-        return folder.pageFromKey(_selectedPageKey);
+        return folder.pageFromKey(selectedPageKey);
       }
     }
     return null;
@@ -56,18 +57,11 @@ class _StoryBookState extends State<StoryBook> {
 
   void _selectPage(
       StoryBookPage page, StoryBookItem folder, BuildContext context) {
-    setState(() {
-      _selectedPageKey = page.key;
-      _selectedFolderKey = folder.key;
-      props(context).reset();
-      actions(context).reset();
-      Navigator.of(context).pop();
-    });
+    drawer(context).select(context, folder.key, page.key);
   }
 
   @override
   Widget build(BuildContext context) {
-    final selectedPage = selectedPageFromWidget();
     return MaterialApp(
       theme: widget.app.theme,
       darkTheme: widget.app.darkTheme,
@@ -80,25 +74,34 @@ class _StoryBookState extends State<StoryBook> {
           ),
           ChangeNotifierProvider(
             create: (context) => PropsProvider(),
-          )
+          ),
+          ChangeNotifierProvider(
+            create: (context) => DrawerProvider(),
+          ),
         ],
-        child: Scaffold(
-          appBar: AppBar(
-            title: selectedPage != null ? selectedPage.title : Text('Home'),
-          ),
-          drawer: Builder(
-            builder: (context) => StoryBookDrawer(
-              data: widget.data,
-              selectedPage: selectedPage,
-              onSelectPage: (folder, page) =>
-                  _selectPage(page, folder, context),
-            ),
-          ),
-          resizeToAvoidBottomPadding: true,
-          bottomNavigationBar: selectedPage?.usesToolbar == true ? ToolbarPane() : null,
-          body: (selectedPage != null)
-              ? StoryBookPageWrapperWidget(selectedPage: selectedPage)
-              : _StoryBookHomePage(),
+        child: Builder(
+          builder: (context) {
+            final selectedPage = selectedPageFromWidget(context);
+            return Scaffold(
+              appBar: AppBar(
+                title: selectedPage != null ? selectedPage.title : Text('Home'),
+              ),
+              drawer: Builder(
+                builder: (context) => StoryBookDrawer(
+                  data: widget.data,
+                  selectedPage: selectedPage,
+                  onSelectPage: (folder, page) =>
+                      _selectPage(page, folder, context),
+                ),
+              ),
+              resizeToAvoidBottomPadding: true,
+              bottomNavigationBar:
+                  selectedPage?.usesToolbar == true ? ToolbarPane() : null,
+              body: (selectedPage != null)
+                  ? StoryBookPageWrapperWidget(selectedPage: selectedPage)
+                  : _StoryBookHomePage(),
+            );
+          },
         ),
       ),
     );

@@ -10,16 +10,18 @@ class StoryboardScreen extends StatelessWidget {
   final Size screenSize;
   final String label;
   final Widget child;
+  final String routeName;
 
-  const StoryboardScreen(
-      {Key key,
-      @required this.scale,
-      @required this.offset,
-      @required this.base,
-      @required this.screenSize,
-      this.label,
-      @required this.child})
-      : super(key: key);
+  const StoryboardScreen({
+    Key key,
+    @required this.scale,
+    @required this.offset,
+    @required this.base,
+    @required this.screenSize,
+    this.label,
+    @required this.child,
+    this.routeName,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +52,12 @@ class StoryboardScreen extends StatelessWidget {
               ),
             ),
           ),
-          if (label != null) Center(child: StoryBookLabel(label: label)),
+          if (label != null)
+            Center(
+                child: StoryBookLabel(
+              label: label,
+              routeName: routeName,
+            )),
         ],
       ),
     );
