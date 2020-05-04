@@ -64,14 +64,23 @@ class _StoryBookState extends State<StoryBook> {
 
   @override
   Widget build(BuildContext context) {
+    final app = widget.app;
     return MaterialApp(
-      theme: widget.app.theme,
-      darkTheme: widget.app.darkTheme,
-      debugShowCheckedModeBanner: widget.app.debugShowCheckedModeBanner,
-      themeMode: widget.app.themeMode,
-      onGenerateRoute: widget.app.onGenerateRoute,
-      onGenerateTitle: widget.app.onGenerateTitle,
-      onUnknownRoute: widget.app.onUnknownRoute,
+      theme: app.theme,
+      darkTheme: app.darkTheme,
+      debugShowCheckedModeBanner: app.debugShowCheckedModeBanner,
+      themeMode: app.themeMode,
+      onGenerateRoute: app.onGenerateRoute,
+      onGenerateTitle: app.onGenerateTitle,
+      onUnknownRoute: app.onUnknownRoute,
+      locale: app.locale,
+      localeListResolutionCallback: app.localeListResolutionCallback,
+      localeResolutionCallback: app.localeResolutionCallback,
+      localizationsDelegates: app.localizationsDelegates,
+      supportedLocales: app.supportedLocales,
+      debugShowMaterialGrid: app.debugShowMaterialGrid,
+      showPerformanceOverlay: app.showPerformanceOverlay,
+      showSemanticsDebugger: app.showSemanticsDebugger,
       home: MultiProvider(
         providers: [
           ChangeNotifierProvider(
