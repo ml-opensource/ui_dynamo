@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_storybook/flutter_storybook.dart';
+import 'package:flutter_storybook/ui/utils/hold_detector.dart';
 import 'package:flutter_storybook/ui/widgets/storyboard/screen.dart';
 import 'package:flutter_storybook/ui/widgets/storyboard/utils.dart';
 
@@ -137,17 +138,27 @@ class StoryboardController extends State<StoryBoard> {
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                IconButton(
-                  icon: Icon(Icons.remove),
-                  onPressed: () => updateScale(_scale - 0.05),
+                HoldDetector(
+                  holdTimeout: Duration(milliseconds: 200),
+                  enableHapticFeedback: true,
+                  onHold: () => updateScale(_scale - 0.05),
+                  child: IconButton(
+                    icon: Icon(Icons.remove),
+                    onPressed: () => updateScale(_scale - 0.05),
+                  ),
                 ),
                 InkWell(
                   child: Center(child: Text('${(_scale * 100).round()}%')),
                   onTap: () => updateScale(1),
                 ),
-                IconButton(
-                  icon: Icon(Icons.add),
-                  onPressed: () => updateScale(_scale + 0.05),
+                HoldDetector(
+                  holdTimeout: Duration(milliseconds: 200),
+                  enableHapticFeedback: true,
+                  onHold: () => updateScale(_scale + 0.05),
+                  child: IconButton(
+                    icon: Icon(Icons.add),
+                    onPressed: () => updateScale(_scale + 0.05),
+                  ),
                 ),
               ],
             ),

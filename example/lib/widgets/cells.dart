@@ -76,7 +76,7 @@ class MainCellList extends StatelessWidget {
           subtitle: item.subtitle,
           iconText: item.iconText,
           count: item.count,
-          onTap: () => this.onTap(item),
+          onTap: () => this.onTap?.call(item),
         );
       },
     );

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_storybook/mediaquery/screen_size_chooser.dart';
+import 'package:flutter_storybook/mediaquery/text_scale.dart';
 import 'package:flutter_storybook/ui/materialapp+extensions.dart';
 
 typedef MediaWidgetBuilder = Widget Function(BuildContext, MediaQueryData);
@@ -10,14 +12,14 @@ class MediaQueryChooser extends StatefulWidget {
   final MaterialApp base;
 
   const MediaQueryChooser(
-      {Key key, @required this.builder, this.shouldScroll = true,
-        @required this.base})
+      {Key key,
+      @required this.builder,
+      this.shouldScroll = true,
+      @required this.base})
       : super(key: key);
 
-  factory MediaQueryChooser.mediaQuery({
-    WidgetBuilder builder,
-    MaterialApp base
-  }) =>
+  factory MediaQueryChooser.mediaQuery(
+          {WidgetBuilder builder, MaterialApp base}) =>
       MediaQueryChooser(
         builder: (context, data) =>
             MediaQuery(data: data, child: builder(context)),
@@ -40,10 +42,29 @@ class _MediaQueryChooserState extends State<MediaQueryChooser> {
     setState(() {
       currentDeviceSelected = name == '' ? null : name; // reset if blank
       currentMediaQuery = name != ''
-          ? MediaQueryData(
+          ? currentMediaQuery.copyWith(
               size: device,
             )
           : null;
+    });
+  }
+
+  void _toggleBrightness() {
+    setState(() {
+      currentMediaQuery = currentMediaQuery.copyWith(
+        platformBrightness:
+            currentMediaQuery.platformBrightness == Brightness.light
+                ? Brightness.dark
+                : Brightness.light,
+      );
+    });
+  }
+
+  void _textScaleFactorChanged(double value) {
+    setState(() {
+      currentMediaQuery = currentMediaQuery.copyWith(
+        textScaleFactor: value,
+      );
     });
   }
 
@@ -64,6 +85,20 @@ class _MediaQueryChooserState extends State<MediaQueryChooser> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
+              TextScaleFactorWidget(
+                textScaleFactor: currentMediaQuery.textScaleFactor,
+                textScaleFactorChanged: _textScaleFactorChanged,
+              ),
+              IconButton(
+                icon: Icon(
+                    currentMediaQuery.platformBrightness == Brightness.light
+                        ? Icons.brightness_7
+                        : Icons.brightness_3),
+                tooltip: 'Turn Brightness On / Off',
+                onPressed: () {
+                  _toggleBrightness();
+                },
+              ),
               if (currentDeviceSelected != null)
                 Text(deviceDisplay(
                     currentDeviceSelected, deviceSizes[currentDeviceSelected])),
@@ -76,7 +111,8 @@ class _MediaQueryChooserState extends State<MediaQueryChooser> {
         ),
         Expanded(
           child: !widget.shouldScroll
-              ? widget.base.isolatedCopy(home: widget.builder(context, currentMediaQuery))
+              ? widget.base.isolatedCopy(
+                  home: widget.builder(context, currentMediaQuery))
               : SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: SingleChildScrollView(
@@ -88,7 +124,8 @@ class _MediaQueryChooserState extends State<MediaQueryChooser> {
                             )
                           : null,
                       constraints: BoxConstraints.tight(currentMediaQuery.size),
-                      child: widget.base.isolatedCopy(home: widget.builder(context, currentMediaQuery)),
+                      child: widget.base.isolatedCopy(
+                          home: widget.builder(context, currentMediaQuery)),
                     ),
                   ),
                 ),
@@ -114,54 +151,3 @@ const Map<String, Size> deviceSizes = {
   'Pixel': Size(540, 960),
   'Pixel XL': Size(720, 1280),
 };
-
-class MediaChooserButton extends StatelessWidget {
-  final Function(String) deviceSelected;
-  final String selectedDeviceName;
-
-  const MediaChooserButton({
-    Key key,
-    @required this.deviceSelected,
-    @required this.selectedDeviceName,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return PopupMenuButton(
-      icon: Icon(
-        Icons.view_list,
-        color: Theme.of(context).iconTheme.color,
-      ),
-      onSelected: deviceSelected,
-      itemBuilder: (BuildContext context) => [
-        CheckedPopupMenuItem(
-          checked: selectedDeviceName == null,
-          value: '',
-          child: Row(
-            children: <Widget>[
-              Text(
-                'Device Window Size',
-                style: TextStyle(fontSize: 12.0),
-              ),
-            ],
-          ),
-        ),
-        ...deviceSizes.keys.map(
-          (key) => buildDeviceOption(key, deviceSizes[key], selectedDeviceName),
-        ),
-      ],
-    );
-  }
-
-  PopupMenuItem<String> buildDeviceOption(
-      String key, Size deviceSize, String selectedDeviceName) {
-    return CheckedPopupMenuItem(
-      checked: selectedDeviceName == key,
-      value: key,
-      child: Text(
-        deviceDisplay(key, deviceSize),
-        style: TextStyle(fontSize: 12.0),
-      ),
-    );
-  }
-}
