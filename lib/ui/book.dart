@@ -70,9 +70,6 @@ class _StoryBookState extends State<StoryBook> {
       darkTheme: app.darkTheme,
       debugShowCheckedModeBanner: app.debugShowCheckedModeBanner,
       themeMode: app.themeMode,
-      onGenerateRoute: app.onGenerateRoute,
-      onGenerateTitle: app.onGenerateTitle,
-      onUnknownRoute: app.onUnknownRoute,
       locale: app.locale,
       localeListResolutionCallback: app.localeListResolutionCallback,
       localeResolutionCallback: app.localeResolutionCallback,
@@ -112,8 +109,13 @@ class _StoryBookState extends State<StoryBook> {
               bottomNavigationBar:
                   selectedPage?.usesToolbar == true ? ToolbarPane() : null,
               body: (selectedPage != null)
-                  ? StoryBookPageWrapperWidget(selectedPage: selectedPage)
-                  : _StoryBookHomePage(),
+                  ? StoryBookPageWrapperWidget(
+                      selectedPage: selectedPage,
+                      base: widget.app,
+                    )
+                  : _StoryBookHomePage(
+                      base: widget.app,
+                    ),
             );
           },
         ),
@@ -126,13 +128,16 @@ class StoryBookPageWrapperWidget extends StatelessWidget {
   const StoryBookPageWrapperWidget({
     Key key,
     @required this.selectedPage,
+    @required this.base,
   }) : super(key: key);
 
   final StoryBookPage selectedPage;
+  final MaterialApp base;
 
   @override
   Widget build(BuildContext context) {
     return MediaQueryChooser(
+      base: base,
       shouldScroll: selectedPage.shouldScroll,
       builder: (context, data) => selectedPage.build(context, data),
     );
@@ -140,8 +145,11 @@ class StoryBookPageWrapperWidget extends StatelessWidget {
 }
 
 class _StoryBookHomePage extends StatelessWidget {
+  final MaterialApp base;
+
   const _StoryBookHomePage({
     Key key,
+    @required this.base,
   }) : super(key: key);
 
   @override

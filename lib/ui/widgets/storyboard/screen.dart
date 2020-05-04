@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_storybook/ui/widgets/storyboard/custom_rect.dart';
 import 'package:flutter_storybook/ui/widgets/storyboard/label.dart';
+import 'package:flutter_storybook/ui/materialapp+extensions.dart';
 
 class StoryboardScreen extends StatelessWidget {
   final double scale;
@@ -41,15 +42,7 @@ class StoryboardScreen extends StatelessWidget {
               elevation: 4,
               child: ClipRect(
                 clipper: CustomRect(Offset(0, 0)),
-                child: MaterialApp(
-                  debugShowCheckedModeBanner: false,
-                  routes: base.routes,
-                  onGenerateRoute: base.onGenerateRoute,
-                  onGenerateInitialRoutes: base.onGenerateInitialRoutes,
-                  onUnknownRoute: base.onUnknownRoute,
-                  themeMode: base.themeMode,
-                  theme: base.theme,
-                  darkTheme: base.darkTheme,
+                child: base.isolatedCopy(
                   // patch when you use a home route with /, dont use child
                   home: child,
                 ),

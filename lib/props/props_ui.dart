@@ -226,7 +226,7 @@ class ValueSelectorField<T> extends StatelessWidget {
               items: [
                 ...prop.value.values.map((e) => DropdownMenuItem(
                       value: e,
-                      child: Text("${e}"),
+                      child: Text("$e"),
                     )),
               ],
             )

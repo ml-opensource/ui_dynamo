@@ -1,22 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_storybook/ui/materialapp+extensions.dart';
 
 typedef MediaWidgetBuilder = Widget Function(BuildContext, MediaQueryData);
 
 class MediaQueryChooser extends StatefulWidget {
   final MediaWidgetBuilder builder;
   final bool shouldScroll;
+  final MaterialApp base;
 
   const MediaQueryChooser(
-      {Key key, @required this.builder, this.shouldScroll = true})
+      {Key key, @required this.builder, this.shouldScroll = true,
+        @required this.base})
       : super(key: key);
 
   factory MediaQueryChooser.mediaQuery({
     WidgetBuilder builder,
+    MaterialApp base
   }) =>
       MediaQueryChooser(
         builder: (context, data) =>
             MediaQuery(data: data, child: builder(context)),
+        base: base,
       );
 
   @override
@@ -71,7 +76,7 @@ class _MediaQueryChooserState extends State<MediaQueryChooser> {
         ),
         Expanded(
           child: !widget.shouldScroll
-              ? widget.builder(context, currentMediaQuery)
+              ? widget.base.isolatedCopy(home: widget.builder(context, currentMediaQuery))
               : SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: SingleChildScrollView(
@@ -83,7 +88,7 @@ class _MediaQueryChooserState extends State<MediaQueryChooser> {
                             )
                           : null,
                       constraints: BoxConstraints.tight(currentMediaQuery.size),
-                      child: widget.builder(context, currentMediaQuery),
+                      child: widget.base.isolatedCopy(home: widget.builder(context, currentMediaQuery)),
                     ),
                   ),
                 ),
