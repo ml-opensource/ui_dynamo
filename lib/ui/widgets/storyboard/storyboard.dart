@@ -188,6 +188,7 @@ class StoryboardController extends State<StoryBoard> {
         offset: offset,
         screenSize: _size,
         scale: _scale,
+        label: label,
       ),
     );
   }
