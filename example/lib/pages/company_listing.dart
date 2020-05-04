@@ -13,6 +13,7 @@ class CompanyListing extends StatelessWidget {
       body: MainCellList(
         items: [
           MainCellItem("A", "Andrew Grosner", "I am a developer.", 10),
+          MainCellItem("B", "Benjamin Button", "I am getting younger by the day", 50),
         ],
         onTap: (item) => Navigator.of(context).pushNamed('/detail',
             arguments: PersonDetailArguments(
