@@ -155,6 +155,7 @@ class _StoryBookHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MediaQueryChooser.mediaQuery(
+      base: base,
       builder: (context) => Padding(
         padding: const EdgeInsets.all(32.0),
         child: Center(

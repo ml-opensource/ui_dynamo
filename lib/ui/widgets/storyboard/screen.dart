@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_storybook/ui/materialapp+extensions.dart';
 import 'package:flutter_storybook/ui/widgets/storyboard/custom_rect.dart';
 import 'package:flutter_storybook/ui/widgets/storyboard/label.dart';
-import 'package:flutter_storybook/ui/materialapp+extensions.dart';
 
 class StoryboardScreen extends StatelessWidget {
   final double scale;
   final Offset offset;
   final MaterialApp base;
-  final Size screenSize;
+  final MediaQueryData mediaQueryData;
   final String label;
   final Widget child;
   final String routeName;
@@ -20,7 +20,7 @@ class StoryboardScreen extends StatelessWidget {
     @required this.scale,
     @required this.offset,
     @required this.base,
-    @required this.screenSize,
+    @required this.mediaQueryData,
     this.label,
     @required this.child,
     this.routeName,
@@ -36,15 +36,18 @@ class StoryboardScreen extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           SizedBox(
-            width: screenSize.width,
-            height: screenSize.height,
+            width: mediaQueryData.size.width,
+            height: mediaQueryData.size.height,
             child: Material(
               elevation: 4,
               child: ClipRect(
                 clipper: CustomRect(Offset(0, 0)),
                 child: base.isolatedCopy(
                   // patch when you use a home route with /, dont use child
-                  home: child,
+                  home: MediaQuery(
+                    child: child,
+                    data: mediaQueryData,
+                  ),
                 ),
               ),
             ),

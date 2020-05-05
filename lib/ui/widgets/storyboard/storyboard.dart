@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_storybook/flutter_storybook.dart';
 import 'package:flutter_storybook/ui/utils/hold_detector.dart';
+import 'package:flutter_storybook/ui/widgets/size+extensions.dart';
 import 'package:flutter_storybook/ui/widgets/storyboard/screen.dart';
 import 'package:flutter_storybook/ui/widgets/storyboard/utils.dart';
 
@@ -13,7 +14,9 @@ StoryBookPage storyboard(MaterialApp app,
     title: Text(title),
     widget: StoryBookWidget((context, data) => StoryBoard(
           child: app,
-          screenSize: data.size,
+          mediaQueryData: data.copyWith(
+            size: data.size.boundedSize(context),
+          ),
           enabled: true,
           routesMapping: routesMapping,
         )),
@@ -28,8 +31,8 @@ class StoryBoard extends StatefulWidget {
   /// Wrap your Material App with this widget
   final MaterialApp child;
 
-  /// Size for each screen
-  final Size screenSize;
+  /// current media query to use.
+  final MediaQueryData mediaQueryData;
 
   /// You can disable this widget at any time and just return the child
   final bool enabled;
@@ -52,7 +55,7 @@ class StoryBoard extends StatefulWidget {
     Key key,
     @required this.child,
     this.enabled = true,
-    this.screenSize = const Size(400, 700),
+    this.mediaQueryData,
     this.initialOffset,
     this.offsetChanged,
     this.initialScale,
@@ -88,7 +91,7 @@ class StoryboardController extends State<StoryBoard> {
   @override
   Widget build(BuildContext context) {
     final base = widget.child;
-    final _size = widget.screenSize;
+    final _size = widget.mediaQueryData.size;
     if (!widget.enabled) return base;
     return Stack(
       children: [
@@ -184,7 +187,7 @@ class StoryboardController extends State<StoryBoard> {
         base: widget.child,
         child: child,
         offset: offset,
-        screenSize: widget.screenSize,
+        mediaQueryData: widget.mediaQueryData,
         scale: _scale,
         label: label,
         routeName: routeName,
@@ -224,7 +227,7 @@ class StoryboardController extends State<StoryBoard> {
           ),
         ),
         offset: offset,
-        screenSize: widget.screenSize,
+        mediaQueryData: widget.mediaQueryData,
         scale: _scale,
         label: label,
       ),
@@ -234,7 +237,7 @@ class StoryboardController extends State<StoryBoard> {
   _renderRoutes() {
     final List<Widget> routesList = [];
     final base = widget.child;
-    final _size = widget.screenSize;
+    final _size = widget.mediaQueryData.size;
     final mapping = widget.routesMapping;
     if (mapping?.isNotEmpty == true) {
       var index = 0;

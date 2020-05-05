@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_storybook/mediaquery/mediaquery.dart';
 
 class MediaChooserButton extends StatelessWidget {
-  final Function(String) deviceSelected;
-  final String selectedDeviceName;
+  final Function(DeviceInfo) deviceSelected;
+  final DeviceInfo selectedDevice;
 
   const MediaChooserButton({
     Key key,
     @required this.deviceSelected,
-    @required this.selectedDeviceName,
+    @required this.selectedDevice,
   }) : super(key: key);
 
   @override
@@ -20,33 +20,32 @@ class MediaChooserButton extends StatelessWidget {
       ),
       onSelected: deviceSelected,
       itemBuilder: (BuildContext context) => [
-        CheckedPopupMenuItem(
-          checked: selectedDeviceName == null,
-          value: '',
-          child: Row(
-            children: <Widget>[
-              Text(
-                'Device Window Size',
-                style: TextStyle(fontSize: 12.0),
-              ),
-            ],
-          ),
-        ),
-        ...deviceSizes.keys.map(
-          (key) => buildDeviceOption(key, deviceSizes[key], selectedDeviceName),
+        ...deviceSizes.values.map(
+          (key) => buildDeviceOption(context, key, selectedDevice),
         ),
       ],
     );
   }
 
-  PopupMenuItem<String> buildDeviceOption(
-      String key, Size deviceSize, String selectedDeviceName) {
+  PopupMenuItem<DeviceInfo> buildDeviceOption(
+      BuildContext context, DeviceInfo deviceInfo, DeviceInfo selectedDevice) {
     return CheckedPopupMenuItem(
-      checked: selectedDeviceName == key,
-      value: key,
-      child: Text(
-        deviceDisplay(key, deviceSize),
-        style: TextStyle(fontSize: 12.0),
+      checked: selectedDevice == deviceInfo,
+      value: deviceInfo,
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Icon(deviceInfo.iconForCategory),
+          SizedBox(
+            width: 15,
+          ),
+          Flexible(
+            child: Text(
+              deviceDisplay(context, deviceInfo),
+              style: TextStyle(fontSize: 12.0),
+            ),
+          ),
+        ],
       ),
     );
   }
