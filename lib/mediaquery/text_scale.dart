@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_storybook/ui/utils/hold_detector.dart';
 
-class TextScaleFactorWidget extends StatelessWidget {
-  final double textScaleFactor;
-  final Function(double) textScaleFactorChanged;
+class AdjustableNumberScaleWidget extends StatelessWidget {
+  final double scaleFactor;
+  final Function(double) scaleFactorChanged;
+  final IconData displayIcon;
 
-  const TextScaleFactorWidget(
+  const AdjustableNumberScaleWidget(
       {Key key,
-      this.textScaleFactor = 0.0,
-      @required this.textScaleFactorChanged})
+      this.scaleFactor = 0.0,
+      @required this.scaleFactorChanged,
+      this.displayIcon})
       : super(key: key);
 
   @override
@@ -25,11 +27,11 @@ class TextScaleFactorWidget extends StatelessWidget {
             onHold: _incrementFactor,
             child: IconButton(
               icon: Icon(Icons.remove),
-              onPressed: textScaleFactor > 0 ? () => _incrementFactor() : null,
+              onPressed: scaleFactor > 0 ? () => _incrementFactor() : null,
             ),
           ),
-          Icon(Icons.text_fields),
-          Text("${textScaleFactor.toStringAsFixed(2)}"),
+          if (this.displayIcon != null) Icon(this.displayIcon),
+          Text("${scaleFactor.toStringAsFixed(2)}"),
           HoldDetector(
             holdTimeout: Duration(milliseconds: 200),
             enableHapticFeedback: true,
@@ -44,7 +46,7 @@ class TextScaleFactorWidget extends StatelessWidget {
     );
   }
 
-  _decrementFactor() => textScaleFactorChanged(textScaleFactor + 0.1);
+  _decrementFactor() => scaleFactorChanged(scaleFactor + 0.1);
 
-  _incrementFactor() => textScaleFactorChanged(textScaleFactor - 0.1);
+  _incrementFactor() => scaleFactorChanged(scaleFactor - 0.1);
 }

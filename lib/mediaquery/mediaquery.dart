@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_storybook/mediaquery/device_sizes.dart';
 import 'package:flutter_storybook/mediaquery/screen_size_chooser.dart';
 import 'package:flutter_storybook/mediaquery/text_scale.dart';
 import 'package:flutter_storybook/ui/materialapp+extensions.dart';
@@ -38,7 +39,7 @@ String deviceDisplay(BuildContext context, DeviceInfo deviceInfo) {
 
 class _MediaQueryChooserState extends State<MediaQueryChooser> {
   MediaQueryData currentMediaQuery;
-  DeviceInfo currentDeviceSelected = deviceSizes.values.toList()[0];
+  DeviceInfo currentDeviceSelected = deviceSizes[0];
 
   void _deviceSelected(BuildContext context, DeviceInfo device) {
     setState(() {
@@ -84,6 +85,22 @@ class _MediaQueryChooserState extends State<MediaQueryChooser> {
     });
   }
 
+  void _toggleAnimations() {
+    setState(() {
+      currentMediaQuery = currentMediaQuery.copyWith(
+        disableAnimations: !currentMediaQuery.disableAnimations,
+      );
+    });
+  }
+
+  void _devicePixelRatioChanged(double value) {
+    setState(() {
+      currentMediaQuery = currentMediaQuery.copyWith(
+        devicePixelRatio: value,
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     if (currentMediaQuery == null) {
@@ -102,6 +119,22 @@ class _MediaQueryChooserState extends State<MediaQueryChooser> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
+              AdjustableNumberScaleWidget(
+                scaleFactor: currentMediaQuery.devicePixelRatio,
+                scaleFactorChanged: _devicePixelRatioChanged,
+                displayIcon: Icons.aspect_ratio,
+              ),
+              IconButton(
+                icon: Icon(currentMediaQuery.disableAnimations
+                    ? Icons.directions_walk
+                    : Icons.directions_run),
+                tooltip: 'Toggle Animations',
+                onPressed: _toggleAnimations,
+              ),
+              Container(
+                height: 15,
+                child: VerticalDivider(),
+              ),
               IconButton(
                 icon: Icon(
                   currentMediaQuery.invertColors
@@ -128,9 +161,10 @@ class _MediaQueryChooserState extends State<MediaQueryChooser> {
                 height: 15,
                 child: VerticalDivider(),
               ),
-              TextScaleFactorWidget(
-                textScaleFactor: currentMediaQuery.textScaleFactor,
-                textScaleFactorChanged: _textScaleFactorChanged,
+              AdjustableNumberScaleWidget(
+                scaleFactor: currentMediaQuery.textScaleFactor,
+                scaleFactorChanged: _textScaleFactorChanged,
+                displayIcon: Icons.text_fields,
               ),
               Container(
                 height: 15,
@@ -187,50 +221,3 @@ class _MediaQueryChooserState extends State<MediaQueryChooser> {
     );
   }
 }
-
-enum DeviceCategory { Mobile, Tablet, Desktop, Expand }
-
-class DeviceInfo {
-  final String name;
-  final Size size;
-  final DeviceCategory category;
-
-  const DeviceInfo(this.name, this.size, this.category);
-
-  IconData get iconForCategory {
-    switch (category) {
-      case DeviceCategory.Desktop:
-        return Icons.desktop_mac;
-      case DeviceCategory.Tablet:
-        return Icons.tablet_mac;
-      case DeviceCategory.Expand:
-        return Icons.settings_ethernet;
-      case DeviceCategory.Mobile:
-      default:
-        return Icons.smartphone;
-    }
-  }
-}
-
-const Map<String, DeviceInfo> deviceSizes = {
-  'Device Window Size':
-      DeviceInfo('Window', Size.infinite, DeviceCategory.Expand),
-  'iPhone 5': DeviceInfo('iPhone 5', Size(320, 568), DeviceCategory.Mobile),
-  'iPhone 6': DeviceInfo('iPhone 6', Size(375, 667), DeviceCategory.Mobile),
-  'iPhone 6/7/8 Plus':
-      DeviceInfo('iPhone 6/7/8 Plus', Size(414, 736), DeviceCategory.Mobile),
-  'iPhone X': DeviceInfo('iPhone X', Size(375, 812), DeviceCategory.Mobile),
-  'iPhone XR/XS Max':
-      DeviceInfo('iPhone XR/XS Max', Size(414, 896), DeviceCategory.Mobile),
-  'iPad': DeviceInfo('iPad', Size(768, 1024), DeviceCategory.Tablet),
-  'iPad Pro 10.5-in':
-      DeviceInfo('iPad Pro 10.5-in', Size(834, 1112), DeviceCategory.Tablet),
-  'iPad Pro 12.9-in':
-      DeviceInfo('iPad Pro 12.9-in', Size(1024, 1366), DeviceCategory.Tablet),
-  'Galaxy S5': DeviceInfo('Galaxy S5', Size(360, 640), DeviceCategory.Mobile),
-  'Galaxy S9': DeviceInfo('Galaxy S9', Size(720, 1460), DeviceCategory.Mobile),
-  'Nexus 5X': DeviceInfo('Nexus 5X', Size(412, 660), DeviceCategory.Mobile),
-  'Nexus 6P': DeviceInfo('Nexus 6P', Size(412, 732), DeviceCategory.Mobile),
-  'Pixel': DeviceInfo('Pixel', Size(540, 960), DeviceCategory.Mobile),
-  'Pixel XL': DeviceInfo('Pixel XL', Size(720, 1280), DeviceCategory.Mobile),
-};

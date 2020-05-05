@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_storybook/mediaquery/device_sizes.dart';
 import 'package:flutter_storybook/mediaquery/mediaquery.dart';
 
 class MediaChooserButton extends StatelessWidget {
@@ -29,11 +30,11 @@ class MediaChooserButton extends StatelessWidget {
         ],
       ),
       onSelected: deviceSelected,
-      itemBuilder: (BuildContext context) => [
-        ...deviceSizes.values.map(
-          (key) => buildDeviceOption(context, key, selectedDevice),
-        ),
-      ],
+      itemBuilder: (BuildContext context) => deviceSizes
+          .map(
+            (key) => buildDeviceOption(context, key, selectedDevice),
+          )
+          .toList(),
     );
   }
 
