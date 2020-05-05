@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_storybook/ui/styles/text_styles.dart';
 
 const double kMaxOrgSize = 1000.0;
 
@@ -56,7 +57,7 @@ class ExpandableWidgetSection extends StatelessWidget {
                     initiallyExpanded: initiallyExpanded,
                     title: Text(
                       title,
-                      style: TextStyle(fontSize: 26),
+                      style: headerStyle,
                     ),
                     subtitle: (subtitle != null)
                         ? Padding(
@@ -108,12 +109,11 @@ class WidgetContainer extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               DefaultTextStyle.merge(
-                style: TextStyle(
-                  fontSize: 26,
-                ),
+                style: headerStyle,
                 child: title,
               ),
               SizedBox(

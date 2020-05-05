@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_storybook/flutter_storybook.dart';
+import 'package:flutter_storybook/ui/styles/text_styles.dart';
 
 class PropTableItem {
   final String name;
@@ -19,7 +20,6 @@ class PropTable extends StatelessWidget {
   final List<PropTableItem> items;
   final Widget title;
 
-  static const defaultTextStyle = TextStyle(fontSize: 24);
 
   const PropTable(
       {Key key, @required this.items, this.title = const Text('Props')})
@@ -28,18 +28,19 @@ class PropTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PresentationWidget(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(bottom: 8.0),
-            child: DefaultTextStyle.merge(style: defaultTextStyle, child: this.title),
-          ),
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Table(
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 32.0),
+                child: DefaultTextStyle.merge(
+                    style: headerStyle, child: this.title),
+              ),
+              Table(
                 border: TableBorder(
                     horizontalInside: BorderSide(
                       color: Colors.grey,
@@ -68,9 +69,9 @@ class PropTable extends StatelessWidget {
                   ...this.items.map((e) => buildTableRow(e)),
                 ],
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
