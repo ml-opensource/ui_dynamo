@@ -14,9 +14,16 @@ class MediaChooserButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton(
-      icon: Icon(
-        Icons.view_list,
-        color: Theme.of(context).iconTheme.color,
+      tooltip: 'Choose Preview Window Size',
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(deviceDisplay(context, selectedDevice)),
+          Icon(
+            selectedDevice.iconForCategory,
+            color: Theme.of(context).iconTheme.color,
+          ),
+        ],
       ),
       onSelected: deviceSelected,
       itemBuilder: (BuildContext context) => [

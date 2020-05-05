@@ -111,6 +111,10 @@ class _MediaQueryChooserState extends State<MediaQueryChooser> {
                 tooltip: 'Invert Colors On / Off',
                 onPressed: _toggleInvertColors,
               ),
+              Container(
+                height: 15,
+                child: VerticalDivider(),
+              ),
               IconButton(
                 icon: Icon(
                   currentMediaQuery.highContrast
@@ -120,9 +124,17 @@ class _MediaQueryChooserState extends State<MediaQueryChooser> {
                 tooltip: 'High Contrast On / Off',
                 onPressed: _toggleHighContrast,
               ),
+              Container(
+                height: 15,
+                child: VerticalDivider(),
+              ),
               TextScaleFactorWidget(
                 textScaleFactor: currentMediaQuery.textScaleFactor,
                 textScaleFactorChanged: _textScaleFactorChanged,
+              ),
+              Container(
+                height: 15,
+                child: VerticalDivider(),
               ),
               IconButton(
                 icon: Icon(
@@ -134,11 +146,19 @@ class _MediaQueryChooserState extends State<MediaQueryChooser> {
                   _toggleBrightness();
                 },
               ),
-              if (currentDeviceSelected != null)
-                Text(deviceDisplay(context, currentDeviceSelected)),
+              Container(
+                height: 15,
+                child: VerticalDivider(),
+              ),
+              SizedBox(
+                width: 15,
+              ),
               MediaChooserButton(
                 deviceSelected: (value) => _deviceSelected(context, value),
                 selectedDevice: currentDeviceSelected,
+              ),
+              SizedBox(
+                width: 15,
               ),
             ],
           ),
