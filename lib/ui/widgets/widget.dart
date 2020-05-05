@@ -28,13 +28,10 @@ class StoryBookWidgetList extends StoryBookWidget {
       : super(
           (context, data) => MediaQuery(
             data: data,
-            child: Padding(
-              padding: EdgeInsets.only(left: 16.0, right: 16.0),
-              child: ListView(
-                children: <Widget>[
-                  ...widgets(context),
-                ],
-              ),
+            child: ListView(
+              children: <Widget>[
+                ...widgets(context),
+              ],
             ),
           ),
         );

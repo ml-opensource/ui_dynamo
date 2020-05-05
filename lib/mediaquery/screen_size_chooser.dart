@@ -19,6 +19,9 @@ class MediaChooserButton extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(deviceDisplay(context, selectedDevice)),
+          SizedBox(
+            width: 8,
+          ),
           Icon(
             selectedDevice.iconForCategory,
             color: Theme.of(context).iconTheme.color,

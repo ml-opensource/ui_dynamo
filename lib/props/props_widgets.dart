@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_storybook/flutter_storybook.dart';
 
 class PropTableItem {
   final String name;
@@ -26,49 +27,51 @@ class PropTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(bottom: 8.0),
-          child: DefaultTextStyle.merge(style: defaultTextStyle, child: this.title),
-        ),
-        Card(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Table(
-              border: TableBorder(
-                  horizontalInside: BorderSide(
-                    color: Colors.grey,
-                  ),
-                  verticalInside: BorderSide(
-                    color: Colors.grey,
-                  )),
-              children: [
-                TableRow(children: [
-                  PropTableHeader(
-                    title: 'Name',
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 12),
-                    child: PropTableHeader(
-                      title: 'Description',
+    return PresentationWidget(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: DefaultTextStyle.merge(style: defaultTextStyle, child: this.title),
+          ),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Table(
+                border: TableBorder(
+                    horizontalInside: BorderSide(
+                      color: Colors.grey,
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 12),
-                    child: PropTableHeader(
-                      title: 'Default Value',
+                    verticalInside: BorderSide(
+                      color: Colors.grey,
+                    )),
+                children: [
+                  TableRow(children: [
+                    PropTableHeader(
+                      title: 'Name',
                     ),
-                  ),
-                ]),
-                ...this.items.map((e) => buildTableRow(e)),
-              ],
+                    Padding(
+                      padding: const EdgeInsets.only(left: 12),
+                      child: PropTableHeader(
+                        title: 'Description',
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 12),
+                      child: PropTableHeader(
+                        title: 'Default Value',
+                      ),
+                    ),
+                  ]),
+                  ...this.items.map((e) => buildTableRow(e)),
+                ],
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

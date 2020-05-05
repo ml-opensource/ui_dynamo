@@ -152,20 +152,25 @@ class AppStoryBook extends StatelessWidget {
   StoryBookPage buildButtonsPage() => StoryBookPage.list(
         title: 'Button States',
         widgets: (context) => [
-          RaisedButton(
-            onPressed: actions(context).onPressed('Primary'),
-            child: Text('Primary'),
+          WidgetContainer(
+            title: Text('Choose a Button'),
+            children: [
+              RaisedButton(
+                onPressed: actions(context).onPressed('Primary'),
+                child: Text('Primary'),
+              ),
+              RaisedButton(
+                onPressed: null,
+                child: Text('Disabled'),
+              ),
+              RaisedButton(
+                onPressed: actions(context).onPressed('Secondary'),
+                child: Text('Secondary'),
+                color: Colors.blue,
+                textColor: Colors.white,
+              ),
+            ],
           ),
-          RaisedButton(
-            onPressed: null,
-            child: Text('Disabled'),
-          ),
-          RaisedButton(
-            onPressed: actions(context).onPressed('Secondary'),
-            child: Text('Secondary'),
-            color: Colors.blue,
-            textColor: Colors.white,
-          )
         ],
       );
 
@@ -266,8 +271,10 @@ Nunc ac pulvinar nunc. Sed blandit mauris sed aliquam lobortis. Vivamus viverra 
               ),
             ],
           ),
-          Text(
-              "Toast is a powerful widget that displays a status notification in the UI."),
+          PresentationWidget(
+            child: Text(
+                "Toast is a powerful widget that displays a status notification in the UI."),
+          ),
           PropTable(
             items: [
               PropTableItem(
