@@ -14,30 +14,33 @@ class TextScaleFactorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        HoldDetector(
-          holdTimeout: Duration(milliseconds: 200),
-          enableHapticFeedback: true,
-          onHold: _incrementFactor,
-          child: IconButton(
-            icon: Icon(Icons.remove),
-            onPressed: textScaleFactor > 0 ? () => _incrementFactor() : null,
+    return Tooltip(
+      message: 'Select a Text Scale',
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          HoldDetector(
+            holdTimeout: Duration(milliseconds: 200),
+            enableHapticFeedback: true,
+            onHold: _incrementFactor,
+            child: IconButton(
+              icon: Icon(Icons.remove),
+              onPressed: textScaleFactor > 0 ? () => _incrementFactor() : null,
+            ),
           ),
-        ),
-        Icon(Icons.text_fields),
-        Text("${textScaleFactor.toStringAsFixed(2)}"),
-        HoldDetector(
-          holdTimeout: Duration(milliseconds: 200),
-          enableHapticFeedback: true,
-          onHold: _decrementFactor,
-          child: IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () => _decrementFactor(),
-          ),
-        )
-      ],
+          Icon(Icons.text_fields),
+          Text("${textScaleFactor.toStringAsFixed(2)}"),
+          HoldDetector(
+            holdTimeout: Duration(milliseconds: 200),
+            enableHapticFeedback: true,
+            onHold: _decrementFactor,
+            child: IconButton(
+              icon: Icon(Icons.add),
+              onPressed: () => _decrementFactor(),
+            ),
+          )
+        ],
+      ),
     );
   }
 
