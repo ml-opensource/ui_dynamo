@@ -158,16 +158,18 @@ class _StoryBookHomePage extends StatelessWidget {
           StoryBookData data) =>
       Row(
         children: [
-          Container(
-            constraints: BoxConstraints(maxWidth: 500),
-            child: Card(
-              margin: EdgeInsets.only(top: 16.0, bottom: 16.0),
-              child: RoutesList(
-                shrinkWrap: true,
-                data: data,
-                selectedPage: selectedPage,
-                onSelectPage: (folder, page) =>
-                    _selectPage(page, folder, context),
+          Flexible(
+            child: Container(
+              constraints: BoxConstraints(maxWidth: 500),
+              child: Card(
+                margin: EdgeInsets.only(top: 16.0, bottom: 16.0),
+                child: RoutesList(
+                  shrinkWrap: true,
+                  data: data,
+                  selectedPage: selectedPage,
+                  onSelectPage: (folder, page) =>
+                      _selectPage(page, folder, context),
+                ),
               ),
             ),
           ),
@@ -245,11 +247,13 @@ class _StoryBookHomePage extends StatelessWidget {
           ),
           Row(
             children: [
-              MediaQueryToolbar(
-                currentMediaQuery: query.currentMediaQuery,
-                onMediaQueryChange: query.selectMediaQuery,
-                currentDeviceSelected: query.currentDevice,
-                onDeviceInfoChanged: query.selectCurrentDevice,
+              Flexible(
+                child: MediaQueryToolbar(
+                  currentMediaQuery: query.currentMediaQuery,
+                  onMediaQueryChange: query.selectMediaQuery,
+                  currentDeviceSelected: query.currentDevice,
+                  onDeviceInfoChanged: query.selectCurrentDevice,
+                ),
               ),
             ],
           ),
