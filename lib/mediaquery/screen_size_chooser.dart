@@ -16,18 +16,21 @@ class MediaChooserButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return PopupMenuButton(
       tooltip: 'Choose Preview Window Size',
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(deviceDisplay(context, selectedDevice)),
-          SizedBox(
-            width: 8,
-          ),
-          Icon(
-            selectedDevice.iconForCategory,
-            color: Theme.of(context).iconTheme.color,
-          ),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(deviceDisplay(context, selectedDevice)),
+            SizedBox(
+              width: 8,
+            ),
+            Icon(
+              selectedDevice.iconForCategory,
+              color: Theme.of(context).iconTheme.color,
+            ),
+          ],
+        ),
       ),
       onSelected: deviceSelected,
       itemBuilder: (BuildContext context) => deviceSizes

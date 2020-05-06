@@ -23,7 +23,7 @@ class MediaQueryToolbar extends StatelessWidget {
   void _deviceSelected(BuildContext context, DeviceInfo device) {
     onDeviceInfoChanged(device);
     onMediaQueryChange(currentMediaQuery.copyWith(
-      size: device.size.boundedSize(context),
+      size: device.logicalSize.boundedSize(context),
     ));
   }
 
@@ -66,9 +66,15 @@ class MediaQueryToolbar extends StatelessWidget {
     ));
   }
 
+  Widget buildDivider() => Container(
+        height: 15,
+        child: VerticalDivider(),
+      );
+
   @override
   Widget build(BuildContext context) {
     return Card(
+      margin: EdgeInsets.only(left: 4.0, right: 4.0),
       elevation: 4.0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
@@ -86,6 +92,7 @@ class MediaQueryToolbar extends StatelessWidget {
             displayIcon: Icons.aspect_ratio,
             tooltip: 'Select a device pixel ratio',
           ),
+          buildDivider(),
           IconButton(
             icon: Icon(currentMediaQuery.disableAnimations
                 ? Icons.directions_walk
@@ -94,10 +101,7 @@ class MediaQueryToolbar extends StatelessWidget {
                 (currentMediaQuery.disableAnimations ? 'On' : 'Off'),
             onPressed: _toggleAnimations,
           ),
-          Container(
-            height: 15,
-            child: VerticalDivider(),
-          ),
+          buildDivider(),
           IconButton(
             icon: Icon(
               currentMediaQuery.invertColors
@@ -108,10 +112,7 @@ class MediaQueryToolbar extends StatelessWidget {
                 (currentMediaQuery.invertColors ? 'Off' : 'On'),
             onPressed: _toggleInvertColors,
           ),
-          Container(
-            height: 15,
-            child: VerticalDivider(),
-          ),
+          buildDivider(),
           IconButton(
             icon: Icon(
               currentMediaQuery.highContrast
@@ -122,20 +123,14 @@ class MediaQueryToolbar extends StatelessWidget {
                 (currentMediaQuery.highContrast ? 'Off' : 'On'),
             onPressed: _toggleHighContrast,
           ),
-          Container(
-            height: 15,
-            child: VerticalDivider(),
-          ),
+          buildDivider(),
           AdjustableNumberScaleWidget(
             scaleFactor: currentMediaQuery.textScaleFactor,
             scaleFactorChanged: _textScaleFactorChanged,
             displayIcon: Icons.text_fields,
             tooltip: 'Select a Text Scale',
           ),
-          Container(
-            height: 15,
-            child: VerticalDivider(),
-          ),
+          buildDivider(),
           IconButton(
             icon: Icon(currentMediaQuery.platformBrightness == Brightness.light
                 ? Icons.brightness_7
@@ -148,10 +143,7 @@ class MediaQueryToolbar extends StatelessWidget {
               _toggleBrightness();
             },
           ),
-          Container(
-            height: 15,
-            child: VerticalDivider(),
-          ),
+          buildDivider(),
           MediaChooserButton(
             deviceSelected: (value) => _deviceSelected(context, value),
             selectedDevice: currentDeviceSelected,
