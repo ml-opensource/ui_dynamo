@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_storybook/mediaquery/device_sizes.dart';
 import 'package:flutter_storybook/mediaquery/media_query_toolbar.dart';
 import 'package:flutter_storybook/ui/materialapp+extensions.dart';
+import 'package:flutter_storybook/ui/utils/measuresize.dart';
 import 'package:flutter_storybook/ui/widgets/size+extensions.dart';
 
 typedef MediaWidgetBuilder = Widget Function(BuildContext, MediaQueryData);
@@ -39,6 +40,13 @@ String deviceDisplay(BuildContext context, DeviceInfo deviceInfo) {
 class _MediaQueryChooserState extends State<MediaQueryChooser> {
   MediaQueryData currentMediaQuery;
   DeviceInfo currentDeviceSelected = deviceSizes[0];
+  double toolbarHeight = 0;
+
+  void _toolbarSizeChanged(Size size) {
+    setState(() {
+      toolbarHeight = size.height;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,46 +55,48 @@ class _MediaQueryChooserState extends State<MediaQueryChooser> {
           MediaQuery.of(context).copyWith(size: currentDeviceSelected.size);
     }
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
+    return Stack(
+      alignment: AlignmentDirectional.topCenter,
       children: <Widget>[
-        buildMediaQueryToolbar(context),
-        Expanded(
-          child: !widget.shouldScroll
-              ? widget.base.isolatedCopy(
-                  home: widget.builder(context, currentMediaQuery))
-              : SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: SingleChildScrollView(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border:
-                            Border.all(color: Theme.of(context).accentColor),
-                      ),
-                      constraints: BoxConstraints.tight(
-                          currentMediaQuery.size.boundedSize(context)),
-                      child: widget.base.isolatedCopy(
-                          home: widget.builder(context, currentMediaQuery)),
+        !widget.shouldScroll
+            ? widget.base.isolatedCopy(
+                home: widget.builder(context, currentMediaQuery))
+            : SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: SingleChildScrollView(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border:
+                          Border.all(color: Theme.of(context).accentColor),
                     ),
+                    margin: EdgeInsets.only(top: toolbarHeight),
+                    constraints: BoxConstraints.tight(
+                        currentMediaQuery.size.boundedSize(context)),
+                    child: widget.base.isolatedCopy(
+                        home: widget.builder(context, currentMediaQuery)),
                   ),
                 ),
-        ),
+              ),
+        buildMediaQueryToolbar(context),
       ],
     );
   }
 
-  buildMediaQueryToolbar(BuildContext context) => MediaQueryToolbar(
-        currentDeviceSelected: currentDeviceSelected,
-        currentMediaQuery: currentMediaQuery,
-        onDeviceInfoChanged: (info) {
-          setState(() {
-            currentDeviceSelected = info;
-          });
-        },
-        onMediaQueryChange: (query) {
-          setState(() {
-            currentMediaQuery = query;
-          });
-        },
+  buildMediaQueryToolbar(BuildContext context) => MeasureSize(
+        onChange: _toolbarSizeChanged,
+        child: MediaQueryToolbar(
+          currentDeviceSelected: currentDeviceSelected,
+          currentMediaQuery: currentMediaQuery,
+          onDeviceInfoChanged: (info) {
+            setState(() {
+              currentDeviceSelected = info;
+            });
+          },
+          onMediaQueryChange: (query) {
+            setState(() {
+              currentMediaQuery = query;
+            });
+          },
+        ),
       );
 }

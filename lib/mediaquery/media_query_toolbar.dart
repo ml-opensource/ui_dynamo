@@ -69,12 +69,16 @@ class MediaQueryToolbar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      elevation: 4.0,
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-        bottomRight: Radius.circular(8.0),
-      )),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
+        borderRadius: BorderRadius.only(
+          bottomRight: Radius.circular(8.0),
+          bottomLeft: Radius.circular(8.0),
+        ),
+      ),
+      child: Wrap(
+        direction: Axis.horizontal,
+        crossAxisAlignment: WrapCrossAlignment.center,
         children: <Widget>[
           AdjustableNumberScaleWidget(
             scaleFactor: currentMediaQuery.devicePixelRatio,
@@ -86,7 +90,8 @@ class MediaQueryToolbar extends StatelessWidget {
             icon: Icon(currentMediaQuery.disableAnimations
                 ? Icons.directions_walk
                 : Icons.directions_run),
-            tooltip: 'Toggle Animations',
+            tooltip: 'Toggle Animations ' +
+                (currentMediaQuery.disableAnimations ? 'On' : 'Off'),
             onPressed: _toggleAnimations,
           ),
           Container(
@@ -99,7 +104,8 @@ class MediaQueryToolbar extends StatelessWidget {
                   ? Icons.invert_colors
                   : Icons.invert_colors_off,
             ),
-            tooltip: 'Invert Colors On / Off',
+            tooltip: 'Invert Colors ' +
+                (currentMediaQuery.invertColors ? 'Off' : 'On'),
             onPressed: _toggleInvertColors,
           ),
           Container(
@@ -112,7 +118,8 @@ class MediaQueryToolbar extends StatelessWidget {
                   ? Icons.tonality
                   : Icons.panorama_fish_eye,
             ),
-            tooltip: 'High Contrast On / Off',
+            tooltip: 'High Contrast ' +
+                (currentMediaQuery.highContrast ? 'Off' : 'On'),
             onPressed: _toggleHighContrast,
           ),
           Container(
@@ -133,7 +140,10 @@ class MediaQueryToolbar extends StatelessWidget {
             icon: Icon(currentMediaQuery.platformBrightness == Brightness.light
                 ? Icons.brightness_7
                 : Icons.brightness_3),
-            tooltip: 'Turn Brightness On / Off',
+            tooltip: 'Make Brightness ' +
+                (currentMediaQuery.platformBrightness == Brightness.light
+                    ? 'Dark'
+                    : 'Light'),
             onPressed: () {
               _toggleBrightness();
             },
@@ -142,15 +152,9 @@ class MediaQueryToolbar extends StatelessWidget {
             height: 15,
             child: VerticalDivider(),
           ),
-          SizedBox(
-            width: 15,
-          ),
           MediaChooserButton(
             deviceSelected: (value) => _deviceSelected(context, value),
             selectedDevice: currentDeviceSelected,
-          ),
-          SizedBox(
-            width: 15,
           ),
         ],
       ),
