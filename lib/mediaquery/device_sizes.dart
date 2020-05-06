@@ -11,6 +11,15 @@ class DeviceInfo {
 
   const DeviceInfo(this.name, this.logicalSize, this.pixelSize, this.category);
 
+  DeviceInfo copyWith({
+    String name,
+    Size logicalSize,
+    Size pixelSize,
+    DeviceCategory category,
+  }) =>
+      DeviceInfo(name ?? this.name, logicalSize ?? this.logicalSize,
+          pixelSize ?? this.pixelSize, category ?? this.category);
+
   IconData get iconForCategory {
     switch (category) {
       case DeviceCategory.Desktop:

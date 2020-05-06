@@ -23,6 +23,7 @@ MaterialApp buildApp() => MaterialApp(
         iconTheme: IconThemeData(
           color: Colors.redAccent,
         ),
+        backgroundColor: Colors.white,
         buttonTheme: ButtonThemeData(
           buttonColor: Colors.red,
           textTheme: ButtonTextTheme.primary,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_storybook/mediaquery/device_sizes.dart';
 import 'package:flutter_storybook/mediaquery/media_query_toolbar.dart';
+import 'package:flutter_storybook/mediaquery/override_media_query_provider.dart';
 import 'package:flutter_storybook/ui/materialapp+extensions.dart';
 import 'package:flutter_storybook/ui/utils/measuresize.dart';
 import 'package:flutter_storybook/ui/widgets/size+extensions.dart';
@@ -38,8 +39,6 @@ String deviceDisplay(BuildContext context, DeviceInfo deviceInfo) {
 }
 
 class _MediaQueryChooserState extends State<MediaQueryChooser> {
-  MediaQueryData currentMediaQuery;
-  DeviceInfo currentDeviceSelected = deviceSizes[0];
   double toolbarHeight = 0;
 
   void _toolbarSizeChanged(Size size) {
@@ -50,11 +49,7 @@ class _MediaQueryChooserState extends State<MediaQueryChooser> {
 
   @override
   Widget build(BuildContext context) {
-    if (currentMediaQuery == null) {
-      currentMediaQuery =
-          MediaQuery.of(context).copyWith(size: currentDeviceSelected.logicalSize.boundedSize(context));
-    }
-
+    final query = mediaQuery(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -64,7 +59,7 @@ class _MediaQueryChooserState extends State<MediaQueryChooser> {
             children: <Widget>[
               !widget.shouldScroll
                   ? widget.base.isolatedCopy(
-                      home: widget.builder(context, currentMediaQuery))
+                      home: widget.builder(context, query.currentMediaQuery))
                   : SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: SingleChildScrollView(
@@ -75,9 +70,9 @@ class _MediaQueryChooserState extends State<MediaQueryChooser> {
                           ),
                           margin: EdgeInsets.only(top: toolbarHeight),
                           constraints: BoxConstraints.tight(
-                              currentMediaQuery.size.boundedSize(context)),
+                              query.boundedMediaQuery.size),
                           child: widget.base.isolatedCopy(
-                              home: widget.builder(context, currentMediaQuery)),
+                              home: widget.builder(context, query.currentMediaQuery)),
                         ),
                       ),
                     ),
@@ -89,21 +84,16 @@ class _MediaQueryChooserState extends State<MediaQueryChooser> {
     );
   }
 
-  buildMediaQueryToolbar(BuildContext context) => MeasureSize(
+  buildMediaQueryToolbar(BuildContext context) {
+    final query = mediaQuery(context);
+    return MeasureSize(
         onChange: _toolbarSizeChanged,
         child: MediaQueryToolbar(
-          currentDeviceSelected: currentDeviceSelected,
-          currentMediaQuery: currentMediaQuery,
-          onDeviceInfoChanged: (info) {
-            setState(() {
-              currentDeviceSelected = info;
-            });
-          },
-          onMediaQueryChange: (query) {
-            setState(() {
-              currentMediaQuery = query;
-            });
-          },
+          currentDeviceSelected: query.currentDevice,
+          currentMediaQuery: query.currentMediaQuery,
+          onDeviceInfoChanged: query.selectCurrentDevice,
+          onMediaQueryChange: query.selectMediaQuery,
         ),
       );
+  }
 }

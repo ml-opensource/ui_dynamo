@@ -14,9 +14,7 @@ StoryBookPage storyboard(MaterialApp app,
     title: Text(title),
     widget: StoryBookWidget((context, data) => StoryBoard(
           child: app,
-          mediaQueryData: data.copyWith(
-            size: data.size.boundedSize(context),
-          ),
+          mediaQueryData: data,
           enabled: true,
           routesMapping: routesMapping,
         )),

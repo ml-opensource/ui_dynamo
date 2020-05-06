@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_storybook/actions/actions_extensions.dart';
 import 'package:flutter_storybook/flutter_storybook.dart';
+import 'package:flutter_storybook/mediaquery/device_sizes.dart';
+import 'package:flutter_storybook/mediaquery/media_query_toolbar.dart';
 import 'package:flutter_storybook/mediaquery/mediaquery.dart';
+import 'package:flutter_storybook/mediaquery/override_media_query_provider.dart';
 import 'package:flutter_storybook/models.dart';
 import 'package:flutter_storybook/props/props_extensions.dart';
 import 'package:flutter_storybook/ui/drawer.dart';
@@ -17,25 +20,30 @@ class StoryBook extends StatefulWidget {
   final MaterialApp app;
 
   factory StoryBook.withApp(MaterialApp app,
-          {@required StoryBookData data,
-          Map<String, List<String>> routesMapping}) =>
-      StoryBook(
-        app: app,
-        data: data.merge(items: [
-          StoryBookPage.of(
-              title: 'Home',
-              icon: Icon(Icons.home),
-              child: (context) => _StoryBookHomePage()),
-          storyboard(app, title: 'Storyboard', routesMapping: routesMapping),
-          StoryBookFolder.of(
-            title: 'Routes',
-            pages: [
-              ...app.routes.entries.map((entry) =>
-                  StoryBookPage.of(title: entry.key, child: entry.value)),
-            ],
-          ),
-        ]),
-      );
+      {@required StoryBookData data, Map<String, List<String>> routesMapping}) {
+    final updatedData = data.merge(items: [
+      storyboard(app, title: 'Storyboard', routesMapping: routesMapping),
+      StoryBookFolder.of(
+        title: 'Routes',
+        pages: [
+          ...app.routes.entries.map((entry) =>
+              StoryBookPage.of(title: entry.key, child: entry.value)),
+        ],
+      ),
+    ]);
+    return StoryBook(
+      app: app,
+      data: updatedData.merge(items: [
+        // merge with the folder routes so the home page can capture the data.
+        StoryBookPage.of(
+            title: 'Home',
+            icon: Icon(Icons.home),
+            child: (context) => _StoryBookHomePage(
+                  data: updatedData,
+                )),
+      ], mergeFirst: true),
+    );
+  }
 
   const StoryBook({Key key, @required this.data, @required this.app})
       : super(key: key);
@@ -46,20 +54,6 @@ class StoryBook extends StatefulWidget {
 
 class _StoryBookState extends State<StoryBook> {
   bool isDrawerOpen = false;
-
-  StoryBookPage selectedPageFromWidget(BuildContext context) {
-    final selectedFolderKey = drawer(context).folderKey;
-    final selectedPageKey = drawer(context).pageKey;
-    if (selectedFolderKey != null && selectedPageKey != null) {
-      final folder = widget.data.items.firstWhere(
-          (element) => element.key == selectedFolderKey,
-          orElse: () => null);
-      if (folder != null) {
-        return folder.pageFromKey(selectedPageKey);
-      }
-    }
-    return null;
-  }
 
   void _selectPage(
       StoryBookPage page, StoryBookItem folder, BuildContext context) {
@@ -93,10 +87,13 @@ class _StoryBookState extends State<StoryBook> {
           ChangeNotifierProvider(
             create: (context) => DrawerProvider(),
           ),
+          ChangeNotifierProvider(
+            create: (context) => OverrideMediaQueryProvider(deviceSizes[0]),
+          )
         ],
         child: Builder(
           builder: (context) {
-            final selectedPage = selectedPageFromWidget(context);
+            final selectedPage = selectedPageFromWidget(widget.data, context);
             return Scaffold(
                 appBar: AppBar(
                   title:
@@ -145,74 +142,127 @@ class StoryBookPageWrapperWidget extends StatelessWidget {
 }
 
 class _StoryBookHomePage extends StatelessWidget {
+  final StoryBookData data;
+
   const _StoryBookHomePage({
     Key key,
+    @required this.data,
   }) : super(key: key);
+
+  void _selectPage(
+      StoryBookPage page, StoryBookItem folder, BuildContext context) {
+    drawer(context).select(context, folder.key, page.key, popDrawer: true);
+  }
+
+  buildRoutesListing(StoryBookPage selectedPage, BuildContext context,
+          StoryBookData data) =>
+      Row(
+        children: [
+          Container(
+            constraints: BoxConstraints(maxWidth: 500),
+            child: Card(
+              margin: EdgeInsets.only(top: 16.0, bottom: 16.0),
+              child: RoutesList(
+                shrinkWrap: true,
+                data: data,
+                selectedPage: selectedPage,
+                onSelectPage: (folder, page) =>
+                    _selectPage(page, folder, context),
+              ),
+            ),
+          ),
+        ],
+      );
 
   @override
   Widget build(BuildContext context) {
+    final selectedPage = selectedPageFromWidget(data, context);
+    final query = mediaQuery(context);
     return Container(
-      padding: const EdgeInsets.all(32.0),
-      color: Colors.white,
-      child: Center(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Icon(
-              Icons.book,
-              size: 100,
-            ),
-            SizedBox(
-              height: 16,
-            ),
-            Text(
-              'Welcome to Flutter Storybook. ',
-              style: TextStyle(fontSize: 30),
-            ),
-            SizedBox(
-              height: 24,
-            ),
-            Text.rich(
-              TextSpan(children: [
-                TextSpan(text: 'Click on '),
-                WidgetSpan(child: Icon(Icons.menu)),
-                TextSpan(text: ' to select a  '),
-                WidgetSpan(child: Icon(Icons.folder)),
-                TextSpan(text: 'to expand to select a page to preview.')
-              ]),
-              style: TextStyle(fontSize: 20),
-            ),
-            SizedBox(
-              height: 16,
-            ),
-            Text.rich(
-              TextSpan(children: [
-                TextSpan(text: 'View the storyboard '),
-                WidgetSpan(child: Icon(Icons.book)),
-                TextSpan(text: ' to view your whole app on one screen.')
-              ]),
-              style: TextStyle(fontSize: 20),
-            ),
-            SizedBox(
-              height: 16,
-            ),
-            Text(
-              'Utilize the toolbar at the top to change MediaQueryData passed '
-              'down to the rendered screens. Each page in the storybook is a '
-              'separate app experience',
-              style: TextStyle(fontSize: 20),
-            ),
-            SizedBox(
-              height: 16,
-            ),
-            Text(
-              'Utilize Props to preview test data and experiment with '
-              'how widgets get rendered. Utilize actions to quickly debug action '
-              'streams.',
-              style: TextStyle(fontSize: 20),
-            ),
-          ],
-        ),
+      padding: const EdgeInsets.only(left: 32.0, right: 32.0),
+      color: Theme.of(context).backgroundColor,
+      alignment: AlignmentDirectional.center,
+      child: ListView(
+        children: <Widget>[
+          SizedBox(
+            height: 32,
+          ),
+          Wrap(
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: 16.0,
+            runSpacing: 16.0,
+            children: [
+              Icon(
+                Icons.book,
+                size: 50,
+              ),
+              Text(
+                'Welcome to Flutter Storybook. ',
+                style: TextStyle(fontSize: 30),
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 24,
+          ),
+          Text.rich(
+            TextSpan(children: [
+              TextSpan(text: 'Start with the storyboard '),
+              WidgetSpan(child: Icon(Icons.book)),
+              TextSpan(text: ' to view your whole app on one screen.')
+            ]),
+            style: TextStyle(fontSize: 20),
+          ),
+          buildRoutesListing(selectedPage, context,
+              data.copyWith(items: data.items.sublist(0, 1))),
+          SizedBox(
+            height: 16,
+          ),
+          Text.rich(
+            TextSpan(children: [
+              TextSpan(text: ' Select a '),
+              WidgetSpan(child: Icon(Icons.folder)),
+              TextSpan(text: ' to pick a page to preview.'),
+              TextSpan(text: ' The drawer '),
+              WidgetSpan(child: Icon(Icons.menu)),
+              TextSpan(text: ' also contains the same.')
+            ]),
+            style: TextStyle(fontSize: 20),
+          ),
+          buildRoutesListing(selectedPage, context,
+              data.copyWith(items: data.items.sublist(1))),
+          SizedBox(
+            height: 16,
+          ),
+          Text(
+            '3. Utilize the toolbar at the top to change MediaQueryData passed '
+            'down to the rendered screens. Each page in the storybook / storyboard is a '
+            'separate app experience.',
+            style: TextStyle(fontSize: 20),
+          ),
+          SizedBox(
+            height: 16,
+          ),
+          Row(
+            children: [
+              MediaQueryToolbar(
+                currentMediaQuery: query.currentMediaQuery,
+                onMediaQueryChange: query.selectMediaQuery,
+                currentDeviceSelected: query.currentDevice,
+                onDeviceInfoChanged: query.selectCurrentDevice,
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 16,
+          ),
+          Text(
+            '4. Utilize Props to preview test data and experiment with '
+            'how widgets get rendered. Utilize actions to quickly debug action '
+            'streams.',
+            style: TextStyle(fontSize: 20),
+          ),
+        ],
       ),
     );
   }

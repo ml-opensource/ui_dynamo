@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_storybook/actions/actions_extensions.dart';
+import 'package:flutter_storybook/models.dart';
 import 'package:flutter_storybook/props/props_extensions.dart';
+import 'package:flutter_storybook/ui/widgets/page.dart';
 import 'package:provider/provider.dart';
 
 class DrawerProvider extends ChangeNotifier {
@@ -26,3 +28,17 @@ class DrawerProvider extends ChangeNotifier {
 
 DrawerProvider drawer(BuildContext context) =>
     Provider.of<DrawerProvider>(context);
+
+StoryBookPage selectedPageFromWidget(StoryBookData data, BuildContext context) {
+  final selectedFolderKey = drawer(context).folderKey;
+  final selectedPageKey = drawer(context).pageKey;
+  if (selectedFolderKey != null && selectedPageKey != null) {
+    final folder = data.items.firstWhere(
+        (element) => element.key == selectedFolderKey,
+        orElse: () => null);
+    if (folder != null) {
+      return folder.pageFromKey(selectedPageKey);
+    }
+  }
+  return null;
+}

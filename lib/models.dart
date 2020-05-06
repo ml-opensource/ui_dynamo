@@ -32,7 +32,10 @@ class StoryBookData {
   final Widget title;
   final List<StoryBookItem> items;
 
-  StoryBookData({this.title, @required this.items});
+  /// Customize the header on the drawer. Default is DrawerHeader widget.
+  final Widget customDrawerHeader;
+
+  StoryBookData({this.title, @required this.items, this.customDrawerHeader});
 
   @override
   bool operator ==(Object other) =>
@@ -45,9 +48,25 @@ class StoryBookData {
   @override
   int get hashCode => title.hashCode ^ items.hashCode;
 
-  StoryBookData merge({List<StoryBookItem> items = const [], Widget title}) =>
+  StoryBookData merge(
+          {List<StoryBookItem> items = const [],
+          Widget title,
+
+          /// if true, we merge the items at start.
+          bool mergeFirst = true}) =>
       StoryBookData(title: title ?? this.title, items: [
-        ...items,
+        if (mergeFirst) ...items,
         ...this.items,
+        if (!mergeFirst) ...items,
       ]);
+
+  StoryBookData copyWith({
+    Widget title,
+    List<StoryBookItem> items,
+    Widget customDrawerHeader,
+  }) =>
+      StoryBookData(
+          items: items ?? this.items,
+          title: title ?? this.title,
+          customDrawerHeader: customDrawerHeader ?? this.customDrawerHeader);
 }
