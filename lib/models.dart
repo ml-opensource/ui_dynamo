@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_storybook/flutter_storybook.dart';
+import 'package:flutter_storybook/mediaquery/device_sizes.dart';
 
 abstract class StoryBookItem {
   final Key key;
@@ -35,7 +36,14 @@ class StoryBookData {
   /// Customize the header on the drawer. Default is DrawerHeader widget.
   final Widget customDrawerHeader;
 
-  StoryBookData({this.title, @required this.items, this.customDrawerHeader});
+  /// the initial preview size for all nested windows.
+  final DeviceInfo defaultDevice;
+
+  StoryBookData(
+      {this.title,
+      @required this.items,
+      this.customDrawerHeader,
+      this.defaultDevice});
 
   @override
   bool operator ==(Object other) =>
@@ -43,10 +51,16 @@ class StoryBookData {
       other is StoryBookData &&
           runtimeType == other.runtimeType &&
           title == other.title &&
-          items == other.items;
+          items == other.items &&
+          customDrawerHeader == other.customDrawerHeader &&
+          defaultDevice == other.defaultDevice;
 
   @override
-  int get hashCode => title.hashCode ^ items.hashCode;
+  int get hashCode =>
+      title.hashCode ^
+      items.hashCode ^
+      customDrawerHeader.hashCode ^
+      defaultDevice.hashCode;
 
   StoryBookData merge(
           {List<StoryBookItem> items = const [],
@@ -54,7 +68,7 @@ class StoryBookData {
 
           /// if true, we merge the items at start.
           bool mergeFirst = true}) =>
-      StoryBookData(title: title ?? this.title, items: [
+      copyWith(title: title ?? this.title, items: [
         if (mergeFirst) ...items,
         ...this.items,
         if (!mergeFirst) ...items,
@@ -64,9 +78,11 @@ class StoryBookData {
     Widget title,
     List<StoryBookItem> items,
     Widget customDrawerHeader,
+    DeviceInfo defaultDevice,
   }) =>
       StoryBookData(
           items: items ?? this.items,
           title: title ?? this.title,
-          customDrawerHeader: customDrawerHeader ?? this.customDrawerHeader);
+          customDrawerHeader: customDrawerHeader ?? this.customDrawerHeader,
+          defaultDevice: defaultDevice ?? this.defaultDevice);
 }

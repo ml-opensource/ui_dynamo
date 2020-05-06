@@ -88,7 +88,8 @@ class _StoryBookState extends State<StoryBook> {
             create: (context) => DrawerProvider(),
           ),
           ChangeNotifierProvider(
-            create: (context) => OverrideMediaQueryProvider(deviceSizes[0]),
+            create: (context) => OverrideMediaQueryProvider(
+                widget.data.defaultDevice ?? deviceSizes[0]),
           )
         ],
         child: Builder(

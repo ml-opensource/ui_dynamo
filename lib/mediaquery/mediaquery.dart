@@ -68,7 +68,7 @@ class _MediaQueryChooserState extends State<MediaQueryChooser> {
                             border:
                                 Border.all(color: Theme.of(context).accentColor),
                           ),
-                          margin: EdgeInsets.only(top: toolbarHeight),
+                          margin: EdgeInsets.only(top: toolbarHeight + 16),
                           constraints: BoxConstraints.tight(
                               query.boundedMediaQuery.size),
                           child: widget.base.isolatedCopy(

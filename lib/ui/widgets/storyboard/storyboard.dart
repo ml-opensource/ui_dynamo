@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_storybook/flutter_storybook.dart';
+import 'package:flutter_storybook/mediaquery/override_media_query_provider.dart';
 import 'package:flutter_storybook/ui/utils/hold_detector.dart';
-import 'package:flutter_storybook/ui/widgets/size+extensions.dart';
 import 'package:flutter_storybook/ui/widgets/storyboard/screen.dart';
 import 'package:flutter_storybook/ui/widgets/storyboard/utils.dart';
 
@@ -14,7 +14,6 @@ StoryBookPage storyboard(MaterialApp app,
     title: Text(title),
     widget: StoryBookWidget((context, data) => StoryBoard(
           child: app,
-          mediaQueryData: data,
           enabled: true,
           routesMapping: routesMapping,
         )),
@@ -28,9 +27,6 @@ StoryBookPage storyboard(MaterialApp app,
 class StoryBoard extends StatefulWidget {
   /// Wrap your Material App with this widget
   final MaterialApp child;
-
-  /// current media query to use.
-  final MediaQueryData mediaQueryData;
 
   /// You can disable this widget at any time and just return the child
   final bool enabled;
@@ -53,7 +49,6 @@ class StoryBoard extends StatefulWidget {
     Key key,
     @required this.child,
     this.enabled = true,
-    this.mediaQueryData,
     this.initialOffset,
     this.offsetChanged,
     this.initialScale,
@@ -88,8 +83,10 @@ class StoryboardController extends State<StoryBoard> {
 
   @override
   Widget build(BuildContext context) {
+    final query = mediaQuery(context);
+    final mediaQueryData = query.boundedMediaQuery;
     final base = widget.child;
-    final _size = widget.mediaQueryData.size;
+    final _size = mediaQueryData.size;
     if (!widget.enabled) return base;
     return Stack(
       children: [
@@ -107,6 +104,7 @@ class StoryboardController extends State<StoryBoard> {
                     if (base?.home != null && widget.routesMapping == null)
                       _addChild(
                         base,
+                        mediaQueryData,
                         base.home,
                         '/',
                         false,
@@ -118,6 +116,7 @@ class StoryboardController extends State<StoryBoard> {
                         widget.routesMapping == null)
                       _addChild(
                         base,
+                        mediaQueryData,
                         base.routes[base.initialRoute](context),
                         base.initialRoute,
                         false,
@@ -126,7 +125,7 @@ class StoryboardController extends State<StoryBoard> {
                             10),
                         'Initial Route',
                       ),
-                    ..._renderRoutes(),
+                    ..._renderRoutes(mediaQueryData),
                   ],
                 ),
               ),
@@ -171,6 +170,7 @@ class StoryboardController extends State<StoryBoard> {
 
   Positioned _addChild(
     MaterialApp base,
+    MediaQueryData mediaQueryData,
     Widget child,
     String routeName,
     bool isFirst,
@@ -185,7 +185,7 @@ class StoryboardController extends State<StoryBoard> {
         base: widget.child,
         child: child,
         offset: offset,
-        mediaQueryData: widget.mediaQueryData,
+        mediaQueryData: mediaQueryData,
         scale: _scale,
         label: label,
         routeName: routeName,
@@ -195,7 +195,7 @@ class StoryboardController extends State<StoryBoard> {
     );
   }
 
-  Positioned _addSectionStart(MaterialApp base,
+  Positioned _addSectionStart(MaterialApp base, MediaQueryData mediaQueryData,
       [Offset offset = Offset.zero, String label]) {
     return Positioned(
       top: calculateTop(offset, _offset, _scale),
@@ -225,17 +225,17 @@ class StoryboardController extends State<StoryBoard> {
           ),
         ),
         offset: offset,
-        mediaQueryData: widget.mediaQueryData,
+        mediaQueryData: mediaQueryData,
         scale: _scale,
         label: label,
       ),
     );
   }
 
-  _renderRoutes() {
+  _renderRoutes(MediaQueryData mediaQueryData) {
     final List<Widget> routesList = [];
     final base = widget.child;
-    final _size = widget.mediaQueryData.size;
+    final _size = mediaQueryData.size;
     final mapping = widget.routesMapping;
     if (mapping?.isNotEmpty == true) {
       var index = 0;
@@ -243,6 +243,7 @@ class StoryboardController extends State<StoryBoard> {
         var offsetIndex = 0;
         routesList.add(_addSectionStart(
           base,
+          mediaQueryData,
           Offset((_size.width + _kSpacing) * (offsetIndex),
               ((_size.height + _kSpacing) + 40) * index),
           entry.key,
@@ -250,6 +251,7 @@ class StoryboardController extends State<StoryBoard> {
         entry.value.forEach((route) {
           routesList.add(_addChild(
             base,
+            mediaQueryData,
             base.routes[route](context),
             route,
             false,
@@ -266,6 +268,7 @@ class StoryboardController extends State<StoryBoard> {
       for (var r = 0; r < base.routes.keys.length; r++) {
         routesList.add(_addChild(
           base,
+          mediaQueryData,
           base.routes[base.routes.keys.toList()[r]](context),
           base.routes.keys.toList()[r],
           false,

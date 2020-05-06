@@ -3,6 +3,7 @@ import 'package:example/widgets/radios.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_storybook/flutter_storybook.dart';
+import 'package:flutter_storybook/mediaquery/device_sizes.dart';
 
 import '../title_widgets.dart';
 import '../widgets/cells.dart';
@@ -34,6 +35,7 @@ class AppStoryBook extends StatelessWidget {
       },
       data: StoryBookData(
         title: Text('Example Storybook'),
+        defaultDevice: DeviceSizes.iphoneX,
         items: [
           StoryBookFolder.of(title: 'Widgets', pages: [
             buildTextStylePage(),
