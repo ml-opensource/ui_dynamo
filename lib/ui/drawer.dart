@@ -76,6 +76,7 @@ class RoutesList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
+      physics: shrinkWrap ? NeverScrollableScrollPhysics() : null,
       shrinkWrap: shrinkWrap,
       separatorBuilder: (context, index) => Divider(
         height: 1,
