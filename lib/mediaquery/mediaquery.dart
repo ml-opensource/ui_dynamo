@@ -52,7 +52,7 @@ class _MediaQueryChooserState extends State<MediaQueryChooser> {
   Widget build(BuildContext context) {
     if (currentMediaQuery == null) {
       currentMediaQuery =
-          MediaQuery.of(context).copyWith(size: currentDeviceSelected.logicalSize);
+          MediaQuery.of(context).copyWith(size: currentDeviceSelected.logicalSize.boundedSize(context));
     }
 
     return Row(

@@ -4,8 +4,8 @@ import 'package:flutter_storybook/props/props_extensions.dart';
 import 'package:provider/provider.dart';
 
 class DrawerProvider extends ChangeNotifier {
-  Key _selectedFolderKey;
-  Key _selectedPageKey;
+  Key _selectedFolderKey = ValueKey('Home');
+  Key _selectedPageKey = ValueKey('Home');
 
   void select(BuildContext context, Key folderKey, Key pageKey,
       {bool popDrawer = false}) {

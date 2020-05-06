@@ -19,8 +19,9 @@ class StoryBookDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: ListView(
-        children: <Widget>[
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
           DrawerHeader(
             child: DefaultTextStyle.merge(
               child: data.title,
@@ -30,12 +31,18 @@ class StoryBookDrawer extends StatelessWidget {
               color: Theme.of(context).primaryColor,
             ),
           ),
-          ...buildSidebar()
+          Expanded(
+            child: ListView.separated(
+              separatorBuilder: (context, index) => Divider(
+                height: 1,
+              ),
+              itemCount: data.items.length,
+              itemBuilder: (context, index) =>
+                  data.items[index].buildWidget(selectedPage, onSelectPage),
+            ),
+          ),
         ],
       ),
     );
   }
-
-  Iterable<Widget> buildSidebar() => data.items
-      .map((folder) => folder.buildWidget(selectedPage, onSelectPage));
 }
