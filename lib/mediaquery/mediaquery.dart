@@ -55,29 +55,34 @@ class _MediaQueryChooserState extends State<MediaQueryChooser> {
           MediaQuery.of(context).copyWith(size: currentDeviceSelected.logicalSize);
     }
 
-    return Stack(
-      alignment: AlignmentDirectional.topCenter,
-      children: <Widget>[
-        !widget.shouldScroll
-            ? widget.base.isolatedCopy(
-                home: widget.builder(context, currentMediaQuery))
-            : SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: SingleChildScrollView(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border:
-                          Border.all(color: Theme.of(context).accentColor),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Stack(
+          alignment: AlignmentDirectional.topCenter,
+          children: <Widget>[
+            !widget.shouldScroll
+                ? widget.base.isolatedCopy(
+                    home: widget.builder(context, currentMediaQuery))
+                : SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: SingleChildScrollView(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border:
+                              Border.all(color: Theme.of(context).accentColor),
+                        ),
+                        margin: EdgeInsets.only(top: toolbarHeight),
+                        constraints: BoxConstraints.tight(
+                            currentMediaQuery.size.boundedSize(context)),
+                        child: widget.base.isolatedCopy(
+                            home: widget.builder(context, currentMediaQuery)),
+                      ),
                     ),
-                    margin: EdgeInsets.only(top: toolbarHeight),
-                    constraints: BoxConstraints.tight(
-                        currentMediaQuery.size.boundedSize(context)),
-                    child: widget.base.isolatedCopy(
-                        home: widget.builder(context, currentMediaQuery)),
                   ),
-                ),
-              ),
-        buildMediaQueryToolbar(context),
+            buildMediaQueryToolbar(context),
+          ],
+        ),
       ],
     );
   }
