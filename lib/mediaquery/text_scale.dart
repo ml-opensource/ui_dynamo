@@ -6,18 +6,20 @@ class AdjustableNumberScaleWidget extends StatelessWidget {
   final double scaleFactor;
   final Function(double) scaleFactorChanged;
   final IconData displayIcon;
+  final String tooltip;
 
-  const AdjustableNumberScaleWidget(
-      {Key key,
-      this.scaleFactor = 0.0,
-      @required this.scaleFactorChanged,
-      this.displayIcon})
-      : super(key: key);
+  const AdjustableNumberScaleWidget({
+    Key key,
+    this.scaleFactor = 0.0,
+    @required this.scaleFactorChanged,
+    this.displayIcon,
+    @required this.tooltip,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Tooltip(
-      message: 'Select a Text Scale',
+      message: tooltip,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [

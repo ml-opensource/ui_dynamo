@@ -156,8 +156,9 @@ class _StoryBookHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MediaQueryChooser.mediaQuery(
       base: base,
-      builder: (context) => Padding(
+      builder: (context) => Container(
         padding: const EdgeInsets.all(32.0),
+        color: Colors.white,
         child: Center(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -165,7 +166,6 @@ class _StoryBookHomePage extends StatelessWidget {
               Icon(
                 Icons.book,
                 size: 100,
-                color: Colors.deepPurple,
               ),
               SizedBox(
                 height: 16,
@@ -174,13 +174,47 @@ class _StoryBookHomePage extends StatelessWidget {
                 'Welcome to Flutter Storybook. ',
                 style: TextStyle(fontSize: 30),
               ),
+              SizedBox(
+                height: 24,
+              ),
               Text.rich(
                 TextSpan(children: [
-                  TextSpan(text: 'Click on a '),
+                  TextSpan(text: 'Click on '),
+                  WidgetSpan(child: Icon(Icons.menu)),
+                  TextSpan(text: ' to select a  '),
                   WidgetSpan(child: Icon(Icons.folder)),
-                  TextSpan(text: ' to select a page to preview.')
+                  TextSpan(text: 'to expand to select a page to preview.')
                 ]),
-                style: TextStyle(fontSize: 25),
+                style: TextStyle(fontSize: 20),
+              ),
+              SizedBox(
+                height: 16,
+              ),
+              Text.rich(
+                TextSpan(children: [
+                  TextSpan(text: 'View the storyboard '),
+                  WidgetSpan(child: Icon(Icons.book)),
+                  TextSpan(text: ' to view your whole app on one screen.')
+                ]),
+                style: TextStyle(fontSize: 20),
+              ),
+              SizedBox(
+                height: 16,
+              ),
+              Text(
+                'Utilize the toolbar at the top to change MediaQueryData passed '
+                'down to the rendered screens. Each page in the storybook is a '
+                'separate app experience',
+                style: TextStyle(fontSize: 20),
+              ),
+              SizedBox(
+                height: 16,
+              ),
+              Text(
+                'Utilize Props to preview test data and experiment with '
+                'how widgets get rendered. Utilize actions to quickly debug action '
+                'streams.',
+                style: TextStyle(fontSize: 20),
               ),
             ],
           ),

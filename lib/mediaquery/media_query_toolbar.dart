@@ -80,6 +80,7 @@ class MediaQueryToolbar extends StatelessWidget {
             scaleFactor: currentMediaQuery.devicePixelRatio,
             scaleFactorChanged: _devicePixelRatioChanged,
             displayIcon: Icons.aspect_ratio,
+            tooltip: 'Select a device pixel ratio',
           ),
           IconButton(
             icon: Icon(currentMediaQuery.disableAnimations
@@ -122,6 +123,7 @@ class MediaQueryToolbar extends StatelessWidget {
             scaleFactor: currentMediaQuery.textScaleFactor,
             scaleFactorChanged: _textScaleFactorChanged,
             displayIcon: Icons.text_fields,
+            tooltip: 'Select a Text Scale',
           ),
           Container(
             height: 15,
