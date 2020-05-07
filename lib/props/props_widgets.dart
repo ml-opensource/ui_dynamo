@@ -42,13 +42,17 @@ class PropTable extends StatelessWidget {
 
   DataRow _buildTableRow(PropTableItem e) => DataRow(
         cells: [
-          DataCell(Container(
-              constraints: _cellConstraints(), child: Text(e.name))),
+          DataCell(
+              Container(constraints: _cellConstraints(), child: Text(e.name))),
           DataCell(Container(
               constraints: _cellConstraints(), child: Text(e.description))),
           DataCell(Container(
               constraints: _cellConstraints(), child: Text(e.defaultValue))),
-          if (e.example != null) DataCell(e.example) else DataCell(Text(''))
+          if (e.example != null)
+            DataCell(
+                Container(constraints: _cellConstraints(), child: e.example))
+          else
+            DataCell(Text(''))
         ],
       );
 
