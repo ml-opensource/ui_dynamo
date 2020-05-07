@@ -203,7 +203,6 @@ class _StoryBookHomePage extends StatelessWidget {
     final query = mediaQuery(context);
     return Container(
       padding: const EdgeInsets.only(left: 32.0, right: 32.0),
-      color: Theme.of(context).backgroundColor,
       alignment: AlignmentDirectional.center,
       child: ListView(
         children: <Widget>[

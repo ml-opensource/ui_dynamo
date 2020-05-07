@@ -17,6 +17,8 @@ class _ToolbarPaneState extends State<ToolbarPane> {
 
   @override
   Widget build(BuildContext context) {
+    final tabTextColor =
+        TextStyle(color: Theme.of(context).textTheme.button.color);
     return DefaultTabController(
       length: 2,
       child: Column(
@@ -38,14 +40,18 @@ class _ToolbarPaneState extends State<ToolbarPane> {
                   isScrollable: true,
                   tabs: [
                     Tab(
-                      text: 'Actions',
+                      child: Text(
+                        'Actions',
+                        style: tabTextColor,
+                      ),
                     ),
                     Tab(
-                      text: 'Props',
+                      child: Text(
+                        'Props',
+                        style: tabTextColor,
+                      ),
                     )
                   ],
-                  indicatorColor: Colors.indigo,
-                  labelColor: Colors.black,
                 ),
               ),
               IconButton(
@@ -64,7 +70,6 @@ class _ToolbarPaneState extends State<ToolbarPane> {
             dragAnchor: DragAnchor.pointer,
             child: Container(
               height: toolbarOpen ? MediaQuery.of(context).size.height / 4 : 0,
-              color: Theme.of(context).scaffoldBackgroundColor,
               child: TabBarView(
                 children: <Widget>[
                   ActionsDisplay(),

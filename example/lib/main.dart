@@ -27,20 +27,28 @@ MaterialApp buildApp() => MaterialApp(
         buttonTheme: ButtonThemeData(
           buttonColor: Colors.red,
           textTheme: ButtonTextTheme.primary,
+          colorScheme: ColorScheme.fromSwatch(
+            primarySwatch: Colors.red,
+          ),
         ),
+        indicatorColor: Colors.black,
+        brightness: Brightness.light,
       ),
       darkTheme: ThemeData(
         primarySwatch: Colors.deepPurple,
-        backgroundColor: Colors.black26,
+        backgroundColor: Colors.black,
         buttonTheme: ButtonThemeData(
-          buttonColor: Colors.deepPurple,
-          textTheme: ButtonTextTheme.primary,
-          disabledColor: Colors.purpleAccent,
-        ),
+            buttonColor: Colors.deepPurple,
+            textTheme: ButtonTextTheme.primary,
+            disabledColor: Colors.purpleAccent,
+            colorScheme: ColorScheme.fromSwatch(
+              primarySwatch: Colors.deepPurple,
+            )),
         iconTheme: IconThemeData(
           color: Colors.deepPurpleAccent,
         ),
         disabledColor: Colors.purpleAccent,
+        brightness: Brightness.dark,
       ),
       routes: {
         '/home': (context) => MainPage(),

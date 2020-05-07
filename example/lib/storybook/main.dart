@@ -1,4 +1,5 @@
 import 'package:example/main.dart';
+import 'package:example/storybook/buttons_page.dart';
 import 'package:example/widgets/radios.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -151,31 +152,6 @@ class AppStoryBook extends StatelessWidget {
               )
             ],
           )
-        ],
-      );
-
-  StoryBookPage buildButtonsPage() => StoryBookPage.list(
-        title: 'Button States',
-        widgets: (context) => [
-          WidgetContainer(
-            title: Text('Choose a Button'),
-            children: [
-              RaisedButton(
-                onPressed: actions(context).onPressed('Primary'),
-                child: Text('Primary'),
-              ),
-              RaisedButton(
-                onPressed: null,
-                child: Text('Disabled'),
-              ),
-              RaisedButton(
-                onPressed: actions(context).onPressed('Secondary'),
-                child: Text('Secondary'),
-                color: Colors.blue,
-                textColor: Colors.white,
-              ),
-            ],
-          ),
         ],
       );
 
