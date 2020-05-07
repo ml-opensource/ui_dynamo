@@ -134,33 +134,36 @@ class StoryboardController extends State<StoryBoard> {
         ),
         Column(
           children: [
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                HoldDetector(
-                  holdTimeout: Duration(milliseconds: 200),
-                  enableHapticFeedback: true,
-                  onHold: () => updateScale(_scale - 0.05),
-                  child: IconButton(
-                    icon: Icon(Icons.remove),
-                    onPressed: () => updateScale(_scale - 0.05),
+            Container(
+              margin: EdgeInsets.only(top: 65.0),
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  HoldDetector(
+                    holdTimeout: Duration(milliseconds: 200),
+                    enableHapticFeedback: true,
+                    onHold: () => updateScale(_scale - 0.05),
+                    child: IconButton(
+                      icon: Icon(Icons.remove),
+                      onPressed: () => updateScale(_scale - 0.05),
+                    ),
                   ),
-                ),
-                InkWell(
-                  child: Center(child: Text('${(_scale * 100).round()}%')),
-                  onTap: () => updateScale(1),
-                ),
-                HoldDetector(
-                  holdTimeout: Duration(milliseconds: 200),
-                  enableHapticFeedback: true,
-                  onHold: () => updateScale(_scale + 0.05),
-                  child: IconButton(
-                    icon: Icon(Icons.add),
-                    onPressed: () => updateScale(_scale + 0.05),
+                  InkWell(
+                    child: Center(child: Text('${(_scale * 100).round()}%')),
+                    onTap: () => updateScale(1),
                   ),
-                ),
-              ],
+                  HoldDetector(
+                    holdTimeout: Duration(milliseconds: 200),
+                    enableHapticFeedback: true,
+                    onHold: () => updateScale(_scale + 0.05),
+                    child: IconButton(
+                      icon: Icon(Icons.add),
+                      onPressed: () => updateScale(_scale + 0.05),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
