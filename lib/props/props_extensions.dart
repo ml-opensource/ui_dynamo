@@ -12,50 +12,59 @@ class PropGroup {
   const PropGroup(this.label, this.groupId);
 }
 
-typedef PropConstructor<T> = PropHandle<T> Function(String label, T value, String groupId);
+typedef PropConstructor<T> = PropHandle<T> Function(
+    String label, T value, String groupId);
+
+const _defaultGroupId = '';
+const _defaultGroup = PropGroup('', _defaultGroupId);
 
 class PropsProvider extends ChangeNotifier {
-  final List<PropHandle> props = [];
-  final List<PropGroup> groups = [];
+  final Map<PropGroup, List<PropHandle>> props = {};
 
-  List propAndGroups() {
-    List propGroups = [];
-    PropGroup currentGroup;
-    props.forEach((element) {
-      final foundGroup = retrieveGroupById(element.groupId);
-      if (foundGroup != null && foundGroup != currentGroup) {
-        propGroups.add(foundGroup);
-        currentGroup = foundGroup;
-      }
-      propGroups.add(element);
+  List propsAndGroups() {
+    final propsAndGroups = [];
+    props.forEach((key, value) {
+      propsAndGroups.add(key);
+      propsAndGroups.addAll(value);
     });
-    return propGroups;
+    return propsAndGroups;
   }
 
-  PropHandle<T> retrievePropByLabel<T>(String label) =>
-      props.firstWhere((element) => element.label == label, orElse: () => null);
+  PropHandle<T> retrieveProp<T>(String label,
+      [String groupId = _defaultGroupId]) {
+    PropGroup group = findGroupById(groupId);
+    if (group != null) {
+      return props[group]
+          .firstWhere((element) => element.label == label, orElse: () => null);
+    }
+    return null;
+  }
 
-  PropGroup retrieveGroupById(String groupId) => groups
-      .firstWhere((element) => element.groupId == groupId, orElse: () => null);
+  PropHandle<T> retrievePropByGroup<T>(String label, PropGroup group) {
+    if (group != null) {
+      return props[group]
+          .firstWhere((element) => element.label == label, orElse: () => null);
+    }
+    return null;
+  }
+
+  PropGroup findGroupById(String groupId) {
+    final group = props.keys.firstWhere((element) => element.groupId == groupId,
+        orElse: () => null);
+    return group;
+  }
 
   PropGroup retrieveOrAddGroup(PropGroup propGroup) {
     if (propGroup == null) {
-      return propGroup;
+      return _defaultGroup;
     }
-    final group = groups.firstWhere(
-        (element) => element.groupId == propGroup.groupId,
-        orElse: () => null);
+    final group = findGroupById(propGroup.groupId);
     if (group != null) {
       return group;
     } else {
-      groups.add(propGroup);
+      props[propGroup] = [];
       return propGroup;
     }
-  }
-
-  void add(PropHandle prop) {
-    props.add(prop);
-    notifyListeners();
   }
 
   /// call to clear prop handles. This is done per page.
@@ -65,15 +74,15 @@ class PropsProvider extends ChangeNotifier {
   }
 
   void _valueChanged<T>(
-      PropHandle<T> prop,
-      PropConstructor<T> propConstructor,
-      T newValue) {
-    final existing = retrievePropByLabel(prop.label);
+      PropHandle<T> prop, PropConstructor<T> propConstructor, T newValue) {
+    final group = findGroupById(prop.groupId);
+    final existing = retrievePropByGroup(prop.label, group);
+    final propsList = props[group];
     if (existing == null) {
-      props.add(propConstructor(prop.label, newValue, prop.groupId));
+      propsList.add(propConstructor(prop.label, newValue, prop.groupId));
     } else {
-      final indexOf = props.indexOf(existing);
-      props.replaceRange(indexOf, indexOf + 1,
+      final indexOf = propsList.indexOf(existing);
+      propsList.replaceRange(indexOf, indexOf + 1,
           [propConstructor(prop.label, newValue, prop.groupId)]);
     }
     notifyListeners();
@@ -117,19 +126,17 @@ class PropsProvider extends ChangeNotifier {
   void radioChanged<T>(RadioValuesHandle<T> prop, T newValue) {
     _valueChanged(
         prop,
-            (label, value, groupId) => RadioValuesHandle<T>(label, value, groupId),
+        (label, value, groupId) => RadioValuesHandle<T>(label, value, groupId),
         prop.value.copyWith(selectedValue: newValue));
   }
 
-  T _value<T>(
-      String label,
-      T defaultValue,
-      PropConstructor<T> propConstructor,
+  T _value<T>(String label, T defaultValue, PropConstructor<T> propConstructor,
       PropGroup group) {
-    final existing = retrievePropByLabel(label);
-    final retrievedGroup = retrieveOrAddGroup(group);
+    final retrievedGroup = retrieveOrAddGroup(group ?? _defaultGroup);
+    final existing = retrievePropByGroup(label, retrievedGroup);
     if (existing == null) {
-      props.add(propConstructor(label, defaultValue, retrievedGroup?.groupId));
+      props[retrievedGroup]
+          .add(propConstructor(label, defaultValue, retrievedGroup?.groupId));
       return defaultValue;
     } else {
       return existing.value;
@@ -175,14 +182,13 @@ class PropsProvider extends ChangeNotifier {
               group)
           .selectedValue;
 
-  T radios<T>(String label, PropValues<T> defaultValues,
-      {PropGroup group}) =>
+  T radios<T>(String label, PropValues<T> defaultValues, {PropGroup group}) =>
       _value<dynamic>(
-          label,
-          defaultValues,
+              label,
+              defaultValues,
               (label, value, groupId) =>
-              RadioValuesHandle<T>(label, value, groupId),
-          group)
+                  RadioValuesHandle<T>(label, value, groupId),
+              group)
           .selectedValue;
 }
 

@@ -286,7 +286,7 @@ Nunc ac pulvinar nunc. Sed blandit mauris sed aliquam lobortis. Vivamus viverra 
                 actions(context).valueChanged("Plain Radio")(value);
                 final _props = props(context);
                 _props.radioChanged(
-                    _props.retrievePropByLabel("Radios"), value);
+                    _props.retrieveProp("Radios"), value);
               },
               selectedValue: props(context).radios(
                   "Radios",

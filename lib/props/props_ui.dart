@@ -10,7 +10,7 @@ class PropsDisplay extends StatelessWidget {
     return Container(
       child: Consumer<PropsProvider>(
         builder: (context, props, child) {
-          final propsList = props.propAndGroups();
+          final propsList = props.propsAndGroups();
           if (propsList.length == 0) {
             return EmptyToolbarView(
               text: Text.rich(
