@@ -29,6 +29,19 @@ MaterialApp buildApp() => MaterialApp(
           textTheme: ButtonTextTheme.primary,
         ),
       ),
+      darkTheme: ThemeData(
+        primarySwatch: Colors.deepPurple,
+        backgroundColor: Colors.black26,
+        buttonTheme: ButtonThemeData(
+          buttonColor: Colors.deepPurple,
+          textTheme: ButtonTextTheme.primary,
+          disabledColor: Colors.purpleAccent,
+        ),
+        iconTheme: IconThemeData(
+          color: Colors.deepPurpleAccent,
+        ),
+        disabledColor: Colors.purpleAccent,
+      ),
       routes: {
         '/home': (context) => MainPage(),
         '/company': (context) => CompanyListing(),

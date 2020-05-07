@@ -64,18 +64,6 @@ class _StoryBookState extends State<StoryBook> {
   Widget build(BuildContext context) {
     final app = widget.app;
     return MaterialApp(
-      theme: app.theme,
-      darkTheme: app.darkTheme,
-      debugShowCheckedModeBanner: app.debugShowCheckedModeBanner,
-      themeMode: app.themeMode,
-      locale: app.locale,
-      localeListResolutionCallback: app.localeListResolutionCallback,
-      localeResolutionCallback: app.localeResolutionCallback,
-      localizationsDelegates: app.localizationsDelegates,
-      supportedLocales: app.supportedLocales,
-      debugShowMaterialGrid: app.debugShowMaterialGrid,
-      showPerformanceOverlay: app.showPerformanceOverlay,
-      showSemanticsDebugger: app.showSemanticsDebugger,
       home: MultiProvider(
         providers: [
           ChangeNotifierProvider(
@@ -95,26 +83,45 @@ class _StoryBookState extends State<StoryBook> {
         child: Builder(
           builder: (context) {
             final selectedPage = selectedPageFromWidget(widget.data, context);
-            return Scaffold(
-                appBar: AppBar(
-                  title:
-                      selectedPage != null ? selectedPage.title : Text('Home'),
-                ),
-                drawer: Builder(
-                  builder: (context) => StoryBookDrawer(
-                    data: widget.data,
-                    selectedPage: selectedPage,
-                    onSelectPage: (folder, page) =>
-                        _selectPage(page, folder, context),
+            final query = mediaQuery(context);
+            return MaterialApp(
+              theme: app.theme,
+              darkTheme: app.darkTheme,
+              debugShowCheckedModeBanner: app.debugShowCheckedModeBanner,
+              themeMode:
+                  query.currentMediaQuery.platformBrightness == Brightness.light
+                      ? ThemeMode.light
+                      : ThemeMode.dark,
+              locale: app.locale,
+              localeListResolutionCallback: app.localeListResolutionCallback,
+              localeResolutionCallback: app.localeResolutionCallback,
+              localizationsDelegates: app.localizationsDelegates,
+              supportedLocales: app.supportedLocales,
+              debugShowMaterialGrid: app.debugShowMaterialGrid,
+              showPerformanceOverlay: app.showPerformanceOverlay,
+              showSemanticsDebugger: app.showSemanticsDebugger,
+              home: Scaffold(
+                  appBar: AppBar(
+                    title: selectedPage != null
+                        ? selectedPage.title
+                        : Text('Home'),
                   ),
-                ),
-                resizeToAvoidBottomPadding: true,
-                bottomNavigationBar:
-                    selectedPage?.usesToolbar == true ? ToolbarPane() : null,
-                body: StoryBookPageWrapperWidget(
-                  selectedPage: selectedPage,
-                  base: widget.app,
-                ));
+                  drawer: Builder(
+                    builder: (context) => StoryBookDrawer(
+                      data: widget.data,
+                      selectedPage: selectedPage,
+                      onSelectPage: (folder, page) =>
+                          _selectPage(page, folder, context),
+                    ),
+                  ),
+                  resizeToAvoidBottomPadding: true,
+                  bottomNavigationBar:
+                      selectedPage?.usesToolbar == true ? ToolbarPane() : null,
+                  body: StoryBookPageWrapperWidget(
+                    selectedPage: selectedPage,
+                    base: widget.app,
+                  )),
+            );
           },
         ),
       ),

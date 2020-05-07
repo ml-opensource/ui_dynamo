@@ -59,20 +59,24 @@ class _MediaQueryChooserState extends State<MediaQueryChooser> {
             children: <Widget>[
               !widget.shouldScroll
                   ? widget.base.isolatedCopy(
-                      home: widget.builder(context, query.currentMediaQuery))
+                      home: widget.builder(context, query.currentMediaQuery),
+                      data: query.currentMediaQuery,
+                    )
                   : SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: SingleChildScrollView(
                         child: Container(
                           decoration: BoxDecoration(
-                            border:
-                                Border.all(color: Theme.of(context).accentColor),
+                            border: Border.all(
+                                color: Theme.of(context).accentColor),
                           ),
                           margin: EdgeInsets.only(top: toolbarHeight + 16),
                           constraints: BoxConstraints.tight(
                               query.boundedMediaQuery.size),
                           child: widget.base.isolatedCopy(
-                              home: widget.builder(context, query.currentMediaQuery)),
+                              data: query.currentMediaQuery,
+                              home: widget.builder(
+                                  context, query.currentMediaQuery)),
                         ),
                       ),
                     ),
@@ -87,13 +91,13 @@ class _MediaQueryChooserState extends State<MediaQueryChooser> {
   buildMediaQueryToolbar(BuildContext context) {
     final query = mediaQuery(context);
     return MeasureSize(
-        onChange: _toolbarSizeChanged,
-        child: MediaQueryToolbar(
-          currentDeviceSelected: query.currentDevice,
-          currentMediaQuery: query.currentMediaQuery,
-          onDeviceInfoChanged: query.selectCurrentDevice,
-          onMediaQueryChange: query.selectMediaQuery,
-        ),
-      );
+      onChange: _toolbarSizeChanged,
+      child: MediaQueryToolbar(
+        currentDeviceSelected: query.currentDevice,
+        currentMediaQuery: query.currentMediaQuery,
+        onDeviceInfoChanged: query.selectCurrentDevice,
+        onMediaQueryChange: query.selectMediaQuery,
+      ),
+    );
   }
 }
