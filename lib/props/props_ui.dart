@@ -79,7 +79,7 @@ class PropsDisplay extends StatelessWidget {
                   return RadioSelectorField(
                     prop: prop,
                     valueChanged: (prop, value) {
-                      props.radioChanged(prop, value);
+                      props.radioChangedByProp(prop, value);
                     },
                   );
                 } else {

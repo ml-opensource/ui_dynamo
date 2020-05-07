@@ -285,12 +285,11 @@ Nunc ac pulvinar nunc. Sed blandit mauris sed aliquam lobortis. Vivamus viverra 
               valueChanged: (value) {
                 actions(context).valueChanged("Plain Radio")(value);
                 final _props = props(context);
-                _props.radioChanged(
-                    _props.retrieveProp("Radios"), value);
+                _props.radioChanged("Radios", value);
               },
               selectedValue: props(context).radios(
                   "Radios",
-                  PropValues<String>(
+                  PropValues(
                     selectedValue: "Yellow",
                     values: [
                       "Yellow",

@@ -22,26 +22,28 @@ class _RadioGroupState extends State<RadioGroup> {
     _selectedValue = widget.selectedValue;
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        Radio(
+        RadioListTile(
           value: "Yellow",
           groupValue: _selectedValue,
           onChanged: _valueChanged,
+          title: Text("Yellow"),
         ),
-        Radio(
+        RadioListTile(
           value: "Red",
           groupValue: _selectedValue,
           onChanged: _valueChanged,
+          title: Text("Red"),
         ),
-        Radio(
+        RadioListTile(
           value: "Green",
           groupValue: _selectedValue,
           onChanged: _valueChanged,
+          title: Text("Green"),
         ),
       ],
     );

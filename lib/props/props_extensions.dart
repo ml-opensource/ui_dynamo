@@ -24,7 +24,9 @@ class PropsProvider extends ChangeNotifier {
   List propsAndGroups() {
     final propsAndGroups = [];
     props.forEach((key, value) {
-      propsAndGroups.add(key);
+      if (key != _defaultGroup) {
+        propsAndGroups.add(key);
+      }
       propsAndGroups.addAll(value);
     });
     return propsAndGroups;
@@ -123,7 +125,15 @@ class PropsProvider extends ChangeNotifier {
         prop.value.copyWith(selectedValue: newValue));
   }
 
-  void radioChanged<T>(RadioValuesHandle<T> prop, T newValue) {
+  void radioChanged<T>(String label, T newValue,
+      [String groupId = _defaultGroupId]) {
+    final prop = retrieveProp<PropValues<T>>(label, groupId);
+    if (prop is RadioValuesHandle<T>) {
+      radioChangedByProp<T>(prop, newValue);
+    }
+  }
+
+  void radioChangedByProp<T>(RadioValuesHandle<T> prop, T newValue) {
     _valueChanged(
         prop,
         (label, value, groupId) => RadioValuesHandle<T>(label, value, groupId),
@@ -133,7 +143,7 @@ class PropsProvider extends ChangeNotifier {
   T _value<T>(String label, T defaultValue, PropConstructor<T> propConstructor,
       PropGroup group) {
     final retrievedGroup = retrieveOrAddGroup(group ?? _defaultGroup);
-    final existing = retrievePropByGroup(label, retrievedGroup);
+    final existing = retrievePropByGroup<T>(label, retrievedGroup);
     if (existing == null) {
       props[retrievedGroup]
           .add(propConstructor(label, defaultValue, retrievedGroup?.groupId));
@@ -174,7 +184,7 @@ class PropsProvider extends ChangeNotifier {
 
   T valueSelector<T>(String label, PropValues<T> defaultValues,
           {PropGroup group}) =>
-      _value<dynamic>(
+      _value<PropValues<T>>(
               label,
               defaultValues,
               (label, value, groupId) =>
@@ -183,7 +193,7 @@ class PropsProvider extends ChangeNotifier {
           .selectedValue;
 
   T radios<T>(String label, PropValues<T> defaultValues, {PropGroup group}) =>
-      _value<dynamic>(
+      _value<PropValues<T>>(
               label,
               defaultValues,
               (label, value, groupId) =>
