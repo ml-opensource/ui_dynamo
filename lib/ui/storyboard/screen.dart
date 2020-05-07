@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_storybook/ui/materialapp+extensions.dart';
-import 'package:flutter_storybook/ui/widgets/storyboard/custom_rect.dart';
-import 'package:flutter_storybook/ui/widgets/storyboard/label.dart';
+import 'package:flutter_storybook/ui/storyboard/custom_rect.dart';
+import 'package:flutter_storybook/ui/storyboard/label.dart';
 
 class StoryboardScreen extends StatelessWidget {
   final double scale;

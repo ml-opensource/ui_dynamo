@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_storybook/mediaquery/device_sizes.dart';
 import 'package:flutter_storybook/mediaquery/screen_size_chooser.dart';
 import 'package:flutter_storybook/mediaquery/text_scale.dart';
-import 'package:flutter_storybook/ui/widgets/size+extensions.dart';
+import 'package:flutter_storybook/ui/utils/size+extensions.dart';
 
 class MediaQueryToolbar extends StatelessWidget {
   final MediaQueryData currentMediaQuery;

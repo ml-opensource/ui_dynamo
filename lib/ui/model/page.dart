@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_storybook/flutter_storybook.dart';
-import 'package:flutter_storybook/ui/widgets/widget.dart';
+import 'package:flutter_storybook/ui/model/widget.dart';
 
 class StoryBookPage extends StoryBookItem {
   /// Returns the widgets to render in a page. These are loaded when page clicked.

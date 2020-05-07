@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_storybook/flutter_storybook.dart';
 import 'package:flutter_storybook/mediaquery/override_media_query_provider.dart';
+import 'package:flutter_storybook/ui/model/page.dart';
+import 'package:flutter_storybook/ui/model/widget.dart';
+import 'package:flutter_storybook/ui/storyboard/screen.dart';
+import 'package:flutter_storybook/ui/storyboard/utils.dart';
 import 'package:flutter_storybook/ui/utils/hold_detector.dart';
-import 'package:flutter_storybook/ui/widgets/storyboard/screen.dart';
-import 'package:flutter_storybook/ui/widgets/storyboard/utils.dart';
 
 const _kSpacing = 80.0;
 

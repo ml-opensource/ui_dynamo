@@ -5,7 +5,7 @@ import 'package:flutter_storybook/mediaquery/media_query_toolbar.dart';
 import 'package:flutter_storybook/mediaquery/override_media_query_provider.dart';
 import 'package:flutter_storybook/ui/materialapp+extensions.dart';
 import 'package:flutter_storybook/ui/utils/measuresize.dart';
-import 'package:flutter_storybook/ui/widgets/size+extensions.dart';
+import 'package:flutter_storybook/ui/utils/size+extensions.dart';
 
 typedef MediaWidgetBuilder = Widget Function(BuildContext, MediaQueryData);
 

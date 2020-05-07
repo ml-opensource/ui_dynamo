@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_storybook/mediaquery/device_sizes.dart';
-import 'package:flutter_storybook/ui/widgets/size+extensions.dart';
+import 'package:flutter_storybook/ui/utils/size+extensions.dart';
 import 'package:provider/provider.dart';
 
 class OverrideMediaQueryProvider extends ChangeNotifier {

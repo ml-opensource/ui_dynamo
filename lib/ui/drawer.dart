@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_storybook/ui/widgets/page.dart';
+import 'package:flutter_storybook/ui/model/page.dart';
 
 import '../models.dart';
 

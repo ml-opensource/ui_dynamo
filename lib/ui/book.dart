@@ -11,8 +11,8 @@ import 'package:flutter_storybook/props/props_extensions.dart';
 import 'package:flutter_storybook/ui/drawer.dart';
 import 'package:flutter_storybook/ui/drawer_provider.dart';
 import 'package:flutter_storybook/ui/toolbar.dart';
-import 'package:flutter_storybook/ui/widgets/page.dart';
-import 'package:flutter_storybook/ui/widgets/storyboard/storyboard.dart';
+import 'package:flutter_storybook/ui/model/page.dart';
+import 'package:flutter_storybook/ui/storyboard/storyboard.dart';
 import 'package:provider/provider.dart';
 
 class StoryBook extends StatefulWidget {
