@@ -10,7 +10,8 @@ StoryBookPage buildButtonsPage() => StoryBookPage.list(
           WidgetContainer(
             title: Text('Buttons'),
             children: [
-              Text('Buttons in our application follow a few kinds of buttons'),
+              StyledText.body(Text(
+                  'Buttons in our application follow a few kinds of buttons')),
             ],
           ),
           WidgetContainer(
@@ -21,7 +22,7 @@ StoryBookPage buildButtonsPage() => StoryBookPage.list(
                 child: Text(prop.text('Text', 'Primary',
                     group: PropGroup('Primary', 'p'))),
               ),
-              Text('Use this button for main actions.'),
+              StyledText.body(Text('Use this button for main actions.')),
             ],
           ),
           WidgetContainer(
@@ -32,8 +33,10 @@ StoryBookPage buildButtonsPage() => StoryBookPage.list(
                 child: Text(prop.text('Text', 'Secondary',
                     group: PropGroup('Secondary', 's'))),
               ),
-              Text(
-                  'Use this button for actions that are cancel-like or unsuggested routes.')
+              StyledText.body(
+                Text(
+                    'Use this button for actions that are cancel-like or unsuggested routes.'),
+              )
             ],
           ),
           WidgetContainer(
@@ -43,7 +46,7 @@ StoryBookPage buildButtonsPage() => StoryBookPage.list(
                 onPressed: null,
                 child: Text('Disabled'),
               ),
-              Text('When the button should be disabled'),
+              StyledText.body(Text('When the button should be disabled')),
             ],
           )
         ];

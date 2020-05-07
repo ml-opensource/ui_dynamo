@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_storybook/ui/styles/text_styles.dart';
+import 'package:flutter_storybook/ui/widgets/text.dart';
 
 const double kMaxOrgSize = 1000.0;
 
@@ -63,10 +63,7 @@ class ExpandableWidgetSection extends StatelessWidget {
                   ),
                   child: ExpansionTile(
                     initiallyExpanded: initiallyExpanded,
-                    title: Text(
-                      title,
-                      style: headerStyle,
-                    ),
+                    title: StyledText.header(Text(title)),
                     subtitle: (subtitle != null)
                         ? Padding(
                             padding: EdgeInsets.only(top: 8.0),
@@ -102,6 +99,7 @@ class WidgetContainer extends StatelessWidget {
   final Widget title;
   final Color cardBackgroundColor;
   final EdgeInsets padding;
+  final double childrenSpacing;
 
   const WidgetContainer({
     Key key,
@@ -109,6 +107,7 @@ class WidgetContainer extends StatelessWidget {
     @required this.children,
     this.cardBackgroundColor,
     this.padding = const EdgeInsets.all(16.0),
+    this.childrenSpacing = 16.0,
   }) : super(key: key);
 
   @override
@@ -122,14 +121,20 @@ class WidgetContainer extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              DefaultTextStyle.merge(
-                style: headerStyle,
-                child: title,
-              ),
+              StyledText.header(title),
               SizedBox(
                 height: 15,
               ),
-              ...children,
+              ListView.separated(
+                  itemBuilder: (context, index) => Align(
+                      alignment: AlignmentDirectional.centerStart,
+                      child: children[index]),
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  separatorBuilder: (context, index) => SizedBox(
+                        height: childrenSpacing,
+                      ),
+                  itemCount: children.length),
             ],
           ),
         ),

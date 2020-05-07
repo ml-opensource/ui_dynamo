@@ -18,7 +18,8 @@ StoryBookPage buildToastPage() => StoryBookPage.list(
           WidgetContainer(
             title: Text('Toast'),
             children: <Widget>[
-              Text('Toast is used to display messages to the user in the UI'),
+              StyledText.body(Text(
+                  'Toast is used to display messages to the user in the UI')),
             ],
           ),
           WidgetContainer(
@@ -84,9 +85,13 @@ StoryBookPage buildToastPage() => StoryBookPage.list(
             ],
           ),
           PresentationWidget(
-            child: Text(
-                "Toast is a powerful widget that displays a status notification in the UI."),
-          ),
+              child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: StyledText.body(
+              Text(
+                  "Toast is a powerful widget that displays a status notification in the UI."),
+            ),
+          )),
           PropTable(
             items: [
               PropTableItem(

@@ -9,5 +9,6 @@ export 'package:flutter_storybook/ui/book.dart';
 export 'package:flutter_storybook/ui/model/folder.dart';
 export 'package:flutter_storybook/ui/model/page.dart';
 export 'package:flutter_storybook/ui/model/widget.dart';
-export 'package:flutter_storybook/ui/organization.dart';
 export 'package:flutter_storybook/ui/storyboard/storyboard.dart';
+export 'package:flutter_storybook/ui/widgets/organization.dart';
+export 'package:flutter_storybook/ui/widgets/text.dart';
