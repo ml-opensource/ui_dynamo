@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_storybook/flutter_storybook.dart';
 import 'package:flutter_storybook/ui/styles/text_styles.dart';
@@ -8,10 +9,16 @@ class PropTableItem {
   final String description;
   final String defaultValue;
 
+  /// provide an example in the table
+  /// the size of the example will be constrained and potentially cut off
+  /// if too large.
+  final Widget example;
+
   PropTableItem(
       {@required this.name,
       @required this.description,
-      this.defaultValue = ''});
+      this.defaultValue = '',
+      this.example});
 }
 
 class PropTable extends StatelessWidget {
@@ -19,11 +26,31 @@ class PropTable extends StatelessWidget {
 
   final List<PropTableItem> items;
   final Widget title;
+  final double maxCellWidth;
+  final double minCellWidth;
 
+  const PropTable({
+    Key key,
+    @required this.items,
+    this.title = const Text('Props'),
+    this.maxCellWidth = 200,
+    this.minCellWidth = 0,
+  }) : super(key: key);
 
-  const PropTable(
-      {Key key, @required this.items, this.title = const Text('Props')})
-      : super(key: key);
+  BoxConstraints _cellConstraints() =>
+      BoxConstraints(maxWidth: maxCellWidth, minWidth: minCellWidth);
+
+  DataRow _buildTableRow(PropTableItem e) => DataRow(
+        cells: [
+          DataCell(Container(
+              constraints: _cellConstraints(), child: Text(e.name))),
+          DataCell(Container(
+              constraints: _cellConstraints(), child: Text(e.description))),
+          DataCell(Container(
+              constraints: _cellConstraints(), child: Text(e.defaultValue))),
+          if (e.example != null) DataCell(e.example) else DataCell(Text(''))
+        ],
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -36,38 +63,21 @@ class PropTable extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.only(bottom: 32.0),
+                padding: const EdgeInsets.only(bottom: 16.0),
                 child: DefaultTextStyle.merge(
                     style: headerStyle, child: this.title),
               ),
-              Table(
-                border: TableBorder(
-                    horizontalInside: BorderSide(
-                      color: Colors.grey,
-                    ),
-                    verticalInside: BorderSide(
-                      color: Colors.grey,
-                    )),
-                children: [
-                  TableRow(children: [
-                    PropTableHeader(
-                      title: 'Name',
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 12),
-                      child: PropTableHeader(
-                        title: 'Description',
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 12),
-                      child: PropTableHeader(
-                        title: 'Default Value',
-                      ),
-                    ),
-                  ]),
-                  ...this.items.map((e) => buildTableRow(e)),
-                ],
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: DataTable(
+                  columns: [
+                    DataColumn(label: Text('Name')),
+                    DataColumn(label: Text('Description')),
+                    DataColumn(label: Text('Default Value')),
+                    DataColumn(label: Text('Example')),
+                  ],
+                  rows: this.items.map((e) => _buildTableRow(e)).toList(),
+                ),
               ),
             ],
           ),
@@ -75,23 +85,6 @@ class PropTable extends StatelessWidget {
       ),
     );
   }
-
-  TableRow buildTableRow(PropTableItem e) => TableRow(
-        children: [
-          Padding(
-            padding: rowPadding,
-            child: Text(e.name),
-          ),
-          Padding(
-            padding: rowPadding.copyWith(left: 12.0),
-            child: Text(e.description),
-          ),
-          Padding(
-            padding: rowPadding.copyWith(left: 12.0),
-            child: Text(e.defaultValue),
-          ),
-        ],
-      );
 }
 
 class PropTableHeader extends StatelessWidget {

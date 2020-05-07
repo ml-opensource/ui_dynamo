@@ -12,13 +12,21 @@ class PresentationWidget extends StatelessWidget {
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-      Flexible(
-          child: Container(
-              constraints: BoxConstraints(maxWidth: maxWidth), child: child))
-    ]);
-  }
+  Widget build(BuildContext context) =>
+      Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Flexible(
+            child: Container(
+          constraints: BoxConstraints(maxWidth: maxWidth),
+          child: Row(
+            children: [
+              Flexible(
+                fit: FlexFit.tight,
+                child: child,
+              ),
+            ],
+          ),
+        ))
+      ]);
 }
 
 /// A visual separator between widgets.

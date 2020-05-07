@@ -95,7 +95,10 @@ class AppStoryBook extends StatelessWidget {
               PropTableItem(
                   name: 'Icon Text',
                   description:
-                      'Specify a single text character to display as avatar.'),
+                      'Specify a single text character to display as avatar.',
+                  example: MainCellAvatar(
+                    iconText: 'A',
+                  )),
               PropTableItem(name: 'Title', description: 'Title for Cell'),
               PropTableItem(name: 'Subtitle', description: 'Subtitle for Cell'),
               PropTableItem(

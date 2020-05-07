@@ -25,10 +25,11 @@ class MainCell extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: ListTile(
-          leading: isFlipped ? buildText() : buildCircleAvatar(),
+          leading: isFlipped ? buildText() : MainCellAvatar(iconText: iconText),
           title: Text(title),
           subtitle: Text(subtitle),
-          trailing: isFlipped ? buildCircleAvatar() : buildText(),
+          trailing:
+              isFlipped ? MainCellAvatar(iconText: iconText) : buildText(),
           onTap: this.onTap,
         ),
       ),
@@ -36,8 +37,18 @@ class MainCell extends StatelessWidget {
   }
 
   Text buildText() => Text("Count $count");
+}
 
-  CircleAvatar buildCircleAvatar() {
+class MainCellAvatar extends StatelessWidget {
+  const MainCellAvatar({
+    Key key,
+    @required this.iconText,
+  }) : super(key: key);
+
+  final String iconText;
+
+  @override
+  Widget build(BuildContext context) {
     return CircleAvatar(
       child: Padding(
         padding: EdgeInsets.all(8.0),

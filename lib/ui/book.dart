@@ -26,7 +26,7 @@ class StoryBook extends StatefulWidget {
     MaterialApp app, {
     @required StoryBookData data,
     Map<String, List<String>> routesMapping,
-    List<Provider> extraProviders,
+    List<Provider> extraProviders = const [],
   }) {
     final updatedData = data.merge(items: [
       storyboard(app, title: 'Storyboard', routesMapping: routesMapping),
