@@ -28,7 +28,7 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
   DeviceInfo get currentDevice => _currentDeviceSelected;
 }
 
-OverrideMediaQueryProvider mediaQuery(BuildContext context) {
+OverrideMediaQueryProvider mKediaQuery(BuildContext context) {
   final provider = Provider.of<OverrideMediaQueryProvider>(context);
   if (provider._currentMediaQuery == null) {
     provider._currentMediaQuery = MediaQuery.of(context);
