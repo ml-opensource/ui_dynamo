@@ -32,9 +32,9 @@ OverrideMediaQueryProvider mediaQuery(BuildContext context) {
   final provider = Provider.of<OverrideMediaQueryProvider>(context);
   if (provider._currentMediaQuery == null) {
     provider._currentMediaQuery = MediaQuery.of(context);
-    provider._boundedMediaQuery = provider._currentMediaQuery.copyWith(
-      size: provider.currentDevice.logicalSize.boundedSize(context),
-    );
   }
+  provider._boundedMediaQuery = provider._currentMediaQuery.copyWith(
+    size: provider.currentDevice.logicalSize.boundedSize(context),
+  );
   return provider;
 }
