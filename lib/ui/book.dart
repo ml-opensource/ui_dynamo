@@ -19,8 +19,15 @@ class StoryBook extends StatefulWidget {
   final StoryBookData data;
   final MaterialApp app;
 
-  factory StoryBook.withApp(MaterialApp app,
-      {@required StoryBookData data, Map<String, List<String>> routesMapping}) {
+  /// an extra set of Provider to inject into the storybook hierarchy.
+  final List<Provider> extraProviders;
+
+  factory StoryBook.withApp(
+    MaterialApp app, {
+    @required StoryBookData data,
+    Map<String, List<String>> routesMapping,
+    List<Provider> extraProviders,
+  }) {
     final updatedData = data.merge(items: [
       storyboard(app, title: 'Storyboard', routesMapping: routesMapping),
       StoryBookFolder.of(
@@ -33,6 +40,7 @@ class StoryBook extends StatefulWidget {
     ]);
     return StoryBook(
       app: app,
+      extraProviders: extraProviders,
       data: updatedData.merge(items: [
         // merge with the folder routes so the home page can capture the data.
         StoryBookPage.of(
@@ -45,7 +53,11 @@ class StoryBook extends StatefulWidget {
     );
   }
 
-  const StoryBook({Key key, @required this.data, @required this.app})
+  const StoryBook(
+      {Key key,
+      @required this.data,
+      @required this.app,
+      this.extraProviders = const []})
       : super(key: key);
 
   @override
@@ -78,7 +90,8 @@ class _StoryBookState extends State<StoryBook> {
           ChangeNotifierProvider(
             create: (context) => OverrideMediaQueryProvider(
                 widget.data.defaultDevice ?? deviceSizes[0]),
-          )
+          ),
+          ...widget.extraProviders,
         ],
         child: Builder(
           builder: (context) {
