@@ -19,10 +19,24 @@ StoryBookPage buildButtonsPage() => StoryBookPage.list(
             children: [
               RaisedButton(
                 onPressed: action.onPressed('Primary'),
-                child: Text(prop.text('Text', 'Primary',
+                child: Text(prop.text('Text', 'Yes',
                     group: PropGroup('Primary', 'p'))),
               ),
               StyledText.body(Text('Use this button for main actions.')),
+            ],
+          ),
+          WidgetContainer(
+            title: Text('Primary Wide'),
+            children: [
+              ConstrainedBox(
+                constraints: BoxConstraints(minWidth: double.infinity),
+                child: RaisedButton(
+                  onPressed: action.onPressed('Primary Wide'),
+                  child: Text(prop.text('Text', 'View All',
+                      group: PropGroup('Primary Wide', 'pw'))),
+                ),
+              ),
+              StyledText.body(Text('This button is used for a very important CTA.')),
             ],
           ),
           WidgetContainer(
@@ -30,7 +44,7 @@ StoryBookPage buildButtonsPage() => StoryBookPage.list(
             children: [
               OutlineButton(
                 onPressed: action.onPressed('Secondary'),
-                child: Text(prop.text('Text', 'Secondary',
+                child: Text(prop.text('Text', 'Cancel',
                     group: PropGroup('Secondary', 's'))),
               ),
               StyledText.body(
@@ -44,7 +58,7 @@ StoryBookPage buildButtonsPage() => StoryBookPage.list(
             children: [
               RaisedButton(
                 onPressed: null,
-                child: Text('Disabled'),
+                child: Text('Save'),
               ),
               StyledText.body(Text('When the button should be disabled')),
             ],
