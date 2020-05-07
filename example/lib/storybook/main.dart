@@ -1,5 +1,6 @@
 import 'package:example/main.dart';
 import 'package:example/storybook/buttons_page.dart';
+import 'package:example/storybook/toasts_page.dart';
 import 'package:example/widgets/radios.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -194,86 +195,6 @@ Nunc ac pulvinar nunc. Sed blandit mauris sed aliquam lobortis. Vivamus viverra 
             MainCellItem('B', 'Item 2', 'Item Subtitle', 20),
           ],
         ),
-      );
-
-  StoryBookPage buildToastPage() => StoryBookPage.list(
-        title: 'Toasts',
-        icon: Icon(Icons.check_circle),
-        widgets: (context) => [
-          WidgetContainer(
-            cardBackgroundColor: Colors.grey,
-            title: Text(
-              'Toast',
-              style: TextStyle(color: Colors.white),
-            ),
-            children: <Widget>[
-              SizedBox(
-                height: 16,
-              ),
-              Center(
-                child: Container(
-                  constraints: BoxConstraints(maxWidth: 300),
-                  child: AppToast(
-                    onClose: actions(context).onPressed('Close Toast'),
-                    message:
-                        props(context).text('Toast Message', 'This message'),
-                    toastMode: props(context).valueSelector(
-                        'Toast Mode',
-                        PropValues<ToastMode>(
-                          selectedValue: ToastMode.Success,
-                          values: <ToastMode>[
-                            ToastMode.Success,
-                            ToastMode.Error,
-                            ToastMode.Warning,
-                          ],
-                        )),
-                  ),
-                ),
-              ),
-              Center(
-                child: Container(
-                  constraints: BoxConstraints(maxWidth: 300),
-                  child: AppToast(
-                    onClose: actions(context).onPressed('Close Toast 2'),
-                    message:
-                        props(context).text('Toast 2 Message', 'This message'),
-                    toastMode: props(context).radios(
-                        'Toast Mode 2',
-                        PropValues<ToastMode>(
-                          selectedValue: ToastMode.Success,
-                          values: <ToastMode>[
-                            ToastMode.Success,
-                            ToastMode.Error,
-                            ToastMode.Warning,
-                          ],
-                        )),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          PresentationWidget(
-            child: Text(
-                "Toast is a powerful widget that displays a status notification in the UI."),
-          ),
-          PropTable(
-            items: [
-              PropTableItem(
-                  name: 'Message',
-                  description: 'Displays a message for this toast'),
-              PropTableItem(
-                name: 'Mode',
-                description: 'Displays a different UI mode',
-                defaultValue: ToastMode.Success.toString(),
-              ),
-              PropTableItem(
-                name: 'OnClose',
-                description: 'Closes the Toast before the scheduled timeout',
-                defaultValue: 'null',
-              ),
-            ],
-          ),
-        ],
       );
 
   StoryBookPage buildRadiosPage() => StoryBookPage.list(

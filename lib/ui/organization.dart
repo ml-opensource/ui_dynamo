@@ -101,13 +101,15 @@ class WidgetContainer extends StatelessWidget {
   final List<Widget> children;
   final Widget title;
   final Color cardBackgroundColor;
+  final EdgeInsets padding;
 
-  const WidgetContainer(
-      {Key key,
-      @required this.title,
-      @required this.children,
-      this.cardBackgroundColor})
-      : super(key: key);
+  const WidgetContainer({
+    Key key,
+    @required this.title,
+    @required this.children,
+    this.cardBackgroundColor,
+    this.padding = const EdgeInsets.all(16.0),
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +117,7 @@ class WidgetContainer extends StatelessWidget {
       child: Card(
         color: cardBackgroundColor,
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: padding,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,

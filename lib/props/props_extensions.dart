@@ -44,8 +44,9 @@ class PropsProvider extends ChangeNotifier {
 
   PropHandle<T> retrievePropByGroup<T>(String label, PropGroup group) {
     if (group != null) {
-      return props[group]
-          .firstWhere((element) => element.label == label, orElse: () => null);
+      final prop = props[group];
+      return prop.firstWhere((element) => element.label == label,
+          orElse: () => null);
     }
     return null;
   }
@@ -80,12 +81,12 @@ class PropsProvider extends ChangeNotifier {
     final group = findGroupById(prop.groupId);
     final existing = retrievePropByGroup(prop.label, group);
     final propsList = props[group];
+    final propHandle = propConstructor(prop.label, newValue, prop.groupId);
     if (existing == null) {
-      propsList.add(propConstructor(prop.label, newValue, prop.groupId));
+      propsList.add(propHandle);
     } else {
       final indexOf = propsList.indexOf(existing);
-      propsList.replaceRange(indexOf, indexOf + 1,
-          [propConstructor(prop.label, newValue, prop.groupId)]);
+      propsList.replaceRange(indexOf, indexOf + 1, [propHandle]);
     }
     notifyListeners();
   }
@@ -127,9 +128,9 @@ class PropsProvider extends ChangeNotifier {
 
   void radioChanged<T>(String label, T newValue,
       [String groupId = _defaultGroupId]) {
-    final prop = retrieveProp<PropValues<T>>(label, groupId);
-    if (prop is RadioValuesHandle<T>) {
-      radioChangedByProp<T>(prop, newValue);
+    final prop = retrieveProp<dynamic>(label, groupId);
+    if (prop is RadioValuesHandle<dynamic>) {
+      radioChangedByProp<dynamic>(prop, newValue);
     }
   }
 
@@ -140,10 +141,10 @@ class PropsProvider extends ChangeNotifier {
         prop.value.copyWith(selectedValue: newValue));
   }
 
-  T _value<T>(String label, T defaultValue, PropConstructor<T> propConstructor,
+  dynamic _value<T>(String label, T defaultValue, PropConstructor<T> propConstructor,
       PropGroup group) {
     final retrievedGroup = retrieveOrAddGroup(group ?? _defaultGroup);
-    final existing = retrievePropByGroup<T>(label, retrievedGroup);
+    final existing = retrievePropByGroup<dynamic>(label, retrievedGroup);
     if (existing == null) {
       props[retrievedGroup]
           .add(propConstructor(label, defaultValue, retrievedGroup?.groupId));
@@ -184,20 +185,20 @@ class PropsProvider extends ChangeNotifier {
 
   T valueSelector<T>(String label, PropValues<T> defaultValues,
           {PropGroup group}) =>
-      _value<PropValues<T>>(
+      _value<dynamic>(
               label,
               defaultValues,
               (label, value, groupId) =>
-                  PropValuesHandle<T>(label, value, groupId),
+                  PropValuesHandle<dynamic>(label, value, groupId),
               group)
           .selectedValue;
 
   T radios<T>(String label, PropValues<T> defaultValues, {PropGroup group}) =>
-      _value<PropValues<T>>(
+      _value<dynamic>(
               label,
               defaultValues,
               (label, value, groupId) =>
-                  RadioValuesHandle<T>(label, value, groupId),
+                  RadioValuesHandle<dynamic>(label, value, groupId),
               group)
           .selectedValue;
 }
