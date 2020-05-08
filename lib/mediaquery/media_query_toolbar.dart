@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_storybook/media_utils.dart';
 import 'package:flutter_storybook/mediaquery/device_sizes.dart';
 import 'package:flutter_storybook/mediaquery/screen_size_chooser.dart';
 import 'package:flutter_storybook/mediaquery/text_scale.dart';
@@ -82,72 +83,93 @@ class MediaQueryToolbar extends StatelessWidget {
           bottomLeft: Radius.circular(8.0),
         ),
       ),
-      child: Wrap(
-        direction: Axis.horizontal,
-        crossAxisAlignment: WrapCrossAlignment.center,
-        children: <Widget>[
-          AdjustableNumberScaleWidget(
-            scaleFactor: currentMediaQuery.devicePixelRatio,
-            scaleFactorChanged: _devicePixelRatioChanged,
-            displayIcon: Icons.aspect_ratio,
-            tooltip: 'Select a device pixel ratio',
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Wrap(
+            direction: Axis.horizontal,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: <Widget>[
+              AdjustableNumberScaleWidget(
+                scaleFactor: currentMediaQuery.devicePixelRatio,
+                scaleFactorChanged: _devicePixelRatioChanged,
+                displayIcon: Icons.aspect_ratio,
+                tooltip: 'Select a device pixel ratio',
+              ),
+              buildDivider(),
+              IconButton(
+                icon: Icon(currentMediaQuery.disableAnimations
+                    ? Icons.directions_walk
+                    : Icons.directions_run),
+                tooltip: 'Toggle Animations ' +
+                    (currentMediaQuery.disableAnimations ? 'On' : 'Off'),
+                onPressed: _toggleAnimations,
+              ),
+              buildDivider(),
+              IconButton(
+                icon: Icon(
+                  currentMediaQuery.invertColors
+                      ? Icons.invert_colors
+                      : Icons.invert_colors_off,
+                ),
+                tooltip: 'Invert Colors ' +
+                    (currentMediaQuery.invertColors ? 'Off' : 'On'),
+                onPressed: _toggleInvertColors,
+              ),
+              buildDivider(),
+              IconButton(
+                icon: Icon(
+                  currentMediaQuery.highContrast
+                      ? Icons.tonality
+                      : Icons.panorama_fish_eye,
+                ),
+                tooltip: 'High Contrast ' +
+                    (currentMediaQuery.highContrast ? 'Off' : 'On'),
+                onPressed: _toggleHighContrast,
+              ),
+              buildDivider(),
+              AdjustableNumberScaleWidget(
+                scaleFactor: currentMediaQuery.textScaleFactor,
+                scaleFactorChanged: _textScaleFactorChanged,
+                displayIcon: Icons.text_fields,
+                tooltip: 'Select a Text Scale',
+              ),
+              buildDivider(),
+              IconButton(
+                icon: Icon(
+                    currentMediaQuery.platformBrightness == Brightness.light
+                        ? Icons.brightness_7
+                        : Icons.brightness_3),
+                tooltip: 'Make Brightness ' +
+                    (currentMediaQuery.platformBrightness == Brightness.light
+                        ? 'Dark'
+                        : 'Light'),
+                onPressed: () {
+                  _toggleBrightness();
+                },
+              ),
+              buildDivider(),
+              MediaChooserButton(
+                deviceSelected: (value) => _deviceSelected(context, value),
+                selectedDevice: currentDeviceSelected,
+              ),
+            ],
           ),
-          buildDivider(),
-          IconButton(
-            icon: Icon(currentMediaQuery.disableAnimations
-                ? Icons.directions_walk
-                : Icons.directions_run),
-            tooltip: 'Toggle Animations ' +
-                (currentMediaQuery.disableAnimations ? 'On' : 'Off'),
-            onPressed: _toggleAnimations,
-          ),
-          buildDivider(),
-          IconButton(
-            icon: Icon(
-              currentMediaQuery.invertColors
-                  ? Icons.invert_colors
-                  : Icons.invert_colors_off,
+          if (isMobile(context))
+            Padding(
+              padding: const EdgeInsets.only(right: 8.0, bottom: 8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  RaisedButton(
+                    child: Text('Collapse'),
+                    onPressed: () {
+
+                    },
+                  ),
+                ],
+              ),
             ),
-            tooltip: 'Invert Colors ' +
-                (currentMediaQuery.invertColors ? 'Off' : 'On'),
-            onPressed: _toggleInvertColors,
-          ),
-          buildDivider(),
-          IconButton(
-            icon: Icon(
-              currentMediaQuery.highContrast
-                  ? Icons.tonality
-                  : Icons.panorama_fish_eye,
-            ),
-            tooltip: 'High Contrast ' +
-                (currentMediaQuery.highContrast ? 'Off' : 'On'),
-            onPressed: _toggleHighContrast,
-          ),
-          buildDivider(),
-          AdjustableNumberScaleWidget(
-            scaleFactor: currentMediaQuery.textScaleFactor,
-            scaleFactorChanged: _textScaleFactorChanged,
-            displayIcon: Icons.text_fields,
-            tooltip: 'Select a Text Scale',
-          ),
-          buildDivider(),
-          IconButton(
-            icon: Icon(currentMediaQuery.platformBrightness == Brightness.light
-                ? Icons.brightness_7
-                : Icons.brightness_3),
-            tooltip: 'Make Brightness ' +
-                (currentMediaQuery.platformBrightness == Brightness.light
-                    ? 'Dark'
-                    : 'Light'),
-            onPressed: () {
-              _toggleBrightness();
-            },
-          ),
-          buildDivider(),
-          MediaChooserButton(
-            deviceSelected: (value) => _deviceSelected(context, value),
-            selectedDevice: currentDeviceSelected,
-          ),
         ],
       ),
     );

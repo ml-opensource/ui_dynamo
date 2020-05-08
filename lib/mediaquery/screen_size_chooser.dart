@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_storybook/media_utils.dart';
 import 'package:flutter_storybook/mediaquery/device_sizes.dart';
 import 'package:flutter_storybook/mediaquery/mediaquery.dart';
 
@@ -14,6 +15,8 @@ class MediaChooserButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final deviceName =
+        deviceDisplay(context, selectedDevice, shortName: isMobile(context));
     return PopupMenuButton(
       tooltip: 'Choose Preview Window Size',
       child: Padding(
@@ -21,7 +24,7 @@ class MediaChooserButton extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(deviceDisplay(context, selectedDevice)),
+            Text(deviceName),
             SizedBox(
               width: 8,
             ),

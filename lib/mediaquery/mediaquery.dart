@@ -33,7 +33,12 @@ class MediaQueryChooser extends StatefulWidget {
   _MediaQueryChooserState createState() => _MediaQueryChooserState();
 }
 
-String deviceDisplay(BuildContext context, DeviceInfo deviceInfo) {
+String deviceDisplay(BuildContext context, DeviceInfo deviceInfo, {
+  bool shortName = false,
+}) {
+  if (shortName) {
+    return deviceInfo.name;
+  }
   final boundedSize = deviceInfo.pixelSize.boundedSize(context);
   return "${deviceInfo.name} (${boundedSize.width.truncate()}x${boundedSize.height.truncate()})";
 }
