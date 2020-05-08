@@ -1,4 +1,5 @@
 import 'package:example/main.dart';
+import 'package:example/pages/person_detail.dart';
 import 'package:example/storybook/buttons_page.dart';
 import 'package:example/storybook/toasts_page.dart';
 import 'package:example/widgets/radios.dart';
@@ -22,9 +23,10 @@ class AppStoryBook extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final app = buildApp();
     return StoryBook.withApp(
-      buildApp(),
-      routesMapping: {
+      app,
+      flowRoutesMapping: {
         'home': [
           '/home',
           '/company',
@@ -34,10 +36,30 @@ class AppStoryBook extends StatelessWidget {
           '/company',
         ]
       },
+      previewRoutes: {
+        '/details/:item': (context) => PersonDetail(
+              item: MainCellItem(
+                  'P', 'Preview Item', 'This is a preview Route', 0),
+            )
+      },
       data: StoryBookData(
         title: Text('Example Storybook'),
         defaultDevice: DeviceSizes.iphoneX,
         items: [
+          StoryBookPage.storyboard(app, title: 'Home Flow', routesMapping: {
+            'home': [
+              '/home',
+              '/company',
+            ],
+          }),
+          StoryBookPage.storyboard(app,
+              title: 'Company Details',
+              routesMapping: {
+                'home': [
+                  '/company',
+                  '/details/:item',
+                ],
+              }),
           StoryBookFolder.of(title: 'Widgets', pages: [
             buildTextStylePage(),
             buildButtonsPage(),

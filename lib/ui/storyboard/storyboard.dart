@@ -1,29 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_storybook/mediaquery/override_media_query_provider.dart';
-import 'package:flutter_storybook/ui/model/page.dart';
-import 'package:flutter_storybook/ui/model/widget.dart';
+import 'package:flutter_storybook/ui/storyboard/flow_start.dart';
 import 'package:flutter_storybook/ui/storyboard/screen.dart';
+import 'package:flutter_storybook/ui/storyboard/storyboard_toolbar.dart';
 import 'package:flutter_storybook/ui/storyboard/utils.dart';
-import 'package:flutter_storybook/ui/utils/hold_detector.dart';
 
 const _kSpacing = 80.0;
-
-StoryBookPage storyboard(MaterialApp app,
-    {@required String title, Map<String, List<String>> routesMapping}) {
-  final page = StoryBookPage(
-    key: ValueKey(title),
-    title: Text(title),
-    widget: StoryBookWidget((context, data) => StoryBoard(
-          child: app,
-          enabled: true,
-          routesMapping: routesMapping,
-        )),
-  );
-  // disable scrolling since our storyboard will handle it for us!
-  page.shouldScroll = false;
-  page.usesToolbar = false;
-  return page;
-}
 
 class StoryBoard extends StatefulWidget {
   /// Wrap your Material App with this widget
@@ -35,14 +17,8 @@ class StoryBoard extends StatefulWidget {
   /// Initial Offset of the canvas
   final Offset initialOffset;
 
-  /// Callback for when the canvas offset changes
-  final ValueChanged<Offset> offsetChanged;
-
   /// Initial Scale of the canvas
   final double initialScale;
-
-  /// Callback for when the scale of the canvas changes
-  final ValueChanged<double> scaleChanged;
 
   final Map<String, List<String>> routesMapping;
 
@@ -51,9 +27,7 @@ class StoryBoard extends StatefulWidget {
     @required this.child,
     this.enabled = true,
     this.initialOffset,
-    this.offsetChanged,
     this.initialScale,
-    this.scaleChanged,
     this.routesMapping,
   }) : super(key: key);
 
@@ -82,6 +56,22 @@ class StoryboardController extends State<StoryBoard> {
     super.didUpdateWidget(oldWidget);
   }
 
+  void _updateOffset(Offset value) {
+    if (mounted) {
+      setState(() {
+        _offset += value;
+      });
+    }
+  }
+
+  void _updateScale(double value) {
+    if (mounted) {
+      setState(() {
+        _scale = value;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final query = mediaQuery(context);
@@ -93,7 +83,7 @@ class StoryboardController extends State<StoryBoard> {
       children: [
         Scaffold(
           body: GestureDetector(
-            onPanUpdate: (panDetails) => updateOffset(panDetails.delta),
+            onPanUpdate: (panDetails) => _updateOffset(panDetails.delta),
             behavior: HitTestBehavior.opaque,
             child: Container(
               width: double.infinity,
@@ -133,40 +123,9 @@ class StoryboardController extends State<StoryBoard> {
             ),
           ),
         ),
-        Column(
-          children: [
-            Container(
-              margin: EdgeInsets.only(top: 65.0),
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  HoldDetector(
-                    holdTimeout: Duration(milliseconds: 200),
-                    enableHapticFeedback: true,
-                    onHold: () => updateScale(_scale - 0.05),
-                    child: IconButton(
-                      icon: Icon(Icons.remove),
-                      onPressed: () => updateScale(_scale - 0.05),
-                    ),
-                  ),
-                  InkWell(
-                    child: Center(child: Text('${(_scale * 100).round()}%')),
-                    onTap: () => updateScale(1),
-                  ),
-                  HoldDetector(
-                    holdTimeout: Duration(milliseconds: 200),
-                    enableHapticFeedback: true,
-                    onHold: () => updateScale(_scale + 0.05),
-                    child: IconButton(
-                      icon: Icon(Icons.add),
-                      onPressed: () => updateScale(_scale + 0.05),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
+        StoryboardToolbar(
+          scale: _scale,
+          updateScale: _updateScale,
         ),
       ],
     );
@@ -208,26 +167,7 @@ class StoryboardController extends State<StoryBoard> {
         base: widget.child,
         isFirst: true,
         isLast: false,
-        child: Material(
-          child: Container(
-            color: Colors.black,
-            child: Center(
-              child: DefaultTextStyle(
-                style: TextStyle(
-                  fontSize: 34.0,
-                  color: Colors.white,
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text('Flow'),
-                    Text(label),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
+        child: FlowStart(label: label),
         offset: offset,
         mediaQueryData: mediaQueryData,
         scale: _scale,
@@ -253,10 +193,18 @@ class StoryboardController extends State<StoryBoard> {
           entry.key,
         ));
         entry.value.forEach((route) {
+          final currentRoute = base.routes[route];
+          assert(() {
+            if (currentRoute == null) {
+              throw FlutterError(
+                  "Could not find a route mapping for ${route} in application routes");
+            }
+            return true;
+          }());
           routesList.add(_addChild(
             base,
             mediaQueryData,
-            base.routes[route](context),
+            currentRoute(context),
             route,
             false,
             (offsetIndex == entry.value.length - 1),
@@ -284,25 +232,5 @@ class StoryboardController extends State<StoryBoard> {
       }
     }
     return routesList;
-  }
-
-  void updateOffset(Offset value) {
-    if (mounted)
-      setState(() {
-        _offset += value;
-      });
-    if (widget?.offsetChanged != null) {
-      widget.offsetChanged(_offset);
-    }
-  }
-
-  void updateScale(double value) {
-    if (mounted)
-      setState(() {
-        _scale = value;
-      });
-    if (widget?.scaleChanged != null) {
-      widget.scaleChanged(_scale);
-    }
   }
 }

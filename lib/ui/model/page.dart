@@ -16,6 +16,23 @@ class StoryBookPage extends StoryBookItem {
       @required this.widget})
       : super(key, title, icon);
 
+  factory StoryBookPage.storyboard(MaterialApp app,
+      {@required String title, Map<String, List<String>> routesMapping}) {
+    final page = StoryBookPage(
+      key: ValueKey(title),
+      title: Text(title),
+      widget: StoryBookWidget((context, data) => StoryBoard(
+            child: app,
+            enabled: true,
+            routesMapping: routesMapping,
+          )),
+    );
+    // disable scrolling since our storyboard will handle it for us!
+    page.shouldScroll = false;
+    page.usesToolbar = false;
+    return page;
+  }
+
   factory StoryBookPage.list({
     Key key,
     @required String title,

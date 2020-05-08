@@ -10,9 +10,9 @@ import 'package:flutter_storybook/models.dart';
 import 'package:flutter_storybook/props/props_extensions.dart';
 import 'package:flutter_storybook/ui/drawer.dart';
 import 'package:flutter_storybook/ui/drawer_provider.dart';
-import 'package:flutter_storybook/ui/toolbar.dart';
+import 'package:flutter_storybook/ui/materialapp+extensions.dart';
 import 'package:flutter_storybook/ui/model/page.dart';
-import 'package:flutter_storybook/ui/storyboard/storyboard.dart';
+import 'package:flutter_storybook/ui/toolbar.dart';
 import 'package:provider/provider.dart';
 
 class StoryBook extends StatefulWidget {
@@ -22,14 +22,50 @@ class StoryBook extends StatefulWidget {
   /// an extra set of Provider to inject into the storybook hierarchy.
   final List<Provider> extraProviders;
 
+  /// Constructs a new StoryBook with
+  /// 1. default storyboard with all app routes. If routesMapping specified,
+  /// use that.
+  /// 2. A folder with all top-level page routes as a page.
+  /// 3. Also, a default Home page using the default Storybook home page. If home
+  /// is specified, render that widget instead.
   factory StoryBook.withApp(
     MaterialApp app, {
+    Widget home,
     @required StoryBookData data,
-    Map<String, List<String>> routesMapping,
+
+    /// Specify a set of Flows to display within the default storybook
+    /// instead of every application route. Each key is the name of the Flow
+    /// and each value is the ordered list of screens shown.
+    Map<String, List<String>> flowRoutesMapping = const {},
+
+    /// Preview Routes are useful to add preview-able content to a route that
+    /// typically does not exist in the normal application
+    Map<String, WidgetBuilder> previewRoutes = const {},
+
+    /// set to true to allow preview routes to override existing routes defined
+    /// in the main application.
+    bool allowPreviewRouteOverrides = false,
     List<Provider> extraProviders = const [],
   }) {
+    final routes = app.routes ?? <String, WidgetBuilder>{};
+    previewRoutes.forEach((key, value) {
+      assert(() {
+        if (routes.containsKey(key)) {
+          throw FlutterError("Duplicate route ${key} found in application. "
+              "Overridding an existing route will replace the functionality "
+              "in StoryBook. If this was intentional, set allowPreviewRouteOverrides "
+              "to true.");
+        }
+        return true;
+      }());
+      routes[key] = value;
+    });
+    final copiedApp = app.copyWith(
+      routes: routes,
+    );
     final updatedData = data.merge(items: [
-      storyboard(app, title: 'Storyboard', routesMapping: routesMapping),
+      StoryBookPage.storyboard(copiedApp,
+          title: 'Storyboard', routesMapping: flowRoutesMapping),
       StoryBookFolder.of(
         title: 'Routes',
         pages: [
@@ -39,14 +75,16 @@ class StoryBook extends StatefulWidget {
       ),
     ]);
     return StoryBook(
-      app: app,
+      app: copiedApp,
       extraProviders: extraProviders,
       data: updatedData.merge(items: [
         // merge with the folder routes so the home page can capture the data.
         StoryBookPage.of(
             title: 'Home',
             icon: Icon(Icons.home),
-            child: (context) => _StoryBookHomePage(
+            child: (context) =>
+                home ??
+                _StoryBookHomePage(
                   data: updatedData,
                 )),
       ], mergeFirst: true),
