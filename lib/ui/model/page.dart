@@ -23,7 +23,6 @@ class StoryBookPage extends StoryBookItem {
       title: Text(title),
       widget: StoryBookWidget((context, data) => StoryBoard(
             child: app,
-            enabled: true,
             routesMapping: routesMapping,
           )),
     );

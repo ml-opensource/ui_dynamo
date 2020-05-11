@@ -33,6 +33,12 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void resetScreenAdjustments() {
+    this._currentOffset = Offset.zero;
+    this._currentScreenScale = 1.0;
+    notifyListeners();
+  }
+
   MediaQueryData get currentMediaQuery => _currentMediaQuery;
 
   MediaQueryData get boundedMediaQuery => _boundedMediaQuery;

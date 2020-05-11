@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_storybook/actions/actions_extensions.dart';
+import 'package:flutter_storybook/mediaquery/override_media_query_provider.dart';
 import 'package:flutter_storybook/models.dart';
 import 'package:flutter_storybook/props/props_extensions.dart';
 import 'package:flutter_storybook/ui/model/page.dart';
@@ -15,6 +16,7 @@ class DrawerProvider extends ChangeNotifier {
     _selectedPageKey = pageKey;
     props(context).reset();
     actions(context).reset();
+    mediaQuery(context).resetScreenAdjustments();
     if (popDrawer) {
       Navigator.of(context).pop();
     }
