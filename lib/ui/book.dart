@@ -313,6 +313,8 @@ class _StoryBookHomePage extends StatelessWidget {
                   onDeviceInfoChanged: query.selectCurrentDevice,
                   scale: query.screenScale,
                   updateScale: query.selectScreenScale,
+                  offset: query.currentOffset,
+                  updateOffset: query.changeCurrentOffset,
                 ),
               ),
             ],

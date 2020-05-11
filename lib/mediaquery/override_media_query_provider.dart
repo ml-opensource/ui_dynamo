@@ -8,6 +8,7 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
   MediaQueryData _boundedMediaQuery;
   DeviceInfo _currentDeviceSelected;
   double _currentScreenScale = 1.0;
+  Offset _currentOffset = Offset.zero;
 
   OverrideMediaQueryProvider(this._currentDeviceSelected);
 
@@ -27,6 +28,11 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void changeCurrentOffset(Offset offset) {
+    this._currentOffset = offset;
+    notifyListeners();
+  }
+
   MediaQueryData get currentMediaQuery => _currentMediaQuery;
 
   MediaQueryData get boundedMediaQuery => _boundedMediaQuery;
@@ -34,6 +40,8 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
   DeviceInfo get currentDevice => _currentDeviceSelected;
 
   double get screenScale => _currentScreenScale;
+
+  Offset get currentOffset => _currentOffset;
 }
 
 OverrideMediaQueryProvider mediaQuery(BuildContext context) {

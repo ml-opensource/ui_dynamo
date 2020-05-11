@@ -92,6 +92,8 @@ class _MediaQueryChooserState extends State<MediaQueryChooser> {
         onMediaQueryChange: query.selectMediaQuery,
         scale: query.screenScale,
         updateScale: query.selectScreenScale,
+        offset: query.currentOffset,
+        updateOffset: query.changeCurrentOffset,
       ),
     );
   }
@@ -112,16 +114,6 @@ class InteractableScreen extends StatefulWidget {
 }
 
 class _InteractableScreenState extends State<InteractableScreen> {
-  Offset _offset;
-
-  void _updateOffset(Offset value) {
-    if (mounted) {
-      setState(() {
-        _offset += value;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final query = mediaQuery(context);
@@ -130,7 +122,6 @@ class _InteractableScreenState extends State<InteractableScreen> {
         0, (realQuery.size.height - query.boundedMediaQuery.size.height) / 2);
     final offsetLeft = Offset(
         (realQuery.size.width - query.boundedMediaQuery.size.width) / 2, 0);
-    _offset ??= Offset(0, 0);
     double topCalculated;
     double leftCalculated;
     // if window, move back to center and do not allow panning.
@@ -138,11 +129,14 @@ class _InteractableScreenState extends State<InteractableScreen> {
       topCalculated = 0;
       leftCalculated = 0;
     } else {
-      topCalculated = calculateTop(offsetTop, _offset, query.screenScale);
-      leftCalculated = calculateLeft(offsetLeft, _offset, query.screenScale);
+      topCalculated =
+          calculateTop(offsetTop, query.currentOffset, query.screenScale);
+      leftCalculated =
+          calculateLeft(offsetLeft, query.currentOffset, query.screenScale);
     }
     return GestureDetector(
-      onPanUpdate: (panDetails) => _updateOffset(panDetails.delta),
+      onPanUpdate: (panDetails) =>
+          query.changeCurrentOffset(query.currentOffset + panDetails.delta),
       behavior: HitTestBehavior.opaque,
       child: OverflowBox(
         child: Container(

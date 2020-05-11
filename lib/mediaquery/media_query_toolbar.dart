@@ -14,7 +14,9 @@ class MediaQueryToolbar extends StatefulWidget {
   final Function(MediaQueryData) onMediaQueryChange;
   final Function(DeviceInfo) onDeviceInfoChanged;
   final Function(double) updateScale;
+  final Function(Offset) updateOffset;
   final double scale;
+  final Offset offset;
 
   const MediaQueryToolbar({
     Key key,
@@ -24,6 +26,8 @@ class MediaQueryToolbar extends StatefulWidget {
     @required this.currentDeviceSelected,
     @required this.updateScale,
     @required this.scale,
+    @required this.offset,
+    @required this.updateOffset,
   }) : super(key: key);
 
   @override
@@ -34,9 +38,10 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
   bool isExpanded = false;
 
   void _deviceSelected(BuildContext context, DeviceInfo device) {
-    // reset scale back to 100% when changing device
+    // reset scale, offset back to 100% when changing device
     if (device != widget.currentDeviceSelected) {
       widget.updateScale(1.0);
+      widget.updateOffset(Offset.zero);
       widget.onDeviceInfoChanged(device);
       widget.onMediaQueryChange(widget.currentMediaQuery.copyWith(
         size: device.logicalSize.boundedSize(context),
@@ -155,11 +160,20 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
           deviceSelected: (value) => _deviceSelected(context, value),
           selectedDevice: widget.currentDeviceSelected,
         ),
-        if (widget.currentDeviceSelected != DeviceSizes.window)
+        if (widget.currentDeviceSelected != DeviceSizes.window) ...[
           ZoomControls(
             scale: widget.scale,
             updateScale: widget.updateScale,
           ),
+          if (widget.offset != Offset.zero)
+            IconButton(
+              tooltip: 'Reset Screen to Center',
+              icon: Icon(Icons.center_focus_strong),
+              onPressed: () {
+                widget.updateOffset(Offset.zero);
+              },
+            ),
+        ],
       ],
     );
   }
