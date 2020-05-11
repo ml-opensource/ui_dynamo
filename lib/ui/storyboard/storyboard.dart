@@ -10,15 +10,11 @@ class StoryBoard extends StatefulWidget {
   /// Wrap your Material App with this widget
   final MaterialApp child;
 
-  /// You can disable this widget at any time and just return the child
-  final bool enabled;
-
   final Map<String, List<String>> routesMapping;
 
   const StoryBoard({
     Key key,
     @required this.child,
-    this.enabled = true,
     this.routesMapping,
   }) : super(key: key);
 
@@ -43,7 +39,6 @@ class StoryboardController extends State<StoryBoard> {
     final size = mediaQueryData.size;
     final scale = query.screenScale;
     final currentOffset = query.currentOffset;
-    if (!widget.enabled) return base;
     return Scaffold(
       body: GestureDetector(
         onPanUpdate: (panDetails) =>
