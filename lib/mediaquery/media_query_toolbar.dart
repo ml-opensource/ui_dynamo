@@ -82,6 +82,10 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
     ));
   }
 
+  void _updateScale(double scale) {
+    widget.updateScale(scale);
+  }
+
   Widget buildDivider() => Container(
         height: 15,
         child: VerticalDivider(),
@@ -163,7 +167,7 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
         if (widget.currentDeviceSelected != DeviceSizes.window) ...[
           ZoomControls(
             scale: widget.scale,
-            updateScale: widget.updateScale,
+            updateScale: _updateScale,
           ),
           if (widget.offset != Offset.zero)
             IconButton(

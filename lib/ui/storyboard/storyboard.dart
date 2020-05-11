@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_storybook/mediaquery/override_media_query_provider.dart';
-import 'package:flutter_storybook/ui/storyboard/flow_start.dart';
 import 'package:flutter_storybook/ui/screen.dart';
+import 'package:flutter_storybook/ui/storyboard/flow_start.dart';
 import 'package:flutter_storybook/ui/storyboard/utils.dart';
 
 const _kSpacing = 80.0;
@@ -13,16 +13,12 @@ class StoryBoard extends StatefulWidget {
   /// You can disable this widget at any time and just return the child
   final bool enabled;
 
-  /// Initial Offset of the canvas
-  final Offset initialOffset;
-
   final Map<String, List<String>> routesMapping;
 
   const StoryBoard({
     Key key,
     @required this.child,
     this.enabled = true,
-    this.initialOffset,
     this.routesMapping,
   }) : super(key: key);
 
@@ -31,15 +27,6 @@ class StoryBoard extends StatefulWidget {
 }
 
 class StoryboardController extends State<StoryBoard> {
-  Offset _offset;
-
-  @override
-  void initState() {
-    _offset = widget.initialOffset;
-    _offset ??= Offset(10, -40);
-    super.initState();
-  }
-
   @override
   void didUpdateWidget(StoryBoard oldWidget) {
     if (oldWidget.child != widget.child) {
@@ -48,25 +35,19 @@ class StoryboardController extends State<StoryBoard> {
     super.didUpdateWidget(oldWidget);
   }
 
-  void _updateOffset(Offset value) {
-    if (mounted) {
-      setState(() {
-        _offset += value;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final query = mediaQuery(context);
     final mediaQueryData = query.boundedMediaQuery;
     final base = widget.child;
-    final _size = mediaQueryData.size;
+    final size = mediaQueryData.size;
     final scale = query.screenScale;
+    final currentOffset = query.currentOffset;
     if (!widget.enabled) return base;
     return Scaffold(
       body: GestureDetector(
-        onPanUpdate: (panDetails) => _updateOffset(panDetails.delta),
+        onPanUpdate: (panDetails) =>
+            query.changeCurrentOffset(query.currentOffset + panDetails.delta),
         behavior: HitTestBehavior.opaque,
         child: Container(
           width: double.infinity,
@@ -77,30 +58,32 @@ class StoryboardController extends State<StoryBoard> {
               children: [
                 if (base?.home != null && widget.routesMapping == null)
                   _addChild(
-                    base,
-                    mediaQueryData,
-                    base.home,
-                    '/',
-                    false,
-                    false,
-                    scale,
-                    Offset(0, 10),
-                    'Home',
+                    base: base,
+                    mediaQueryData: mediaQueryData,
+                    child: base.home,
+                    routeName: '/',
+                    isFirst: false,
+                    isLast: false,
+                    scale: scale,
+                    offset: Offset(0, 10),
+                    label: 'Home',
+                    currentMediaOffset: currentOffset,
                   ),
                 if (base?.initialRoute != null && widget.routesMapping == null)
                   _addChild(
-                    base,
-                    mediaQueryData,
-                    base.routes[base.initialRoute](context),
-                    base.initialRoute,
-                    false,
-                    false,
-                    scale,
-                    Offset(
-                        base?.home != null ? _size.width + _kSpacing : 0, 10),
-                    'Initial Route',
+                    base: base,
+                    mediaQueryData: mediaQueryData,
+                    child: base.routes[base.initialRoute](context),
+                    routeName: base.initialRoute,
+                    isFirst: false,
+                    isLast: false,
+                    scale: scale,
+                    offset: Offset(
+                        base?.home != null ? size.width + _kSpacing : 0, 10),
+                    label: 'Initial Route',
+                    currentMediaOffset: currentOffset,
                   ),
-                ..._renderRoutes(mediaQueryData, scale),
+                ..._renderRoutes(mediaQueryData, scale, currentOffset),
               ],
             ),
           ),
@@ -109,20 +92,21 @@ class StoryboardController extends State<StoryBoard> {
     );
   }
 
-  Positioned _addChild(
-    MaterialApp base,
-    MediaQueryData mediaQueryData,
-    Widget child,
-    String routeName,
-    bool isFirst,
-    bool isLast,
-    double scale, [
+  Positioned _addChild({
+    @required MaterialApp base,
+    @required MediaQueryData mediaQueryData,
+    @required Widget child,
+    @required String routeName,
+    @required bool isFirst,
+    @required bool isLast,
+    @required double scale,
     Offset offset = Offset.zero,
     String label,
-  ]) {
+    @required Offset currentMediaOffset,
+  }) {
     return Positioned(
-      top: calculateTop(offset, _offset, scale),
-      left: calculateLeft(offset, _offset, scale),
+      top: calculateTop(offset, currentMediaOffset, scale),
+      left: calculateLeft(offset, currentMediaOffset, scale),
       child: ScalableScreen(
         base: widget.child,
         child: child,
@@ -134,12 +118,17 @@ class StoryboardController extends State<StoryBoard> {
     );
   }
 
-  Positioned _addSectionStart(MaterialApp base, MediaQueryData mediaQueryData,
-      double scale,
-      [Offset offset = Offset.zero, String label]) {
+  Positioned _addSectionStart({
+    @required MaterialApp base,
+    @required MediaQueryData mediaQueryData,
+    @required double scale,
+    Offset offset = Offset.zero,
+    String label,
+    @required Offset currentMediaOffset,
+  }) {
     return Positioned(
-      top: calculateTop(offset, _offset, scale),
-      left: calculateLeft(offset, _offset, scale),
+      top: calculateTop(offset, currentMediaOffset, scale),
+      left: calculateLeft(offset, currentMediaOffset, scale),
       child: ScalableScreen(
         base: widget.child,
         child: FlowStart(label: label),
@@ -150,7 +139,8 @@ class StoryboardController extends State<StoryBoard> {
     );
   }
 
-  _renderRoutes(MediaQueryData mediaQueryData, double scale) {
+  _renderRoutes(
+      MediaQueryData mediaQueryData, double scale, Offset currentMediaOffset) {
     final List<Widget> routesList = [];
     final base = widget.child;
     final _size = mediaQueryData.size;
@@ -160,12 +150,13 @@ class StoryboardController extends State<StoryBoard> {
       mapping.entries.forEach((entry) {
         var offsetIndex = 0;
         routesList.add(_addSectionStart(
-          base,
-          mediaQueryData,
-          scale,
-          Offset((_size.width + _kSpacing) * (offsetIndex),
+          base: base,
+          mediaQueryData: mediaQueryData,
+          scale: scale,
+          offset: Offset((_size.width + _kSpacing) * (offsetIndex),
               ((_size.height + _kSpacing) + 40) * index),
-          entry.key,
+          label: entry.key,
+          currentMediaOffset: currentMediaOffset,
         ));
         entry.value.forEach((route) {
           final currentRoute = base.routes[route];
@@ -177,16 +168,17 @@ class StoryboardController extends State<StoryBoard> {
             return true;
           }());
           routesList.add(_addChild(
-            base,
-            mediaQueryData,
-            currentRoute(context),
-            route,
-            false,
-            (offsetIndex == entry.value.length - 1),
-            scale,
-            Offset((_size.width + _kSpacing) * (offsetIndex + 1),
+            base: base,
+            mediaQueryData: mediaQueryData,
+            child: currentRoute(context),
+            routeName: route,
+            isFirst: false,
+            isLast: (offsetIndex == entry.value.length - 1),
+            scale: scale,
+            offset: Offset((_size.width + _kSpacing) * (offsetIndex + 1),
                 ((_size.height + _kSpacing) + 40) * index),
-            route,
+            label: route,
+            currentMediaOffset: currentMediaOffset,
           ));
           offsetIndex++;
         });
@@ -195,16 +187,16 @@ class StoryboardController extends State<StoryBoard> {
     } else if (base?.routes != null) {
       for (var r = 0; r < base.routes.keys.length; r++) {
         routesList.add(_addChild(
-          base,
-          mediaQueryData,
-          base.routes[base.routes.keys.toList()[r]](context),
-          base.routes.keys.toList()[r],
-          false,
-          false,
-          scale,
-          Offset(
+          base: base,
+          mediaQueryData: mediaQueryData,
+          child: base.routes[base.routes.keys.toList()[r]](context),
+          routeName: base.routes.keys.toList()[r],
+          isFirst: false,
+          isLast: false,
+          scale: scale,
+          offset: Offset(
               (_size.width + _kSpacing) * r, (_size.height + _kSpacing) + 40),
-          base.routes.keys.toList()[r],
+          label: base.routes.keys.toList()[r],
         ));
       }
     }
