@@ -34,10 +34,14 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
   bool isExpanded = false;
 
   void _deviceSelected(BuildContext context, DeviceInfo device) {
-    widget.onDeviceInfoChanged(device);
-    widget.onMediaQueryChange(widget.currentMediaQuery.copyWith(
-      size: device.logicalSize.boundedSize(context),
-    ));
+    // reset scale back to 100% when changing device
+    if (device != widget.currentDeviceSelected) {
+      widget.updateScale(1.0);
+      widget.onDeviceInfoChanged(device);
+      widget.onMediaQueryChange(widget.currentMediaQuery.copyWith(
+        size: device.logicalSize.boundedSize(context),
+      ));
+    }
   }
 
   void _toggleBrightness() {
@@ -151,10 +155,11 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
           deviceSelected: (value) => _deviceSelected(context, value),
           selectedDevice: widget.currentDeviceSelected,
         ),
-        ZoomControls(
-          scale: widget.scale,
-          updateScale: widget.updateScale,
-        ),
+        if (widget.currentDeviceSelected != DeviceSizes.window)
+          ZoomControls(
+            scale: widget.scale,
+            updateScale: widget.updateScale,
+          ),
       ],
     );
   }
