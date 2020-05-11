@@ -38,12 +38,13 @@ MaterialApp buildApp() => MaterialApp(
         primarySwatch: Colors.deepPurple,
         backgroundColor: Colors.black,
         buttonTheme: ButtonThemeData(
-            buttonColor: Colors.deepPurple,
-            textTheme: ButtonTextTheme.primary,
-            disabledColor: Colors.purpleAccent,
-            colorScheme: ColorScheme.fromSwatch(
-              primarySwatch: Colors.deepPurple,
-            )),
+          buttonColor: Colors.deepPurple,
+          textTheme: ButtonTextTheme.primary,
+          disabledColor: Colors.purpleAccent,
+          colorScheme: ColorScheme.fromSwatch(
+            primarySwatch: Colors.deepPurple,
+          ),
+        ),
         iconTheme: IconThemeData(
           color: Colors.deepPurpleAccent,
         ),

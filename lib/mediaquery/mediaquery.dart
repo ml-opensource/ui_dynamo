@@ -108,23 +108,18 @@ class _InteractableScreenState extends State<InteractableScreen> {
       OverrideMediaQueryProvider provider, double toolbarOffset) {
     final offsetTop = Offset(
         0,
-        (realQuery.size.height -
-                    provider.boundedMediaQuery.size.height) /
-                2 -
+        (realQuery.size.height - provider.boundedMediaQuery.size.height) / 2 -
             toolbarOffset);
-    return calculateTop(offsetTop, provider.currentOffset,
-        provider.screenScale);
+    return calculateTop(
+        offsetTop, provider.currentOffset, provider.screenScale);
   }
 
   double _calculateOffsetLeft(MediaQueryData realQuery,
       OverrideMediaQueryProvider provider, double toolbarOffset) {
     final offsetLeft = Offset(
-        (realQuery.size.width -
-                provider.boundedMediaQuery.size.width) /
-            2,
-        0);
-    return calculateLeft(offsetLeft, provider.currentOffset,
-        provider.screenScale);
+        (realQuery.size.width - provider.boundedMediaQuery.size.width) / 2, 0);
+    return calculateLeft(
+        offsetLeft, provider.currentOffset, provider.screenScale);
   }
 
   @override
@@ -165,23 +160,24 @@ class _InteractableScreenState extends State<InteractableScreen> {
                       child: widget.widget
                           .builder(context, query.currentMediaQuery),
                     ),
-                    Positioned(
-                      top: 0,
-                      right: 0,
-                      child: MeasureSize(
-                        onChange: (size) {
-                          setState(() {
-                            this.offsetLabelSize = size;
-                          });
-                        },
-                        child: Card(
-                            child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                              "Offset (${leftCalculated.truncateToDouble()},${topCalculated.truncateToDouble()})"),
-                        )),
-                      ),
-                    )
+                    if (query.showOffsetIndicator)
+                      Positioned(
+                        top: 0,
+                        right: 0,
+                        child: MeasureSize(
+                          onChange: (size) {
+                            setState(() {
+                              this.offsetLabelSize = size;
+                            });
+                          },
+                          child: Card(
+                              child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                                "Offset (${leftCalculated.truncateToDouble()},${topCalculated.truncateToDouble()})"),
+                          )),
+                        ),
+                      )
                   ],
                 ),
               ),

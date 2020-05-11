@@ -9,6 +9,7 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
   DeviceInfo _currentDeviceSelected;
   double _currentScreenScale = 1.0;
   Offset _currentOffset = Offset.zero;
+  bool _showOffsetIndicator = false;
 
   OverrideMediaQueryProvider(this._currentDeviceSelected);
 
@@ -30,6 +31,11 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
 
   void changeCurrentOffset(Offset offset) {
     this._currentOffset = offset;
+    notifyListeners();
+  }
+
+  void changeOffsetIndicator(bool show) {
+    this._showOffsetIndicator = show;
     notifyListeners();
   }
 
@@ -55,6 +61,8 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
   double get screenScale => _currentScreenScale;
 
   Offset get currentOffset => _currentOffset;
+
+  bool get showOffsetIndicator => _showOffsetIndicator;
 }
 
 OverrideMediaQueryProvider mediaQuery(BuildContext context) {

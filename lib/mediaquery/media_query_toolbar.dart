@@ -79,6 +79,11 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
     mediaQueryProvider.selectScreenScale(scale);
   }
 
+  void _toggleOffset(OverrideMediaQueryProvider mediaQueryProvider) {
+    mediaQueryProvider
+        .changeOffsetIndicator(!mediaQueryProvider.showOffsetIndicator);
+  }
+
   Widget buildDivider() => Container(
         height: 15,
         child: VerticalDivider(),
@@ -168,14 +173,21 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
             scale: mediaQueryProvider.screenScale,
             updateScale: (value) => _updateScale(value, mediaQueryProvider),
           ),
-          if (mediaQueryProvider.currentOffset != Offset.zero)
-            IconButton(
-              tooltip: 'Reset Screen to Center',
-              icon: Icon(Icons.center_focus_strong),
-              onPressed: () {
-                mediaQueryProvider.changeCurrentOffset(Offset.zero);
-              },
-            ),
+          IconButton(
+            tooltip: 'Reset Screen to Center',
+            icon: Icon(Icons.center_focus_strong),
+            onPressed: mediaQueryProvider.currentOffset != Offset.zero
+                ? () {
+                    mediaQueryProvider.changeCurrentOffset(Offset.zero);
+                  }
+                : null,
+          ),
+          OutlineButton(
+            child: Text(mediaQueryProvider.showOffsetIndicator
+                ? 'Hide Offset'
+                : 'Show Offset'),
+            onPressed: () => _toggleOffset(mediaQueryProvider),
+          )
         ],
       ],
     );
