@@ -104,14 +104,34 @@ class InteractableScreen extends StatefulWidget {
 class _InteractableScreenState extends State<InteractableScreen> {
   Size offsetLabelSize = Size.zero;
 
+  double _calculateOffsetTop(MediaQueryData realQuery,
+      OverrideMediaQueryProvider provider, double toolbarOffset) {
+    final offsetTop = Offset(
+        0,
+        (realQuery.size.height -
+                    provider.boundedMediaQuery.size.height) /
+                2 -
+            toolbarOffset);
+    return calculateTop(offsetTop, provider.currentOffset,
+        provider.screenScale);
+  }
+
+  double _calculateOffsetLeft(MediaQueryData realQuery,
+      OverrideMediaQueryProvider provider, double toolbarOffset) {
+    final offsetLeft = Offset(
+        (realQuery.size.width -
+                provider.boundedMediaQuery.size.width) /
+            2,
+        0);
+    return calculateLeft(offsetLeft, provider.currentOffset,
+        provider.screenScale);
+  }
+
   @override
   Widget build(BuildContext context) {
     final query = mediaQuery(context);
     final realQuery = MediaQuery.of(context);
-    final offsetTop = Offset(
-        0, (realQuery.size.height - query.boundedMediaQuery.size.height) / 2);
-    final offsetLeft = Offset(
-        (realQuery.size.width - query.boundedMediaQuery.size.width) / 2, 0);
+    final toolbarOffset = (widget.toolbarHeight + 48);
     double topCalculated;
     double leftCalculated;
     // if window, move back to center and do not allow panning.
@@ -119,10 +139,8 @@ class _InteractableScreenState extends State<InteractableScreen> {
       topCalculated = 0;
       leftCalculated = 0;
     } else {
-      topCalculated =
-          calculateTop(offsetTop, query.currentOffset, query.screenScale);
-      leftCalculated =
-          calculateLeft(offsetLeft, query.currentOffset, query.screenScale);
+      topCalculated = _calculateOffsetTop(realQuery, query, toolbarOffset);
+      leftCalculated = _calculateOffsetLeft(realQuery, query, toolbarOffset);
     }
     return GestureDetector(
       onPanUpdate: (panDetails) =>
@@ -130,7 +148,7 @@ class _InteractableScreenState extends State<InteractableScreen> {
       behavior: HitTestBehavior.opaque,
       child: OverflowBox(
         child: Container(
-          margin: EdgeInsets.only(top: widget.toolbarHeight + 48),
+          margin: EdgeInsets.only(top: toolbarOffset),
           child: Stack(
             children: [
               Positioned(
