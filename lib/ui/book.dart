@@ -238,7 +238,6 @@ class _StoryBookHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final selectedPage = selectedPageFromWidget(data, context);
-    final query = mediaQuery(context);
     return Container(
       padding: const EdgeInsets.only(left: 32.0, right: 32.0),
       alignment: AlignmentDirectional.center,
@@ -306,16 +305,7 @@ class _StoryBookHomePage extends StatelessWidget {
           Row(
             children: [
               Flexible(
-                child: MediaQueryToolbar(
-                  currentMediaQuery: query.currentMediaQuery,
-                  onMediaQueryChange: query.selectMediaQuery,
-                  currentDeviceSelected: query.currentDevice,
-                  onDeviceInfoChanged: query.selectCurrentDevice,
-                  scale: query.screenScale,
-                  updateScale: query.selectScreenScale,
-                  offset: query.currentOffset,
-                  updateOffset: query.changeCurrentOffset,
-                ),
+                child: MediaQueryToolbar(),
               ),
             ],
           ),

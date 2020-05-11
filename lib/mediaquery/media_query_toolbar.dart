@@ -3,31 +3,15 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_storybook/media_utils.dart';
 import 'package:flutter_storybook/mediaquery/device_sizes.dart';
+import 'package:flutter_storybook/mediaquery/override_media_query_provider.dart';
 import 'package:flutter_storybook/mediaquery/screen_size_chooser.dart';
 import 'package:flutter_storybook/mediaquery/text_scale.dart';
 import 'package:flutter_storybook/mediaquery/zoom_controls.dart';
 import 'package:flutter_storybook/ui/utils/size+extensions.dart';
 
 class MediaQueryToolbar extends StatefulWidget {
-  final MediaQueryData currentMediaQuery;
-  final DeviceInfo currentDeviceSelected;
-  final Function(MediaQueryData) onMediaQueryChange;
-  final Function(DeviceInfo) onDeviceInfoChanged;
-  final Function(double) updateScale;
-  final Function(Offset) updateOffset;
-  final double scale;
-  final Offset offset;
-
   const MediaQueryToolbar({
     Key key,
-    @required this.currentMediaQuery,
-    @required this.onMediaQueryChange,
-    @required this.onDeviceInfoChanged,
-    @required this.currentDeviceSelected,
-    @required this.updateScale,
-    @required this.scale,
-    @required this.offset,
-    @required this.updateOffset,
   }) : super(key: key);
 
   @override
@@ -37,53 +21,62 @@ class MediaQueryToolbar extends StatefulWidget {
 class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
   bool isExpanded = false;
 
-  void _deviceSelected(BuildContext context, DeviceInfo device) {
+  void _deviceSelected(BuildContext context, DeviceInfo device,
+      OverrideMediaQueryProvider mediaQueryProvider) {
     // reset scale, offset back to 100% when changing device
-    if (device != widget.currentDeviceSelected) {
-      widget.updateScale(1.0);
-      widget.updateOffset(Offset.zero);
-      widget.onDeviceInfoChanged(device);
-      widget.onMediaQueryChange(widget.currentMediaQuery.copyWith(
-        size: device.logicalSize.boundedSize(context),
-      ));
+    if (device != mediaQueryProvider.currentDevice) {
+      mediaQueryProvider.resetScreenAdjustments(
+          newDevice: device,
+          overrideData: mediaQueryProvider.currentMediaQuery.copyWith(
+            size: device.logicalSize.boundedSize(context),
+          ));
     }
   }
 
-  void _toggleBrightness() {
-    widget.onMediaQueryChange(widget.currentMediaQuery.copyWith(
+  void _toggleBrightness(OverrideMediaQueryProvider mediaQueryProvider) {
+    mediaQueryProvider
+        .selectMediaQuery(mediaQueryProvider.currentMediaQuery.copyWith(
       platformBrightness:
-          widget.currentMediaQuery.platformBrightness == Brightness.light
+          mediaQueryProvider.currentMediaQuery.platformBrightness ==
+                  Brightness.light
               ? Brightness.dark
               : Brightness.light,
     ));
   }
 
-  void _toggleHighContrast() {
-    widget.onMediaQueryChange(widget.currentMediaQuery.copyWith(
-      highContrast: !widget.currentMediaQuery.highContrast,
+  void _toggleHighContrast(OverrideMediaQueryProvider mediaQueryProvider) {
+    mediaQueryProvider
+        .selectMediaQuery(mediaQueryProvider.currentMediaQuery.copyWith(
+      highContrast: !mediaQueryProvider.currentMediaQuery.highContrast,
     ));
   }
 
-  void _toggleInvertColors() {
-    widget.onMediaQueryChange(widget.currentMediaQuery.copyWith(
-      invertColors: !widget.currentMediaQuery.invertColors,
+  void _toggleInvertColors(OverrideMediaQueryProvider mediaQueryProvider) {
+    mediaQueryProvider
+        .selectMediaQuery(mediaQueryProvider.currentMediaQuery.copyWith(
+      invertColors: !mediaQueryProvider.currentMediaQuery.invertColors,
     ));
   }
 
-  void _textScaleFactorChanged(double value) {
-    widget.onMediaQueryChange(widget.currentMediaQuery.copyWith(
+  void _textScaleFactorChanged(
+      double value, OverrideMediaQueryProvider mediaQueryProvider) {
+    mediaQueryProvider
+        .selectMediaQuery(mediaQueryProvider.currentMediaQuery.copyWith(
       textScaleFactor: value,
     ));
   }
 
-  void _toggleAnimations() {
-    widget.onMediaQueryChange(widget.currentMediaQuery.copyWith(
-      disableAnimations: !widget.currentMediaQuery.disableAnimations,
+  void _toggleAnimations(OverrideMediaQueryProvider mediaQueryProvider) {
+    mediaQueryProvider
+        .selectMediaQuery(mediaQueryProvider.currentMediaQuery.copyWith(
+      disableAnimations:
+          !mediaQueryProvider.currentMediaQuery.disableAnimations,
     ));
   }
 
-  void _updateScale(double scale) {
-    widget.updateScale(scale);
+  void _updateScale(
+      double scale, OverrideMediaQueryProvider mediaQueryProvider) {
+    mediaQueryProvider.selectScreenScale(scale);
   }
 
   Widget buildDivider() => Container(
@@ -91,90 +84,96 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
         child: VerticalDivider(),
       );
 
-  List<Widget> topBarList() {
+  List<Widget> topBarList(OverrideMediaQueryProvider mediaQueryProvider) {
     return [
       IconButton(
-        icon: Icon(widget.currentMediaQuery.disableAnimations
+        icon: Icon(mediaQueryProvider.currentMediaQuery.disableAnimations
             ? Icons.directions_walk
             : Icons.directions_run),
         tooltip: 'Toggle Animations ' +
-            (widget.currentMediaQuery.disableAnimations ? 'On' : 'Off'),
-        onPressed: _toggleAnimations,
+            (mediaQueryProvider.currentMediaQuery.disableAnimations
+                ? 'On'
+                : 'Off'),
+        onPressed: () => _toggleAnimations(mediaQueryProvider),
       ),
       buildDivider(),
       IconButton(
         icon: Icon(
-          widget.currentMediaQuery.invertColors
+          mediaQueryProvider.currentMediaQuery.invertColors
               ? Icons.invert_colors
               : Icons.invert_colors_off,
         ),
         tooltip: 'Invert Colors ' +
-            (widget.currentMediaQuery.invertColors ? 'Off' : 'On'),
-        onPressed: _toggleInvertColors,
+            (mediaQueryProvider.currentMediaQuery.invertColors ? 'Off' : 'On'),
+        onPressed: () => _toggleInvertColors(mediaQueryProvider),
       ),
       buildDivider(),
       IconButton(
         icon: Icon(
-          widget.currentMediaQuery.highContrast
+          mediaQueryProvider.currentMediaQuery.highContrast
               ? Icons.tonality
               : Icons.panorama_fish_eye,
         ),
         tooltip: 'High Contrast ' +
-            (widget.currentMediaQuery.highContrast ? 'Off' : 'On'),
-        onPressed: _toggleHighContrast,
+            (mediaQueryProvider.currentMediaQuery.highContrast ? 'Off' : 'On'),
+        onPressed: () => _toggleHighContrast(mediaQueryProvider),
       ),
       buildDivider(),
       IconButton(
-        icon: Icon(
-            widget.currentMediaQuery.platformBrightness == Brightness.light
-                ? Icons.brightness_7
-                : Icons.brightness_3),
+        icon: Icon(mediaQueryProvider.currentMediaQuery.platformBrightness ==
+                Brightness.light
+            ? Icons.brightness_7
+            : Icons.brightness_3),
         tooltip: 'Make Brightness ' +
-            (widget.currentMediaQuery.platformBrightness == Brightness.light
+            (mediaQueryProvider.currentMediaQuery.platformBrightness ==
+                    Brightness.light
                 ? 'Dark'
                 : 'Light'),
         onPressed: () {
-          _toggleBrightness();
+          _toggleBrightness(mediaQueryProvider);
         },
       ),
     ];
   }
 
-  buildIcons(BuildContext context) {
+  buildIcons(
+      BuildContext context, OverrideMediaQueryProvider mediaQueryProvider) {
     final expandable = isMobile(context);
     if (expandable && !isExpanded) {
       return Row(
-        children: [...topBarList()],
+        children: [...topBarList(mediaQueryProvider)],
       );
     }
     return Wrap(
       direction: Axis.horizontal,
       crossAxisAlignment: WrapCrossAlignment.center,
       children: <Widget>[
-        ...topBarList(),
+        ...topBarList(mediaQueryProvider),
         buildDivider(),
         AdjustableNumberScaleWidget(
-          scaleFactor: widget.currentMediaQuery.textScaleFactor,
-          scaleFactorChanged: _textScaleFactorChanged,
+          scaleFactor: mediaQueryProvider.currentMediaQuery.textScaleFactor,
+          scaleFactorChanged: (value) =>
+              _textScaleFactorChanged(value, mediaQueryProvider),
           displayIcon: Icons.text_fields,
           tooltip: 'Select a Text Scale',
         ),
         buildDivider(),
         MediaChooserButton(
-          deviceSelected: (value) => _deviceSelected(context, value),
-          selectedDevice: widget.currentDeviceSelected,
+          deviceSelected: (value) =>
+              _deviceSelected(context, value, mediaQueryProvider),
+          selectedDevice: mediaQueryProvider.currentDevice,
         ),
-        if (widget.currentDeviceSelected != DeviceSizes.window) ...[
+        if (mediaQueryProvider.currentDevice != DeviceSizes.window) ...[
           ZoomControls(
-            scale: widget.scale,
-            updateScale: _updateScale,
+            scale: mediaQueryProvider.screenScale,
+            updateScale: (value) => _updateScale(value, mediaQueryProvider),
           ),
-          if (widget.offset != Offset.zero)
+          if (mediaQueryProvider.currentOffset != Offset.zero)
             IconButton(
               tooltip: 'Reset Screen to Center',
               icon: Icon(Icons.center_focus_strong),
               onPressed: () {
-                widget.updateOffset(Offset.zero);
+                mediaQueryProvider.changeCurrentOffset(Offset.zero);
               },
             ),
         ],
@@ -187,6 +186,7 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
     final cardmargin = isTablet(context)
         ? EdgeInsets.only(left: 4.0, right: 4.0)
         : EdgeInsets.all(0);
+    final media = mediaQuery(context);
     return Card(
       margin: cardmargin,
       elevation: 4.0,
@@ -201,7 +201,7 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
         children: [
           Flexible(
             fit: FlexFit.tight,
-            child: buildIcons(context),
+            child: buildIcons(context, media),
           ),
           if (isMobile(context))
             SizedBox(

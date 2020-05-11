@@ -81,22 +81,10 @@ class _MediaQueryChooserState extends State<MediaQueryChooser> {
     );
   }
 
-  buildMediaQueryToolbar(BuildContext context) {
-    final query = mediaQuery(context);
-    return MeasureSize(
-      onChange: _toolbarSizeChanged,
-      child: MediaQueryToolbar(
-        currentDeviceSelected: query.currentDevice,
-        currentMediaQuery: query.currentMediaQuery,
-        onDeviceInfoChanged: query.selectCurrentDevice,
-        onMediaQueryChange: query.selectMediaQuery,
-        scale: query.screenScale,
-        updateScale: query.selectScreenScale,
-        offset: query.currentOffset,
-        updateOffset: query.changeCurrentOffset,
-      ),
-    );
-  }
+  buildMediaQueryToolbar(BuildContext context) => MeasureSize(
+        onChange: _toolbarSizeChanged,
+        child: MediaQueryToolbar(),
+      );
 }
 
 class InteractableScreen extends StatefulWidget {
@@ -114,6 +102,8 @@ class InteractableScreen extends StatefulWidget {
 }
 
 class _InteractableScreenState extends State<InteractableScreen> {
+  Size offsetLabelSize = Size.zero;
+
   @override
   Widget build(BuildContext context) {
     final query = mediaQuery(context);
@@ -146,14 +136,35 @@ class _InteractableScreenState extends State<InteractableScreen> {
               Positioned(
                 top: topCalculated,
                 left: leftCalculated,
-                child: ScalableScreen(
-                  showBorder: query.currentDevice != DeviceSizes.window,
-                  isStoryBoard: false,
-                  scale: query.screenScale,
-                  mediaQueryData: query.boundedMediaQuery,
-                  base: widget.widget.base,
-                  child:
-                      widget.widget.builder(context, query.currentMediaQuery),
+                child: Stack(
+                  children: [
+                    ScalableScreen(
+                      showBorder: query.currentDevice != DeviceSizes.window,
+                      isStoryBoard: false,
+                      scale: query.screenScale,
+                      mediaQueryData: query.boundedMediaQuery,
+                      base: widget.widget.base,
+                      child: widget.widget
+                          .builder(context, query.currentMediaQuery),
+                    ),
+                    Positioned(
+                      top: 0,
+                      right: 0,
+                      child: MeasureSize(
+                        onChange: (size) {
+                          setState(() {
+                            this.offsetLabelSize = size;
+                          });
+                        },
+                        child: Card(
+                            child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                              "Offset (${leftCalculated.truncateToDouble()},${topCalculated.truncateToDouble()})"),
+                        )),
+                      ),
+                    )
+                  ],
                 ),
               ),
             ],

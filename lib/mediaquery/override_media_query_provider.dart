@@ -33,9 +33,16 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void resetScreenAdjustments() {
+  void resetScreenAdjustments(
+      {DeviceInfo newDevice, MediaQueryData overrideData}) {
     this._currentOffset = Offset.zero;
     this._currentScreenScale = 1.0;
+    if (newDevice != null) {
+      this._currentDeviceSelected = newDevice;
+    }
+    if (overrideData != null) {
+      this._currentMediaQuery = overrideData;
+    }
     notifyListeners();
   }
 
