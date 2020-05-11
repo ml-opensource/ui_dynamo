@@ -51,7 +51,7 @@ class StoryBook extends StatefulWidget {
     previewRoutes.forEach((key, value) {
       assert(() {
         if (routes.containsKey(key)) {
-          throw FlutterError("Duplicate route ${key} found in application. "
+          throw FlutterError("Duplicate route $key found in application. "
               "Overridding an existing route will replace the functionality "
               "in StoryBook. If this was intentional, set allowPreviewRouteOverrides "
               "to true.");
@@ -311,6 +311,8 @@ class _StoryBookHomePage extends StatelessWidget {
                   onMediaQueryChange: query.selectMediaQuery,
                   currentDeviceSelected: query.currentDevice,
                   onDeviceInfoChanged: query.selectCurrentDevice,
+                  scale: query.screenScale,
+                  updateScale: query.selectScreenScale,
                 ),
               ),
             ],

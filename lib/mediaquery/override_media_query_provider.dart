@@ -7,6 +7,7 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
   MediaQueryData _currentMediaQuery;
   MediaQueryData _boundedMediaQuery;
   DeviceInfo _currentDeviceSelected;
+  double _currentScreenScale = 1.0;
 
   OverrideMediaQueryProvider(this._currentDeviceSelected);
 
@@ -21,11 +22,18 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void selectScreenScale(double scale) {
+    this._currentScreenScale = scale;
+    notifyListeners();
+  }
+
   MediaQueryData get currentMediaQuery => _currentMediaQuery;
 
   MediaQueryData get boundedMediaQuery => _boundedMediaQuery;
 
   DeviceInfo get currentDevice => _currentDeviceSelected;
+
+  double get screenScale => _currentScreenScale;
 }
 
 OverrideMediaQueryProvider mediaQuery(BuildContext context) {

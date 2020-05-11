@@ -5,13 +5,16 @@ import 'package:flutter_storybook/media_utils.dart';
 import 'package:flutter_storybook/mediaquery/device_sizes.dart';
 import 'package:flutter_storybook/mediaquery/screen_size_chooser.dart';
 import 'package:flutter_storybook/mediaquery/text_scale.dart';
+import 'package:flutter_storybook/mediaquery/zoom_controls.dart';
 import 'package:flutter_storybook/ui/utils/size+extensions.dart';
 
-class MediaQueryToolbar extends StatelessWidget {
+class MediaQueryToolbar extends StatefulWidget {
   final MediaQueryData currentMediaQuery;
   final DeviceInfo currentDeviceSelected;
   final Function(MediaQueryData) onMediaQueryChange;
   final Function(DeviceInfo) onDeviceInfoChanged;
+  final Function(double) updateScale;
+  final double scale;
 
   const MediaQueryToolbar({
     Key key,
@@ -19,51 +22,54 @@ class MediaQueryToolbar extends StatelessWidget {
     @required this.onMediaQueryChange,
     @required this.onDeviceInfoChanged,
     @required this.currentDeviceSelected,
+    @required this.updateScale,
+    @required this.scale,
   }) : super(key: key);
 
+  @override
+  _MediaQueryToolbarState createState() => _MediaQueryToolbarState();
+}
+
+class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
+  bool isExpanded = false;
+
   void _deviceSelected(BuildContext context, DeviceInfo device) {
-    onDeviceInfoChanged(device);
-    onMediaQueryChange(currentMediaQuery.copyWith(
+    widget.onDeviceInfoChanged(device);
+    widget.onMediaQueryChange(widget.currentMediaQuery.copyWith(
       size: device.logicalSize.boundedSize(context),
     ));
   }
 
   void _toggleBrightness() {
-    onMediaQueryChange(currentMediaQuery.copyWith(
+    widget.onMediaQueryChange(widget.currentMediaQuery.copyWith(
       platformBrightness:
-          currentMediaQuery.platformBrightness == Brightness.light
+          widget.currentMediaQuery.platformBrightness == Brightness.light
               ? Brightness.dark
               : Brightness.light,
     ));
   }
 
   void _toggleHighContrast() {
-    onMediaQueryChange(currentMediaQuery.copyWith(
-      highContrast: !currentMediaQuery.highContrast,
+    widget.onMediaQueryChange(widget.currentMediaQuery.copyWith(
+      highContrast: !widget.currentMediaQuery.highContrast,
     ));
   }
 
   void _toggleInvertColors() {
-    onMediaQueryChange(currentMediaQuery.copyWith(
-      invertColors: !currentMediaQuery.invertColors,
+    widget.onMediaQueryChange(widget.currentMediaQuery.copyWith(
+      invertColors: !widget.currentMediaQuery.invertColors,
     ));
   }
 
   void _textScaleFactorChanged(double value) {
-    onMediaQueryChange(currentMediaQuery.copyWith(
+    widget.onMediaQueryChange(widget.currentMediaQuery.copyWith(
       textScaleFactor: value,
     ));
   }
 
   void _toggleAnimations() {
-    onMediaQueryChange(currentMediaQuery.copyWith(
-      disableAnimations: !currentMediaQuery.disableAnimations,
-    ));
-  }
-
-  void _devicePixelRatioChanged(double value) {
-    onMediaQueryChange(currentMediaQuery.copyWith(
-      devicePixelRatio: value,
+    widget.onMediaQueryChange(widget.currentMediaQuery.copyWith(
+      disableAnimations: !widget.currentMediaQuery.disableAnimations,
     ));
   }
 
@@ -72,10 +78,94 @@ class MediaQueryToolbar extends StatelessWidget {
         child: VerticalDivider(),
       );
 
+  List<Widget> topBarList() {
+    return [
+      IconButton(
+        icon: Icon(widget.currentMediaQuery.disableAnimations
+            ? Icons.directions_walk
+            : Icons.directions_run),
+        tooltip: 'Toggle Animations ' +
+            (widget.currentMediaQuery.disableAnimations ? 'On' : 'Off'),
+        onPressed: _toggleAnimations,
+      ),
+      buildDivider(),
+      IconButton(
+        icon: Icon(
+          widget.currentMediaQuery.invertColors
+              ? Icons.invert_colors
+              : Icons.invert_colors_off,
+        ),
+        tooltip: 'Invert Colors ' +
+            (widget.currentMediaQuery.invertColors ? 'Off' : 'On'),
+        onPressed: _toggleInvertColors,
+      ),
+      buildDivider(),
+      IconButton(
+        icon: Icon(
+          widget.currentMediaQuery.highContrast
+              ? Icons.tonality
+              : Icons.panorama_fish_eye,
+        ),
+        tooltip: 'High Contrast ' +
+            (widget.currentMediaQuery.highContrast ? 'Off' : 'On'),
+        onPressed: _toggleHighContrast,
+      ),
+      buildDivider(),
+      IconButton(
+        icon: Icon(
+            widget.currentMediaQuery.platformBrightness == Brightness.light
+                ? Icons.brightness_7
+                : Icons.brightness_3),
+        tooltip: 'Make Brightness ' +
+            (widget.currentMediaQuery.platformBrightness == Brightness.light
+                ? 'Dark'
+                : 'Light'),
+        onPressed: () {
+          _toggleBrightness();
+        },
+      ),
+    ];
+  }
+
+  buildIcons(BuildContext context) {
+    final expandable = isMobile(context);
+    if (expandable && !isExpanded) {
+      return Row(
+        children: [...topBarList()],
+      );
+    }
+    return Wrap(
+      direction: Axis.horizontal,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      children: <Widget>[
+        ...topBarList(),
+        buildDivider(),
+        AdjustableNumberScaleWidget(
+          scaleFactor: widget.currentMediaQuery.textScaleFactor,
+          scaleFactorChanged: _textScaleFactorChanged,
+          displayIcon: Icons.text_fields,
+          tooltip: 'Select a Text Scale',
+        ),
+        buildDivider(),
+        MediaChooserButton(
+          deviceSelected: (value) => _deviceSelected(context, value),
+          selectedDevice: widget.currentDeviceSelected,
+        ),
+        ZoomControls(
+          scale: widget.scale,
+          updateScale: widget.updateScale,
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final cardmargin = isTablet(context)
+        ? EdgeInsets.only(left: 4.0, right: 4.0)
+        : EdgeInsets.all(0);
     return Card(
-      margin: EdgeInsets.only(left: 4.0, right: 4.0),
+      margin: cardmargin,
       elevation: 4.0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
@@ -83,93 +173,27 @@ class MediaQueryToolbar extends StatelessWidget {
           bottomLeft: Radius.circular(8.0),
         ),
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Wrap(
-            direction: Axis.horizontal,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: <Widget>[
-              AdjustableNumberScaleWidget(
-                scaleFactor: currentMediaQuery.devicePixelRatio,
-                scaleFactorChanged: _devicePixelRatioChanged,
-                displayIcon: Icons.aspect_ratio,
-                tooltip: 'Select a device pixel ratio',
-              ),
-              buildDivider(),
-              IconButton(
-                icon: Icon(currentMediaQuery.disableAnimations
-                    ? Icons.directions_walk
-                    : Icons.directions_run),
-                tooltip: 'Toggle Animations ' +
-                    (currentMediaQuery.disableAnimations ? 'On' : 'Off'),
-                onPressed: _toggleAnimations,
-              ),
-              buildDivider(),
-              IconButton(
-                icon: Icon(
-                  currentMediaQuery.invertColors
-                      ? Icons.invert_colors
-                      : Icons.invert_colors_off,
-                ),
-                tooltip: 'Invert Colors ' +
-                    (currentMediaQuery.invertColors ? 'Off' : 'On'),
-                onPressed: _toggleInvertColors,
-              ),
-              buildDivider(),
-              IconButton(
-                icon: Icon(
-                  currentMediaQuery.highContrast
-                      ? Icons.tonality
-                      : Icons.panorama_fish_eye,
-                ),
-                tooltip: 'High Contrast ' +
-                    (currentMediaQuery.highContrast ? 'Off' : 'On'),
-                onPressed: _toggleHighContrast,
-              ),
-              buildDivider(),
-              AdjustableNumberScaleWidget(
-                scaleFactor: currentMediaQuery.textScaleFactor,
-                scaleFactorChanged: _textScaleFactorChanged,
-                displayIcon: Icons.text_fields,
-                tooltip: 'Select a Text Scale',
-              ),
-              buildDivider(),
-              IconButton(
-                icon: Icon(
-                    currentMediaQuery.platformBrightness == Brightness.light
-                        ? Icons.brightness_7
-                        : Icons.brightness_3),
-                tooltip: 'Make Brightness ' +
-                    (currentMediaQuery.platformBrightness == Brightness.light
-                        ? 'Dark'
-                        : 'Light'),
-                onPressed: () {
-                  _toggleBrightness();
-                },
-              ),
-              buildDivider(),
-              MediaChooserButton(
-                deviceSelected: (value) => _deviceSelected(context, value),
-                selectedDevice: currentDeviceSelected,
-              ),
-            ],
+          Flexible(
+            fit: FlexFit.tight,
+            child: buildIcons(context),
           ),
           if (isMobile(context))
-            Padding(
-              padding: const EdgeInsets.only(right: 8.0, bottom: 8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  RaisedButton(
-                    child: Text('Collapse'),
-                    onPressed: () {
-
-                    },
-                  ),
-                ],
+            SizedBox(
+              width: 48,
+              height: 48,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(96.0),
+                child: Icon(isExpanded ? Icons.expand_less : Icons.expand_more),
+                onTap: () {
+                  setState(() {
+                    isExpanded = !isExpanded;
+                  });
+                },
               ),
-            ),
+            )
         ],
       ),
     );
