@@ -177,9 +177,7 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
             tooltip: 'Reset Screen to Center',
             icon: Icon(Icons.center_focus_strong),
             onPressed: mediaQueryProvider.currentOffset != Offset.zero
-                ? () {
-                    mediaQueryProvider.changeCurrentOffset(Offset.zero);
-                  }
+                ? () => mediaQueryProvider.changeCurrentOffset(Offset.zero)
                 : null,
           ),
           OutlineButton(
