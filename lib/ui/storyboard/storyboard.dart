@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_storybook/mediaquery/override_media_query_provider.dart';
 import 'package:flutter_storybook/ui/screen.dart';
@@ -60,46 +61,53 @@ class StoryboardController extends State<StoryBoard> {
     final mediaQueryData = query.boundedMediaQuery;
     final base = widget.child;
     final size = mediaQueryData.size;
-    final scale = query.screenScale;
-    final currentOffset = query.currentOffset;
     return Scaffold(
-      body: GestureDetector(
-        onPanUpdate: (panDetails) => query.offsetChange(panDetails.delta),
-        behavior: HitTestBehavior.opaque,
-        child: Container(
-          width: double.infinity,
-          height: double.infinity,
-          child: OverflowBox(
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                if (base?.home != null && widget.routesMapping == null)
-                  _addChild(
-                    base: base,
-                    provider: query,
-                    realQuery: realQuery,
-                    child: base.home,
-                    routeName: '/',
-                    isFirst: false,
-                    isLast: false,
-                    offset: Offset(0, 10),
-                    label: 'Home',
-                  ),
-                if (base?.initialRoute != null && widget.routesMapping == null)
-                  _addChild(
-                    base: base,
-                    provider: query,
-                    realQuery: realQuery,
-                    child: base.routes[base.initialRoute](context),
-                    routeName: base.initialRoute,
-                    isFirst: false,
-                    isLast: false,
-                    offset: Offset(
-                        base?.home != null ? size.width + _kSpacing : 0, 10),
-                    label: 'Initial Route',
-                  ),
-                ..._renderRoutes(query, realQuery),
-              ],
+      body: Listener(
+        onPointerSignal: (event) {
+          if (event is PointerScrollEvent) {
+            /// scroll when user scrolls
+            query.offsetChange(event.scrollDelta);
+          }
+        },
+        child: GestureDetector(
+          onPanUpdate: (panDetails) => query.offsetChange(panDetails.delta),
+          behavior: HitTestBehavior.opaque,
+          child: Container(
+            width: double.infinity,
+            height: double.infinity,
+            child: OverflowBox(
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  if (base?.home != null && widget.routesMapping == null)
+                    _addChild(
+                      base: base,
+                      provider: query,
+                      realQuery: realQuery,
+                      child: base.home,
+                      routeName: '/',
+                      isFirst: false,
+                      isLast: false,
+                      offset: Offset(0, 10),
+                      label: 'Home',
+                    ),
+                  if (base?.initialRoute != null &&
+                      widget.routesMapping == null)
+                    _addChild(
+                      base: base,
+                      provider: query,
+                      realQuery: realQuery,
+                      child: base.routes[base.initialRoute](context),
+                      routeName: base.initialRoute,
+                      isFirst: false,
+                      isLast: false,
+                      offset: Offset(
+                          base?.home != null ? size.width + _kSpacing : 0, 10),
+                      label: 'Initial Route',
+                    ),
+                  ..._renderRoutes(query, realQuery),
+                ],
+              ),
             ),
           ),
         ),
