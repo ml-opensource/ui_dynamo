@@ -8,7 +8,14 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
   MediaQueryData _boundedMediaQuery;
   DeviceInfo _currentDeviceSelected;
   double _currentScreenScale = 1.0;
+  double _toolbarHeight = 0;
+
+  /// this will be offset at scale 1.0
   Offset _currentOffset = Offset.zero;
+
+  /// this will be used when changing scale, to represent offset as function
+  /// of current.
+  Offset _scaledOffset = Offset.zero;
   bool _showOffsetIndicator = false;
 
   OverrideMediaQueryProvider(this._currentDeviceSelected);
@@ -25,12 +32,19 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
   }
 
   void selectScreenScale(double scale) {
+    final diffScale = (scale - this._currentScreenScale);
     this._currentScreenScale = scale;
+    this._scaledOffset = Offset(
+        (_currentOffset.dx * screenScale), (_currentOffset.dy * screenScale));
+    this._currentOffset =
+        Offset(_scaledOffset.dx / screenScale, _scaledOffset.dy / screenScale);
     notifyListeners();
   }
 
-  void changeCurrentOffset(Offset offset) {
-    this._currentOffset = offset;
+  void offsetChange(Offset delta) {
+    this._scaledOffset = _scaledOffset + delta;
+    this._currentOffset =
+        Offset(_scaledOffset.dx / screenScale, _scaledOffset.dy / screenScale);
     notifyListeners();
   }
 
@@ -42,6 +56,7 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
   void resetScreenAdjustments(
       {DeviceInfo newDevice, MediaQueryData overrideData}) {
     this._currentOffset = Offset.zero;
+    this._scaledOffset = Offset.zero;
     this._currentScreenScale = 1.0;
     if (newDevice != null) {
       this._currentDeviceSelected = newDevice;
@@ -49,6 +64,11 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
     if (overrideData != null) {
       this._currentMediaQuery = overrideData;
     }
+    notifyListeners();
+  }
+
+  void toolbarHeightChanged(double height) {
+    this._toolbarHeight = height;
     notifyListeners();
   }
 
@@ -60,9 +80,13 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
 
   double get screenScale => _currentScreenScale;
 
-  Offset get currentOffset => _currentOffset;
+  Offset get currentOffset => _scaledOffset;
 
   bool get showOffsetIndicator => _showOffsetIndicator;
+
+  bool get isAdjusted => currentOffset != Offset.zero || screenScale != 1.0;
+
+  double get toolbarHeight => _toolbarHeight;
 }
 
 OverrideMediaQueryProvider mediaQuery(BuildContext context) {

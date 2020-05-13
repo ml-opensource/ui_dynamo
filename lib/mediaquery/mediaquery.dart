@@ -48,14 +48,6 @@ String deviceDisplay(
 }
 
 class _MediaQueryChooserState extends State<MediaQueryChooser> {
-  double toolbarHeight = 0;
-
-  void _toolbarSizeChanged(Size size) {
-    setState(() {
-      toolbarHeight = size.height;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final query = mediaQuery(context);
@@ -72,8 +64,8 @@ class _MediaQueryChooserState extends State<MediaQueryChooser> {
                       data: query.currentMediaQuery,
                     )
                   : InteractableScreen(
-                      toolbarHeight: toolbarHeight, widget: widget),
-              buildMediaQueryToolbar(context),
+                      toolbarHeight: query.toolbarHeight, widget: widget),
+              buildMediaQueryToolbar(context, query),
             ],
           ),
         ),
@@ -81,8 +73,10 @@ class _MediaQueryChooserState extends State<MediaQueryChooser> {
     );
   }
 
-  buildMediaQueryToolbar(BuildContext context) => MeasureSize(
-        onChange: _toolbarSizeChanged,
+  buildMediaQueryToolbar(
+          BuildContext context, OverrideMediaQueryProvider provider) =>
+      MeasureSize(
+        onChange: (size) => provider.toolbarHeightChanged(size.height),
         child: MediaQueryToolbar(),
       );
 }
@@ -110,16 +104,14 @@ class _InteractableScreenState extends State<InteractableScreen> {
         0,
         (realQuery.size.height - provider.boundedMediaQuery.size.height) / 2 -
             toolbarOffset);
-    return calculateTop(
-        offsetTop, provider.currentOffset, provider.screenScale);
+    return calculateTop(offsetTop, provider.currentOffset, 1.0, bounded: true);
   }
 
-  double _calculateOffsetLeft(MediaQueryData realQuery,
-      OverrideMediaQueryProvider provider, double toolbarOffset) {
+  double _calculateOffsetLeft(
+      MediaQueryData realQuery, OverrideMediaQueryProvider provider) {
     final offsetLeft = Offset(
         (realQuery.size.width - provider.boundedMediaQuery.size.width) / 2, 0);
-    return calculateLeft(
-        offsetLeft, provider.currentOffset, provider.screenScale);
+    return calculateLeft(offsetLeft, provider.currentOffset, 1.0);
   }
 
   @override
@@ -135,11 +127,10 @@ class _InteractableScreenState extends State<InteractableScreen> {
       leftCalculated = 0;
     } else {
       topCalculated = _calculateOffsetTop(realQuery, query, toolbarOffset);
-      leftCalculated = _calculateOffsetLeft(realQuery, query, toolbarOffset);
+      leftCalculated = _calculateOffsetLeft(realQuery, query);
     }
     return GestureDetector(
-      onPanUpdate: (panDetails) =>
-          query.changeCurrentOffset(query.currentOffset + panDetails.delta),
+      onPanUpdate: (panDetails) => query.offsetChange(panDetails.delta),
       behavior: HitTestBehavior.opaque,
       child: OverflowBox(
         child: Container(
