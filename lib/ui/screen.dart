@@ -1,24 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_storybook/mediaquery/override_media_query_provider.dart';
 import 'package:flutter_storybook/ui/materialapp+extensions.dart';
 import 'package:flutter_storybook/ui/storyboard/custom_rect.dart';
 import 'package:flutter_storybook/ui/storyboard/label.dart';
 
 class ScalableScreen extends StatelessWidget {
-  final double scale;
   final MaterialApp base;
-  final MediaQueryData mediaQueryData;
   final String label;
   final Widget child;
   final String routeName;
   final bool isStoryBoard;
   final bool showBorder;
+  final OverrideMediaQueryProvider provider;
 
   const ScalableScreen({
     Key key,
-    @required this.scale,
+    @required this.provider,
     @required this.base,
-    @required this.mediaQueryData,
     this.label,
     @required this.child,
     this.routeName,
@@ -28,8 +27,9 @@ class ScalableScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final mediaQueryData = provider.boundedMediaQuery;
     return Transform.scale(
-      scale: scale,
+      scale: provider.screenScale,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -40,8 +40,8 @@ class ScalableScreen extends StatelessWidget {
                     )
                   : null,
               child: SizedBox(
-                width: mediaQueryData.size.width,
-                height: mediaQueryData.size.height,
+                width: provider.viewportWidth,
+                height: provider.viewportHeight,
                 child: Material(
                   elevation: 4,
                   child: ClipRect(

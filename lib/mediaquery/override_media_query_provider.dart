@@ -94,6 +94,15 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
   double get toolbarHeight => _toolbarHeight;
 
   double get bottomBarHeight => _bottomBarHeight;
+
+  double get viewportHeight {
+    if (currentDevice != DeviceSizes.window) {
+      return boundedMediaQuery.size.height;
+    }
+    return boundedMediaQuery.size.height - toolbarHeight - bottomBarHeight - 48;
+  }
+
+  double get viewportWidth => boundedMediaQuery.size.width;
 }
 
 OverrideMediaQueryProvider mediaQuery(BuildContext context) {
