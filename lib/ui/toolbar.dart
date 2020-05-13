@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_storybook/actions/actions_ui.dart';
+import 'package:flutter_storybook/mediaquery/override_media_query_provider.dart';
 import 'package:flutter_storybook/props/props_ui.dart';
+import 'package:flutter_storybook/ui/widgets/measuresize.dart';
 
 class ToolbarPane extends StatefulWidget {
   const ToolbarPane({
@@ -19,66 +21,72 @@ class _ToolbarPaneState extends State<ToolbarPane> {
   Widget build(BuildContext context) {
     final tabTextColor =
         TextStyle(color: Theme.of(context).textTheme.button.color);
-    return DefaultTabController(
-      length: 2,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Divider(
-            thickness: 2,
-            height: 2,
-          ),
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: TabBar(
-                  onTap: (index) {
+    final provider = mediaQuery(context);
+    return MeasureSize(
+      onChange: (size) => provider.bottomBarHeightChanged(size.height),
+      child: DefaultTabController(
+        length: 2,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Divider(
+              thickness: 2,
+              height: 2,
+            ),
+            Row(
+              children: <Widget>[
+                Expanded(
+                  child: TabBar(
+                    onTap: (index) {
+                      setState(() {
+                        toolbarOpen = true;
+                      });
+                    },
+                    isScrollable: true,
+                    tabs: [
+                      Tab(
+                        child: Text(
+                          'Actions',
+                          style: tabTextColor,
+                        ),
+                      ),
+                      Tab(
+                        child: Text(
+                          'Props',
+                          style: tabTextColor,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                IconButton(
+                  icon:
+                      Icon(toolbarOpen ? Icons.expand_less : Icons.expand_more),
+                  onPressed: () {
                     setState(() {
-                      toolbarOpen = true;
+                      toolbarOpen = !toolbarOpen;
                     });
                   },
-                  isScrollable: true,
-                  tabs: [
-                    Tab(
-                      child: Text(
-                        'Actions',
-                        style: tabTextColor,
-                      ),
-                    ),
-                    Tab(
-                      child: Text(
-                        'Props',
-                        style: tabTextColor,
-                      ),
-                    )
+                ),
+              ],
+            ),
+            Draggable(
+              axis: Axis.vertical,
+              feedback: Text('DRAGGING'),
+              dragAnchor: DragAnchor.pointer,
+              child: Container(
+                height:
+                    toolbarOpen ? MediaQuery.of(context).size.height / 4 : 0,
+                child: TabBarView(
+                  children: <Widget>[
+                    ActionsDisplay(),
+                    PropsDisplay(),
                   ],
                 ),
               ),
-              IconButton(
-                icon: Icon(toolbarOpen ? Icons.expand_less : Icons.expand_more),
-                onPressed: () {
-                  setState(() {
-                    toolbarOpen = !toolbarOpen;
-                  });
-                },
-              ),
-            ],
-          ),
-          Draggable(
-            axis: Axis.vertical,
-            feedback: Text('DRAGGING'),
-            dragAnchor: DragAnchor.pointer,
-            child: Container(
-              height: toolbarOpen ? MediaQuery.of(context).size.height / 4 : 0,
-              child: TabBarView(
-                children: <Widget>[
-                  ActionsDisplay(),
-                  PropsDisplay(),
-                ],
-              ),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }

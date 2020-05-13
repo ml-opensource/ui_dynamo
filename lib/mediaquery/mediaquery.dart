@@ -6,8 +6,9 @@ import 'package:flutter_storybook/mediaquery/override_media_query_provider.dart'
 import 'package:flutter_storybook/ui/materialapp+extensions.dart';
 import 'package:flutter_storybook/ui/screen.dart';
 import 'package:flutter_storybook/ui/storyboard/utils.dart';
-import 'package:flutter_storybook/ui/utils/measuresize.dart';
 import 'package:flutter_storybook/ui/utils/size+extensions.dart';
+import 'package:flutter_storybook/ui/widgets/measuresize.dart';
+import 'package:flutter_storybook/ui/widgets/panscroll.dart';
 
 typedef MediaWidgetBuilder = Widget Function(BuildContext, MediaQueryData);
 
@@ -63,8 +64,7 @@ class _MediaQueryChooserState extends State<MediaQueryChooser> {
                       home: widget.builder(context, query.currentMediaQuery),
                       data: query.currentMediaQuery,
                     )
-                  : InteractableScreen(
-                      toolbarHeight: query.toolbarHeight, widget: widget),
+                  : InteractableScreen(widget: widget),
               buildMediaQueryToolbar(context, query),
             ],
           ),
@@ -84,11 +84,9 @@ class _MediaQueryChooserState extends State<MediaQueryChooser> {
 class InteractableScreen extends StatefulWidget {
   const InteractableScreen({
     Key key,
-    @required this.toolbarHeight,
     @required this.widget,
   }) : super(key: key);
 
-  final double toolbarHeight;
   final MediaQueryChooser widget;
 
   @override
@@ -98,13 +96,13 @@ class InteractableScreen extends StatefulWidget {
 class _InteractableScreenState extends State<InteractableScreen> {
   Size offsetLabelSize = Size.zero;
 
-  double _calculateOffsetTop(MediaQueryData realQuery,
-      OverrideMediaQueryProvider provider, double toolbarOffset) {
+  double _calculateOffsetTop(
+      MediaQueryData realQuery, OverrideMediaQueryProvider provider) {
     final offsetTop = Offset(
         0,
-        (realQuery.size.height - provider.boundedMediaQuery.size.height) / 2 -
-            toolbarOffset);
-    return calculateTop(offsetTop, provider.currentOffset, 1.0, bounded: true);
+        (realQuery.size.height - provider.boundedMediaQuery.size.height) / 2 +
+            48);
+    return calculateTop(offsetTop, provider.currentOffset, 1.0);
   }
 
   double _calculateOffsetLeft(
@@ -118,62 +116,61 @@ class _InteractableScreenState extends State<InteractableScreen> {
   Widget build(BuildContext context) {
     final query = mediaQuery(context);
     final realQuery = MediaQuery.of(context);
-    final toolbarOffset = (widget.toolbarHeight + 48);
     double topCalculated;
     double leftCalculated;
     // if window, move back to center and do not allow panning.
     if (query.currentDevice == DeviceSizes.window) {
-      topCalculated = 0;
+      topCalculated = query.toolbarHeight;
       leftCalculated = 0;
     } else {
-      topCalculated = _calculateOffsetTop(realQuery, query, toolbarOffset);
+      topCalculated = _calculateOffsetTop(realQuery, query);
       leftCalculated = _calculateOffsetLeft(realQuery, query);
     }
-    return GestureDetector(
-      onPanUpdate: (panDetails) => query.offsetChange(panDetails.delta),
-      behavior: HitTestBehavior.opaque,
+    return PanScrollDetector(
+      onOffsetChange: (offset) {
+        if (query.currentDevice != DeviceSizes.window) {
+          query.offsetChange(offset);
+        }
+      },
       child: OverflowBox(
-        child: Container(
-          margin: EdgeInsets.only(top: toolbarOffset),
-          child: Stack(
-            children: [
-              Positioned(
-                top: topCalculated,
-                left: leftCalculated,
-                child: Stack(
-                  children: [
-                    ScalableScreen(
-                      showBorder: query.currentDevice != DeviceSizes.window,
-                      isStoryBoard: false,
-                      scale: query.screenScale,
-                      mediaQueryData: query.boundedMediaQuery,
-                      base: widget.widget.base,
-                      child: widget.widget
-                          .builder(context, query.currentMediaQuery),
-                    ),
-                    if (query.showOffsetIndicator)
-                      Positioned(
-                        top: 0,
-                        right: 0,
-                        child: MeasureSize(
-                          onChange: (size) {
-                            setState(() {
-                              this.offsetLabelSize = size;
-                            });
-                          },
-                          child: Card(
-                              child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                                "Offset (${leftCalculated.truncateToDouble()},${topCalculated.truncateToDouble()})"),
-                          )),
-                        ),
-                      )
-                  ],
-                ),
+        child: Stack(
+          children: [
+            Positioned(
+              top: topCalculated,
+              left: leftCalculated,
+              child: Stack(
+                children: [
+                  ScalableScreen(
+                    showBorder: query.currentDevice != DeviceSizes.window,
+                    isStoryBoard: false,
+                    scale: query.screenScale,
+                    mediaQueryData: query.boundedMediaQuery,
+                    base: widget.widget.base,
+                    child:
+                        widget.widget.builder(context, query.currentMediaQuery),
+                  ),
+                  if (query.showOffsetIndicator)
+                    Positioned(
+                      top: 0,
+                      right: 0,
+                      child: MeasureSize(
+                        onChange: (size) {
+                          setState(() {
+                            this.offsetLabelSize = size;
+                          });
+                        },
+                        child: Card(
+                            child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                              "Offset (${leftCalculated.truncateToDouble()},${topCalculated.truncateToDouble()})"),
+                        )),
+                      ),
+                    )
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

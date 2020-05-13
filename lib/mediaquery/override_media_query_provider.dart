@@ -9,6 +9,7 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
   DeviceInfo _currentDeviceSelected;
   double _currentScreenScale = 1.0;
   double _toolbarHeight = 0;
+  double _bottomBarHeight = 0;
 
   /// this will be offset at scale 1.0
   Offset _currentOffset = Offset.zero;
@@ -32,7 +33,6 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
   }
 
   void selectScreenScale(double scale) {
-    final diffScale = (scale - this._currentScreenScale);
     this._currentScreenScale = scale;
     this._scaledOffset = Offset(
         (_currentOffset.dx * screenScale), (_currentOffset.dy * screenScale));
@@ -72,6 +72,11 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void bottomBarHeightChanged(double height) {
+    this._bottomBarHeight = height;
+    notifyListeners();
+  }
+
   MediaQueryData get currentMediaQuery => _currentMediaQuery;
 
   MediaQueryData get boundedMediaQuery => _boundedMediaQuery;
@@ -87,6 +92,8 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
   bool get isAdjusted => currentOffset != Offset.zero || screenScale != 1.0;
 
   double get toolbarHeight => _toolbarHeight;
+
+  double get bottomBarHeight => _bottomBarHeight;
 }
 
 OverrideMediaQueryProvider mediaQuery(BuildContext context) {
