@@ -46,7 +46,9 @@ class StoryboardController extends State<StoryBoard> {
   double _calculateOffsetLeft(Offset offset, MediaQueryData realQuery,
       OverrideMediaQueryProvider provider) {
     final offsetLeft = Offset(
-        (realQuery.size.width - provider.boundedMediaQuery.size.width) / 2, 0);
+        offset.dx +
+            (realQuery.size.width - provider.boundedMediaQuery.size.width) / 2,
+        0);
     return calculateLeft(
         offsetLeft, provider.currentOffset, provider.screenScale);
   }
@@ -96,7 +98,7 @@ class StoryboardController extends State<StoryBoard> {
                         base?.home != null ? size.width + _kSpacing : 0, 10),
                     label: 'Initial Route',
                   ),
-                ..._renderRoutes(query),
+                ..._renderRoutes(query, realQuery),
               ],
             ),
           ),
