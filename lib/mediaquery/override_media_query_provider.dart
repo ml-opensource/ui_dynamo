@@ -54,15 +54,35 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
   }
 
   void resetScreenAdjustments(
-      {DeviceInfo newDevice, MediaQueryData overrideData}) {
+      {DeviceInfo newDevice,
+      MediaQueryData overrideData,
+      MediaQueryData realQuery}) {
     this._currentOffset = Offset.zero;
     this._scaledOffset = Offset.zero;
-    this._currentScreenScale = 1.0;
     if (newDevice != null) {
       this._currentDeviceSelected = newDevice;
     }
     if (overrideData != null) {
       this._currentMediaQuery = overrideData;
+      this._boundedMediaQuery = overrideData;
+    }
+    // use this to adjust screen size to fit.
+    if (realQuery != null) {
+      final widthRatio =
+          realQuery.size.width / (boundedMediaQuery.size.width + 48);
+      final heightRatio = _viewPortHeightCalculate(realQuery.size.height) /
+          (boundedMediaQuery.size.height + 48);
+      if (widthRatio < 1 || heightRatio < 1) {
+        if (widthRatio < heightRatio) {
+          this._currentScreenScale = widthRatio;
+        } else {
+          this._currentScreenScale = heightRatio;
+        }
+      } else {
+        this._currentScreenScale = 1.0;
+      }
+    } else {
+      this._currentScreenScale = 1.0;
     }
     notifyListeners();
   }
@@ -99,8 +119,11 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
     if (currentDevice != DeviceSizes.window) {
       return boundedMediaQuery.size.height;
     }
-    return boundedMediaQuery.size.height - toolbarHeight - bottomBarHeight - 48;
+    return _viewPortHeightCalculate(boundedMediaQuery.size.height);
   }
+
+  double _viewPortHeightCalculate(double height) =>
+      height - toolbarHeight - bottomBarHeight - 48;
 
   double get viewportWidth => boundedMediaQuery.size.width;
 }

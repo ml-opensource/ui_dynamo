@@ -22,14 +22,16 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
   bool isExpanded = false;
 
   void _deviceSelected(BuildContext context, DeviceInfo device,
-      OverrideMediaQueryProvider mediaQueryProvider) {
+      OverrideMediaQueryProvider mediaQueryProvider, MediaQueryData realQuery) {
     // reset scale, offset back to 100% when changing device
     if (device != mediaQueryProvider.currentDevice) {
       mediaQueryProvider.resetScreenAdjustments(
-          newDevice: device,
-          overrideData: mediaQueryProvider.currentMediaQuery.copyWith(
-            size: device.logicalSize.boundedSize(context),
-          ));
+        newDevice: device,
+        overrideData: mediaQueryProvider.currentMediaQuery.copyWith(
+          size: device.logicalSize.boundedSize(context),
+        ),
+        realQuery: realQuery,
+      );
     }
   }
 
@@ -144,6 +146,7 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
   buildIcons(
       BuildContext context, OverrideMediaQueryProvider mediaQueryProvider) {
     final expandable = isMobile(context);
+    final realQuery = MediaQuery.of(context);
     if (expandable && !isExpanded) {
       return Row(
         children: [...topBarList(mediaQueryProvider)],
@@ -165,7 +168,7 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
         buildDivider(),
         MediaChooserButton(
           deviceSelected: (value) =>
-              _deviceSelected(context, value, mediaQueryProvider),
+              _deviceSelected(context, value, mediaQueryProvider, realQuery),
           selectedDevice: mediaQueryProvider.currentDevice,
         ),
         if (mediaQueryProvider.currentDevice != DeviceSizes.window) ...[
@@ -174,10 +177,11 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
             updateScale: (value) => _updateScale(value, mediaQueryProvider),
           ),
           IconButton(
-            tooltip: 'Reset Screen Adjustments',
+            tooltip: 'Size to Fit',
             icon: Icon(Icons.center_focus_strong),
             onPressed: mediaQueryProvider.isAdjusted
-                ? () => mediaQueryProvider.resetScreenAdjustments()
+                ? () => mediaQueryProvider.resetScreenAdjustments(
+                    realQuery: realQuery)
                 : null,
           ),
           OutlineButton(

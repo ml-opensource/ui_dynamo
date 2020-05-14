@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_storybook/mediaquery/device_sizes.dart';
@@ -132,7 +133,7 @@ class _InteractableScreenState extends State<InteractableScreen> {
   void initState() {
     super.initState();
     CombineLatestStream.combine2(
-      _scrollOffsetChange,
+      _scrollOffsetChange.distinct(),
       _isScrolling.distinct(),
       (offset, isScrolling) => OffsetScrollEvent(offset, isScrolling),
     ).where((event) => !event.isScrolling).listen((event) {
@@ -190,21 +191,24 @@ class _InteractableScreenState extends State<InteractableScreen> {
                           .builder(context, query.currentMediaQuery),
                     ),
                     if (query.showOffsetIndicator)
-                      Positioned(
-                        top: 0,
-                        right: 0,
-                        child: MeasureSize(
-                          onChange: (size) {
-                            setState(() {
-                              this.offsetLabelSize = size;
-                            });
-                          },
-                          child: Card(
-                              child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                                "Offset (${leftCalculated.truncateToDouble()},${topCalculated.truncateToDouble()})"),
-                          )),
+                      Transform.scale(
+                        scale: query.screenScale,
+                        child: Positioned(
+                          top: 0,
+                          right: 0,
+                          child: MeasureSize(
+                            onChange: (size) {
+                              setState(() {
+                                this.offsetLabelSize = size;
+                              });
+                            },
+                            child: Card(
+                                child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                  "Offset (${leftCalculated.truncateToDouble()},${topCalculated.truncateToDouble()})"),
+                            )),
+                          ),
                         ),
                       )
                   ],
@@ -231,6 +235,8 @@ class _InteractableScreenState extends State<InteractableScreen> {
       _isScrolling.add(true);
     } else if (scroll is ScrollEndNotification) {
       _notScrollingThrottle.add(null);
+    } else {
+      debugPrint("RECEIVED OTHER ${scroll}");
     }
     return false;
   }
