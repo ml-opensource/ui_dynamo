@@ -133,12 +133,9 @@ class _InteractableScreenState extends State<InteractableScreen> {
     super.initState();
     CombineLatestStream.combine2(
       _scrollOffsetChange,
-      _isScrolling.doOnData((event) {
-        debugPrint("EVENT $event");
-      }).distinct(),
+      _isScrolling.distinct(),
       (offset, isScrolling) => OffsetScrollEvent(offset, isScrolling),
     ).where((event) => !event.isScrolling).listen((event) {
-      debugPrint("Event ${event}");
       if (event.offset != null && !event.isScrolling) {
         final query = mediaQuery(context);
         query.offsetChange(event.offset);
