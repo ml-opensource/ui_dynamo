@@ -163,7 +163,13 @@ class _InteractableScreenState extends State<InteractableScreen> {
     double topCalculated;
     double leftCalculated;
     // if window, move back to center and do not allow panning.
-    if (query.currentDevice == DeviceSizes.window) {
+    final widthSmaller =
+        query.boundedMediaQuery.size.width < realQuery.size.width;
+    final heightSmaller =
+        query.viewPortHeightCalculate(query.boundedMediaQuery.size.height) <
+            query.viewPortHeightCalculate(realQuery.size.height);
+    final isWindow = query.currentDevice == DeviceSizes.window;
+    if (isWindow) {
       topCalculated = query.toolbarHeight;
       leftCalculated = 0;
     } else {
@@ -173,6 +179,9 @@ class _InteractableScreenState extends State<InteractableScreen> {
     return NotificationListener<ScrollNotification>(
       onNotification: _sendScrollNotification,
       child: PanScrollDetector(
+        isHorizontalEnabled: !widthSmaller && !isWindow && heightSmaller,
+        isVerticalEnabled: !heightSmaller && !isWindow && widthSmaller,
+        isPanningEnabled: !heightSmaller && !widthSmaller && !isWindow,
         onOffsetChange: (offset) => _sendOffsetNotification(query, offset),
         child: OverflowBox(
           child: Stack(
@@ -223,11 +232,7 @@ class _InteractableScreenState extends State<InteractableScreen> {
 
   void _sendOffsetNotification(
       OverrideMediaQueryProvider query, Offset offset) {
-    if (query.currentDevice != DeviceSizes.window) {
-      _scrollOffsetChange.add(offset);
-    } else {
-      _scrollOffsetChange.add(null);
-    }
+    _scrollOffsetChange.add(offset);
   }
 
   bool _sendScrollNotification(ScrollNotification scroll) {

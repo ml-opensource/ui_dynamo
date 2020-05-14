@@ -70,7 +70,7 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
     if (realQuery != null) {
       final widthRatio =
           realQuery.size.width / (boundedMediaQuery.size.width + 48);
-      final heightRatio = _viewPortHeightCalculate(realQuery.size.height) /
+      final heightRatio = viewPortHeightCalculate(realQuery.size.height) /
           (boundedMediaQuery.size.height + 48);
       if (widthRatio < 1 || heightRatio < 1) {
         if (widthRatio < heightRatio) {
@@ -119,10 +119,10 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
     if (currentDevice != DeviceSizes.window) {
       return boundedMediaQuery.size.height;
     }
-    return _viewPortHeightCalculate(boundedMediaQuery.size.height);
+    return viewPortHeightCalculate(boundedMediaQuery.size.height);
   }
 
-  double _viewPortHeightCalculate(double height) =>
+  double viewPortHeightCalculate(double height) =>
       height - toolbarHeight - bottomBarHeight - 48;
 
   double get viewportWidth => boundedMediaQuery.size.width;
