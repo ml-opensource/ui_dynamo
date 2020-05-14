@@ -67,7 +67,7 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
       this._boundedMediaQuery = overrideData;
     }
     // use this to adjust screen size to fit.
-    if (realQuery != null) {
+    if (realQuery != null && _currentDeviceSelected != DeviceSizes.window) {
       final widthRatio =
           realQuery.size.width / (boundedMediaQuery.size.width + 48);
       final heightRatio = viewPortHeightCalculate(realQuery.size.height) /
