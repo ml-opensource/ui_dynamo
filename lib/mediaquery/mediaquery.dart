@@ -9,6 +9,7 @@ import 'package:flutter_storybook/ui/storyboard/utils.dart';
 import 'package:flutter_storybook/ui/utils/size+extensions.dart';
 import 'package:flutter_storybook/ui/widgets/measuresize.dart';
 import 'package:flutter_storybook/ui/widgets/panscroll.dart';
+import 'package:rxdart/rxdart.dart';
 
 typedef MediaWidgetBuilder = Widget Function(BuildContext, MediaQueryData);
 
@@ -93,15 +94,30 @@ class InteractableScreen extends StatefulWidget {
   _InteractableScreenState createState() => _InteractableScreenState();
 }
 
+class OffsetScrollEvent {
+  final Offset offset;
+  final bool isScrolling;
+
+  OffsetScrollEvent(this.offset, this.isScrolling);
+
+  @override
+  String toString() {
+    return 'OffsetScrollEvent{offset: $offset, isScrolling: $isScrolling}';
+  }
+}
+
 class _InteractableScreenState extends State<InteractableScreen> {
   Size offsetLabelSize = Size.zero;
+  final _isScrolling = BehaviorSubject.seeded(false);
+  final _notScrollingThrottle = PublishSubject();
+  final _scrollOffsetChange = PublishSubject<Offset>();
+
+  CompositeSubscription _subscription = CompositeSubscription();
 
   double _calculateOffsetTop(
       MediaQueryData realQuery, OverrideMediaQueryProvider provider) {
-    final offsetTop = Offset(
-        0,
-        (realQuery.size.height - provider.boundedMediaQuery.size.height) / 2 +
-            48);
+    final offsetTop = Offset(0,
+        (realQuery.size.height - provider.boundedMediaQuery.size.height) / 2);
     return calculateTop(offsetTop, provider.currentOffset, 1.0);
   }
 
@@ -110,6 +126,36 @@ class _InteractableScreenState extends State<InteractableScreen> {
     final offsetLeft = Offset(
         (realQuery.size.width - provider.boundedMediaQuery.size.width) / 2, 0);
     return calculateLeft(offsetLeft, provider.currentOffset, 1.0);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    CombineLatestStream.combine2(
+      _scrollOffsetChange,
+      _isScrolling.doOnData((event) {
+        debugPrint("EVENT $event");
+      }).distinct(),
+      (offset, isScrolling) => OffsetScrollEvent(offset, isScrolling),
+    ).where((event) => !event.isScrolling).listen((event) {
+      debugPrint("Event ${event}");
+      if (event.offset != null && !event.isScrolling) {
+        final query = mediaQuery(context);
+        query.offsetChange(event.offset);
+      }
+    }).addTo(_subscription);
+    _notScrollingThrottle
+        .throttleTime(Duration(milliseconds: 1000), trailing: true)
+        .listen((event) {
+      _isScrolling.add(false);
+    }).addTo(_subscription);
+    _isScrolling.add(false);
+  }
+
+  @override
+  void deactivate() {
+    _subscription.dispose();
+    super.deactivate();
   }
 
   @override
@@ -126,52 +172,69 @@ class _InteractableScreenState extends State<InteractableScreen> {
       topCalculated = _calculateOffsetTop(realQuery, query);
       leftCalculated = _calculateOffsetLeft(realQuery, query);
     }
-    return PanScrollDetector(
-      onOffsetChange: (offset) {
-        if (query.currentDevice != DeviceSizes.window) {
-          query.offsetChange(offset);
-        }
-      },
-      child: OverflowBox(
-        child: Stack(
-          children: [
-            Positioned(
-              top: topCalculated,
-              left: leftCalculated,
-              child: Stack(
-                children: [
-                  ScalableScreen(
-                    showBorder: query.currentDevice != DeviceSizes.window,
-                    isStoryBoard: false,
-                    provider: query,
-                    base: widget.widget.base,
-                    child:
-                        widget.widget.builder(context, query.currentMediaQuery),
-                  ),
-                  if (query.showOffsetIndicator)
-                    Positioned(
-                      top: 0,
-                      right: 0,
-                      child: MeasureSize(
-                        onChange: (size) {
-                          setState(() {
-                            this.offsetLabelSize = size;
-                          });
-                        },
-                        child: Card(
-                            child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                              "Offset (${leftCalculated.truncateToDouble()},${topCalculated.truncateToDouble()})"),
-                        )),
-                      ),
-                    )
-                ],
+    return NotificationListener<ScrollNotification>(
+      onNotification: _sendScrollNotification,
+      child: PanScrollDetector(
+        onOffsetChange: (offset) => _sendOffsetNotification(query, offset),
+        child: OverflowBox(
+          child: Stack(
+            children: [
+              Positioned(
+                top: topCalculated,
+                left: leftCalculated,
+                child: Stack(
+                  children: [
+                    ScalableScreen(
+                      showBorder: query.currentDevice != DeviceSizes.window,
+                      isStoryBoard: false,
+                      provider: query,
+                      base: widget.widget.base,
+                      child: widget.widget
+                          .builder(context, query.currentMediaQuery),
+                    ),
+                    if (query.showOffsetIndicator)
+                      Positioned(
+                        top: 0,
+                        right: 0,
+                        child: MeasureSize(
+                          onChange: (size) {
+                            setState(() {
+                              this.offsetLabelSize = size;
+                            });
+                          },
+                          child: Card(
+                              child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                                "Offset (${leftCalculated.truncateToDouble()},${topCalculated.truncateToDouble()})"),
+                          )),
+                        ),
+                      )
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  void _sendOffsetNotification(
+      OverrideMediaQueryProvider query, Offset offset) {
+    if (query.currentDevice != DeviceSizes.window) {
+      _scrollOffsetChange.add(offset);
+    } else {
+      _scrollOffsetChange.add(null);
+    }
+  }
+
+  bool _sendScrollNotification(ScrollNotification scroll) {
+    if (scroll is ScrollStartNotification) {
+      _isScrolling.add(true);
+    } else if (scroll is ScrollEndNotification) {
+      _notScrollingThrottle.add(null);
+    }
+    return false;
   }
 }
