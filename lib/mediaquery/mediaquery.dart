@@ -160,22 +160,13 @@ class _InteractableScreenState extends State<InteractableScreen> {
   Widget build(BuildContext context) {
     final query = mediaQuery(context);
     final realQuery = MediaQuery.of(context);
-    double topCalculated;
-    double leftCalculated;
     // if window, move back to center and do not allow panning.
-    final widthSmaller =
-        query.boundedMediaQuery.size.width < realQuery.size.width;
-    final heightSmaller =
-        query.viewPortHeightCalculate(query.boundedMediaQuery.size.height) <
-            query.viewPortHeightCalculate(realQuery.size.height);
+    final widthSmaller = query.scaledWidth < realQuery.size.width;
+    final heightSmaller = query.scaledHeight <
+        query.viewPortHeightCalculate(realQuery.size.height);
     final isWindow = query.currentDevice == DeviceSizes.window;
-    if (isWindow) {
-      topCalculated = query.toolbarHeight;
-      leftCalculated = 0;
-    } else {
-      topCalculated = _calculateOffsetTop(realQuery, query);
-      leftCalculated = _calculateOffsetLeft(realQuery, query);
-    }
+    double topCalculated = isWindow ? query.toolbarHeight : _calculateOffsetTop(realQuery, query);
+    double leftCalculated = isWindow ? 0 : _calculateOffsetLeft(realQuery, query);
     return NotificationListener<ScrollNotification>(
       onNotification: _sendScrollNotification,
       child: PanScrollDetector(
