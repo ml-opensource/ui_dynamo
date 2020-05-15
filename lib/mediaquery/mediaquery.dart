@@ -190,27 +190,6 @@ class _InteractableScreenState extends State<InteractableScreen> {
                       child: widget.widget
                           .builder(context, query.currentMediaQuery),
                     ),
-                    if (query.showOffsetIndicator)
-                      Transform.scale(
-                        scale: query.screenScale,
-                        child: Positioned(
-                          top: 0,
-                          right: 0,
-                          child: MeasureSize(
-                            onChange: (size) {
-                              setState(() {
-                                this.offsetLabelSize = size;
-                              });
-                            },
-                            child: Card(
-                                child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                  "Offset (${leftCalculated.truncateToDouble()},${topCalculated.truncateToDouble()})"),
-                            )),
-                          ),
-                        ),
-                      )
                   ],
                 ),
               ),

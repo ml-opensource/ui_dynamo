@@ -81,17 +81,13 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
     mediaQueryProvider.selectScreenScale(scale);
   }
 
-  void _toggleOffset(OverrideMediaQueryProvider mediaQueryProvider) {
-    mediaQueryProvider
-        .changeOffsetIndicator(!mediaQueryProvider.showOffsetIndicator);
-  }
-
   Widget buildDivider() => Container(
         height: 15,
         child: VerticalDivider(),
       );
 
-  List<Widget> topBarList(OverrideMediaQueryProvider mediaQueryProvider) {
+  List<Widget> topBarList(OverrideMediaQueryProvider mediaQueryProvider,
+      MediaQueryData realQuery) {
     return [
       IconButton(
         icon: Icon(mediaQueryProvider.currentMediaQuery.disableAnimations
@@ -140,6 +136,15 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
           _toggleBrightness(mediaQueryProvider);
         },
       ),
+      buildDivider(),
+      IconButton(
+        tooltip: 'Size to Fit',
+        icon: Icon(Icons.center_focus_strong),
+        onPressed: mediaQueryProvider.isAdjusted
+            ? () => mediaQueryProvider.resetScreenAdjustments(
+            realQuery: realQuery)
+            : null,
+      ),
     ];
   }
 
@@ -149,14 +154,14 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
     final realQuery = MediaQuery.of(context);
     if (expandable && !isExpanded) {
       return Row(
-        children: [...topBarList(mediaQueryProvider)],
+        children: [...topBarList(mediaQueryProvider, realQuery)],
       );
     }
     return Wrap(
       direction: Axis.horizontal,
       crossAxisAlignment: WrapCrossAlignment.center,
       children: <Widget>[
-        ...topBarList(mediaQueryProvider),
+        ...topBarList(mediaQueryProvider, realQuery),
         buildDivider(),
         AdjustableNumberScaleWidget(
           scaleFactor: mediaQueryProvider.currentMediaQuery.textScaleFactor,
@@ -176,20 +181,6 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
             scale: mediaQueryProvider.screenScale,
             updateScale: (value) => _updateScale(value, mediaQueryProvider),
           ),
-          IconButton(
-            tooltip: 'Size to Fit',
-            icon: Icon(Icons.center_focus_strong),
-            onPressed: mediaQueryProvider.isAdjusted
-                ? () => mediaQueryProvider.resetScreenAdjustments(
-                    realQuery: realQuery)
-                : null,
-          ),
-          OutlineButton(
-            child: Text(mediaQueryProvider.showOffsetIndicator
-                ? 'Hide Offset'
-                : 'Show Offset'),
-            onPressed: () => _toggleOffset(mediaQueryProvider),
-          )
         ],
       ],
     );
