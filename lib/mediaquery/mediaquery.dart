@@ -117,18 +117,13 @@ class _InteractableScreenState extends State<InteractableScreen> {
 
   double _calculateOffsetTop(
       MediaQueryData realQuery, OverrideMediaQueryProvider provider) {
-    final offsetTop = Offset(
-        0,
-        (realQuery.size.height -
-                provider.boundedMediaQuery.size.height - provider.toolbarHeight) /
-            2);
-    return calculateTop(offsetTop, provider.currentOffset, 1.0);
+    return calculateTop(Offset(0, provider.viewPortOffsetTop(realQuery)),
+        provider.currentOffset, 1.0);
   }
 
   double _calculateOffsetLeft(
       MediaQueryData realQuery, OverrideMediaQueryProvider provider) {
-    final offsetLeft = Offset(
-        (realQuery.size.width - provider.boundedMediaQuery.size.width) / 2, 0);
+    final offsetLeft = Offset(provider.viewPortOffsetLeft(realQuery), 0);
     return calculateLeft(offsetLeft, provider.currentOffset, 1.0);
   }
 

@@ -16,7 +16,8 @@ class DrawerProvider extends ChangeNotifier {
     _selectedPageKey = pageKey;
     props(context).reset();
     actions(context).reset();
-    mediaQuery(context).resetScreenAdjustments();
+    mediaQuery(context)
+        .resetScreenAdjustments(realQuery: MediaQuery.of(context));
     if (popDrawer) {
       Navigator.of(context).pop();
     }

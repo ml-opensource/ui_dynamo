@@ -33,17 +33,20 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
 
   void selectScreenScale(double scale) {
     this._currentScreenScale = scale;
-    this._scaledOffset = Offset(
-        (_currentOffset.dx * screenScale), (_currentOffset.dy * screenScale));
-    this._currentOffset =
-        Offset(_scaledOffset.dx / screenScale, _scaledOffset.dy / screenScale);
+    this._scaledOffset = scaledOffsetCalculate();
+    this._currentOffset = currentOffsetFromScale();
     notifyListeners();
   }
 
+  Offset currentOffsetFromScale() =>
+      Offset(_scaledOffset.dx / screenScale, _scaledOffset.dy / screenScale);
+
+  Offset scaledOffsetCalculate() => Offset(
+      (_currentOffset.dx * screenScale), (_currentOffset.dy * screenScale));
+
   void offsetChange(Offset delta) {
     this._scaledOffset = _scaledOffset + delta;
-    this._currentOffset =
-        Offset(_scaledOffset.dx / screenScale, _scaledOffset.dy / screenScale);
+    this._currentOffset = currentOffsetFromScale();
     notifyListeners();
   }
 
@@ -51,8 +54,6 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
       {DeviceInfo newDevice,
       MediaQueryData overrideData,
       MediaQueryData realQuery}) {
-    this._currentOffset = Offset.zero;
-    this._scaledOffset = Offset.zero;
     if (newDevice != null) {
       this._currentDeviceSelected = newDevice;
     }
@@ -78,6 +79,8 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
     } else {
       this._currentScreenScale = 1.0;
     }
+    this._currentOffset = Offset(0, 0 - (bottomBarHeight / 2));
+    this._scaledOffset = scaledOffsetCalculate();
     notifyListeners();
   }
 
@@ -123,6 +126,13 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
 
   double get scaledHeight =>
       viewPortHeightCalculate(boundedMediaQuery.size.height * screenScale);
+
+  double viewPortOffsetTop(MediaQueryData realQuery) =>
+      (realQuery.size.height - boundedMediaQuery.size.height - toolbarHeight) /
+      2;
+
+  double viewPortOffsetLeft(MediaQueryData realQuery) =>
+      (realQuery.size.width - boundedMediaQuery.size.width) / 2;
 }
 
 OverrideMediaQueryProvider mediaQuery(BuildContext context) {
