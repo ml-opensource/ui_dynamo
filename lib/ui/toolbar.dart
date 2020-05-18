@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_storybook/actions/actions_ui.dart';
 import 'package:flutter_storybook/mediaquery/override_media_query_provider.dart';
-import 'package:flutter_storybook/props/props_ui.dart';
+import 'package:flutter_storybook/plugins/plugin.dart';
 import 'package:flutter_storybook/ui/widgets/measuresize.dart';
 
 class ToolbarPane extends StatefulWidget {
+  final List<StoryBookPlugin> plugins;
+
   const ToolbarPane({
     Key key,
+    this.plugins = const [],
   }) : super(key: key);
 
   @override
@@ -22,10 +24,11 @@ class _ToolbarPaneState extends State<ToolbarPane> {
     final tabTextColor =
         TextStyle(color: Theme.of(context).textTheme.button.color);
     final provider = mediaQuery(context);
+    final plugins = widget.plugins;
     return MeasureSize(
       onChange: (size) => provider.bottomBarHeightChanged(size.height),
       child: DefaultTabController(
-        length: 2,
+        length: plugins.length,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
@@ -44,18 +47,12 @@ class _ToolbarPaneState extends State<ToolbarPane> {
                     },
                     isScrollable: true,
                     tabs: [
-                      Tab(
-                        child: Text(
-                          'Actions',
-                          style: tabTextColor,
-                        ),
-                      ),
-                      Tab(
-                        child: Text(
-                          'Props',
-                          style: tabTextColor,
-                        ),
-                      )
+                      ...plugins.map((e) => Tab(
+                            child: Text(
+                              e.bottomTabText,
+                              style: tabTextColor,
+                            ),
+                          )),
                     ],
                   ),
                 ),
@@ -79,8 +76,7 @@ class _ToolbarPaneState extends State<ToolbarPane> {
                     toolbarOpen ? MediaQuery.of(context).size.height / 4 : 0,
                 child: TabBarView(
                   children: <Widget>[
-                    ActionsDisplay(),
-                    PropsDisplay(),
+                    ...plugins.map((e) => e.bottomTabPane(context)),
                   ],
                 ),
               ),

@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_storybook/actions/actions_extensions.dart';
+import 'package:flutter_storybook/actions/actions_plugin.dart';
 import 'package:flutter_storybook/flutter_storybook.dart';
 import 'package:flutter_storybook/mediaquery/device_sizes.dart';
 import 'package:flutter_storybook/mediaquery/media_query_toolbar.dart';
 import 'package:flutter_storybook/mediaquery/mediaquery.dart';
 import 'package:flutter_storybook/mediaquery/override_media_query_provider.dart';
 import 'package:flutter_storybook/models.dart';
-import 'package:flutter_storybook/props/props_extensions.dart';
+import 'package:flutter_storybook/plugins/plugin.dart';
+import 'package:flutter_storybook/props/props_plugin.dart';
 import 'package:flutter_storybook/ui/drawer.dart';
 import 'package:flutter_storybook/ui/drawer_provider.dart';
 import 'package:flutter_storybook/ui/materialapp+extensions.dart';
@@ -20,7 +21,7 @@ class StoryBook extends StatefulWidget {
   final MaterialApp app;
 
   /// an extra set of Provider to inject into the storybook hierarchy.
-  final List<Provider> extraProviders;
+  final List<StoryBookPlugin> plugins;
 
   /// Constructs a new StoryBook with
   /// 1. default storyboard with all app routes. If routesMapping specified,
@@ -45,7 +46,13 @@ class StoryBook extends StatefulWidget {
     /// set to true to allow preview routes to override existing routes defined
     /// in the main application.
     bool allowPreviewRouteOverrides = false,
-    List<Provider> extraProviders = const [],
+
+    /// Define extra plugins for this app to use in inherited widgets.
+    List<StoryBookPlugin> plugins = const [],
+
+    /// if true, props and actions are provided. if false, it requires using
+    /// [plugins] manually
+    bool useDefaultPlugins = true,
   }) {
     final routes = app.routes ?? <String, WidgetBuilder>{};
     previewRoutes.forEach((key, value) {
@@ -76,7 +83,13 @@ class StoryBook extends StatefulWidget {
     ]);
     return StoryBook(
       app: copiedApp,
-      extraProviders: extraProviders,
+      plugins: [
+        ...plugins,
+        if (useDefaultPlugins) ...[
+          actionsPlugin(),
+          propsPlugin(),
+        ]
+      ],
       data: updatedData.merge(items: [
         // merge with the folder routes so the home page can capture the data.
         StoryBookPage.of(
@@ -95,7 +108,7 @@ class StoryBook extends StatefulWidget {
       {Key key,
       @required this.data,
       @required this.app,
-      this.extraProviders = const []})
+      this.plugins = const []})
       : super(key: key);
 
   @override
@@ -117,19 +130,15 @@ class _StoryBookState extends State<StoryBook> {
       home: MultiProvider(
         providers: [
           ChangeNotifierProvider(
-            create: (context) => ActionsProvider(),
-          ),
-          ChangeNotifierProvider(
-            create: (context) => PropsProvider(),
-          ),
-          ChangeNotifierProvider(
             create: (context) => DrawerProvider(),
           ),
           ChangeNotifierProvider(
             create: (context) => OverrideMediaQueryProvider(
                 widget.data.defaultDevice ?? deviceSizes[0]),
           ),
-          ...widget.extraProviders,
+          ...widget.plugins.map(
+            (e) => ChangeNotifierProvider(create: e.provider),
+          ),
         ],
         child: Builder(
           builder: (context) {
@@ -166,8 +175,11 @@ class _StoryBookState extends State<StoryBook> {
                     ),
                   ),
                   resizeToAvoidBottomPadding: true,
-                  bottomNavigationBar:
-                      selectedPage?.usesToolbar == true ? ToolbarPane() : null,
+                  bottomNavigationBar: selectedPage?.usesToolbar == true
+                      ? ToolbarPane(
+                          plugins: widget.plugins,
+                        )
+                      : null,
                   body: StoryBookPageWrapperWidget(
                     selectedPage: selectedPage,
                     base: widget.app,
