@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_storybook/mediaquery/override_media_query_provider.dart';
@@ -25,6 +27,7 @@ class _ToolbarPaneState extends State<ToolbarPane> {
         TextStyle(color: Theme.of(context).textTheme.button.color);
     final provider = mediaQuery(context);
     final plugins = widget.plugins;
+    final media = MediaQuery.of(context);
     return MeasureSize(
       onChange: (size) => provider.bottomBarHeightChanged(size.height),
       child: DefaultTabController(
@@ -67,18 +70,17 @@ class _ToolbarPaneState extends State<ToolbarPane> {
                 ),
               ],
             ),
-            Draggable(
-              axis: Axis.vertical,
-              feedback: Text('DRAGGING'),
-              dragAnchor: DragAnchor.pointer,
-              child: Container(
-                height:
-                    toolbarOpen ? MediaQuery.of(context).size.height / 4 : 0,
-                child: TabBarView(
-                  children: <Widget>[
-                    ...plugins.map((e) => e.bottomTabPane(context)),
-                  ],
-                ),
+            Container(
+              height: toolbarOpen
+                  ? max(
+                      (media.size.height / 3) - provider.toolbarHeight,
+                      min((media.size.height / 2) - provider.toolbarHeight,
+                          300))
+                  : 0,
+              child: TabBarView(
+                children: <Widget>[
+                  ...plugins.map((e) => e.bottomTabPane(context)),
+                ],
               ),
             )
           ],
