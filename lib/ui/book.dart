@@ -9,8 +9,8 @@ import 'package:flutter_storybook/mediaquery/override_media_query_provider.dart'
 import 'package:flutter_storybook/models.dart';
 import 'package:flutter_storybook/plugins/plugin.dart';
 import 'package:flutter_storybook/props/props_plugin.dart';
-import 'package:flutter_storybook/ui/drawer.dart';
-import 'package:flutter_storybook/ui/drawer_provider.dart';
+import 'package:flutter_storybook/ui/drawer/drawer.dart';
+import 'package:flutter_storybook/ui/drawer/drawer_provider.dart';
 import 'package:flutter_storybook/ui/materialapp+extensions.dart';
 import 'package:flutter_storybook/ui/model/page.dart';
 import 'package:flutter_storybook/ui/toolbar.dart';
@@ -137,7 +137,7 @@ class _StoryBookState extends State<StoryBook> {
                 widget.data.defaultDevice ?? deviceSizes[0]),
           ),
           ...widget.plugins.map(
-            (e) => ChangeNotifierProvider(create: e.provider),
+            (e) => e.provider,
           ),
         ],
         child: Builder(

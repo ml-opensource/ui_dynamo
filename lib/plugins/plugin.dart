@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 /// Specify an optional [Provider] to inject into buildable pages for
 /// the main StoryBook.
 class StoryBookPlugin<T extends ChangeNotifier> {
-  final ValueBuilder<T> provider;
+  final ChangeNotifierProvider<T> provider;
 
   final WidgetBuilder bottomTabPane;
 

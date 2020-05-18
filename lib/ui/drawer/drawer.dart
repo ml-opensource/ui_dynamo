@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_storybook/ui/model/page.dart';
 
-import '../models.dart';
+import '../../models.dart';
 
 class StoryBookDrawer extends StatelessWidget {
   final StoryBookData data;
