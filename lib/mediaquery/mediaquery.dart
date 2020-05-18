@@ -165,8 +165,10 @@ class _InteractableScreenState extends State<InteractableScreen> {
     final heightSmaller = query.scaledHeight <
         query.viewPortHeightCalculate(realQuery.size.height);
     final isWindow = query.currentDevice == DeviceSizes.window;
-    double topCalculated = isWindow ? query.toolbarHeight : _calculateOffsetTop(realQuery, query);
-    double leftCalculated = isWindow ? 0 : _calculateOffsetLeft(realQuery, query);
+    double topCalculated =
+        isWindow ? query.toolbarHeight : _calculateOffsetTop(realQuery, query);
+    double leftCalculated =
+        isWindow ? 0 : _calculateOffsetLeft(realQuery, query);
     return NotificationListener<ScrollNotification>(
       onNotification: _sendScrollNotification,
       child: PanScrollDetector(
@@ -210,8 +212,6 @@ class _InteractableScreenState extends State<InteractableScreen> {
       _isScrolling.add(true);
     } else if (scroll is ScrollEndNotification) {
       _notScrollingThrottle.add(null);
-    } else {
-      debugPrint("RECEIVED OTHER ${scroll}");
     }
     return false;
   }
