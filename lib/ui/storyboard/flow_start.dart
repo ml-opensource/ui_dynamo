@@ -23,6 +23,13 @@ class FlowStart extends StatelessWidget {
                 children: [
                   Text('Flow'),
                   Text(label),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  Icon(
+                    Icons.arrow_forward,
+                    size: 64.0,
+                  ),
                 ],
               ),
             ),

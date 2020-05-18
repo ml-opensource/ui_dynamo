@@ -26,16 +26,6 @@ class AppStoryBook extends StatelessWidget {
     final app = buildApp();
     return StoryBook.withApp(
       app,
-      flowRoutesMapping: {
-        'home': [
-          '/home',
-          '/company',
-        ],
-        'home 2': [
-          '/home',
-          '/company',
-        ]
-      },
       previewRoutes: {
         '/details/:item': (context) => PersonDetail(
               item: MainCellItem(

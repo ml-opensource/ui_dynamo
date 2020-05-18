@@ -34,11 +34,6 @@ class StoryBook extends StatefulWidget {
     Widget home,
     @required StoryBookData data,
 
-    /// Specify a set of Flows to display within the default storybook
-    /// instead of every application route. Each key is the name of the Flow
-    /// and each value is the ordered list of screens shown.
-    Map<String, List<String>> flowRoutesMapping = const {},
-
     /// Preview Routes are useful to add preview-able content to a route that
     /// typically does not exist in the normal application
     Map<String, WidgetBuilder> previewRoutes = const {},
@@ -71,8 +66,7 @@ class StoryBook extends StatefulWidget {
       routes: routes,
     );
     final updatedData = data.merge(items: [
-      StoryBookPage.storyboard(copiedApp,
-          title: 'Storyboard', routesMapping: flowRoutesMapping),
+      StoryBookPage.storyboard(copiedApp, title: 'Storyboard'),
       StoryBookFolder.of(
         title: 'Routes',
         pages: [

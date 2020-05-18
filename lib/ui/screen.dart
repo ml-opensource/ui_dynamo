@@ -11,6 +11,7 @@ class ScalableScreen extends StatelessWidget {
   final Widget child;
   final String routeName;
   final bool isStoryBoard;
+  final bool isFlowStart;
   final bool showBorder;
   final OverrideMediaQueryProvider provider;
 
@@ -23,6 +24,7 @@ class ScalableScreen extends StatelessWidget {
     this.routeName,
     this.isStoryBoard = true,
     this.showBorder = true,
+    this.isFlowStart = false,
   }) : super(key: key);
 
   @override
@@ -62,6 +64,7 @@ class ScalableScreen extends StatelessWidget {
           if (label != null)
             Center(
                 child: StoryBookLabel(
+              isFlowStart: isFlowStart,
               label: label,
               routeName: routeName,
             )),

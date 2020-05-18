@@ -6,8 +6,10 @@ import 'package:flutter_storybook/ui/drawer/drawer_provider.dart';
 class StoryBookLabel extends StatelessWidget {
   final String label;
   final String routeName;
+  final bool isFlowStart;
 
-  const StoryBookLabel({Key key, this.label, this.routeName}) : super(key: key);
+  const StoryBookLabel({Key key, this.label, this.routeName, this.isFlowStart})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,18 +34,13 @@ class StoryBookLabel extends StatelessWidget {
                 fontSize: 20,
               ),
             ),
-            Visibility(
-              maintainSize: true,
-              maintainAnimation: true,
-              maintainState: true,
-              visible: routeName != null,
-              child: IconButton(
-                icon: Icon(device.iconForCategory),
-                onPressed: () {
-                  drawer(context)
-                      .select(context, ValueKey('Routes'), ValueKey(routeName));
-                },
-              ),
+            IconButton(
+              icon: Icon(
+                  !isFlowStart ? device.iconForCategory : Icons.arrow_forward),
+              onPressed: () {
+                drawer(context)
+                    .select(context, ValueKey('Routes'), ValueKey(routeName));
+              },
             )
           ],
         ),

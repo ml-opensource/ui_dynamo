@@ -12,6 +12,9 @@ class StoryBoard extends StatefulWidget {
   /// Wrap your Material App with this widget
   final MaterialApp child;
 
+  /// Specify a set of Flows to display within the default storybook
+  /// instead of every application route. Each key is the name of the Flow
+  /// and each value is the ordered list of screens shown.
   final Map<String, List<String>> routesMapping;
 
   const StoryBoard({
@@ -138,6 +141,7 @@ class StoryboardController extends State<StoryBoard> {
     String label,
     @required MediaQueryData realQuery,
     @required OverrideMediaQueryProvider provider,
+    @required String nextRoute,
   }) {
     final top = _calculateOffsetTop(offset, realQuery, provider);
     final left = _calculateOffsetLeft(offset, realQuery, provider);
@@ -149,6 +153,8 @@ class StoryboardController extends State<StoryBoard> {
         child: FlowStart(label: label),
         provider: provider,
         label: label,
+        isFlowStart: true,
+        routeName: nextRoute,
       ),
     );
   }
@@ -169,6 +175,7 @@ class StoryboardController extends State<StoryBoard> {
           offset: Offset((_size.width + _kSpacing) * (offsetIndex),
               ((_size.height + _kSpacing) + 40) * index),
           label: entry.key,
+          nextRoute: entry.value[0],
         ));
         entry.value.forEach((route) {
           final currentRoute = base.routes[route];
