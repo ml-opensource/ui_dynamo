@@ -104,8 +104,6 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
 
   Offset get currentOffset => _scaledOffset;
 
-  bool get isAdjusted => currentOffset != Offset.zero || screenScale != 1.0;
-
   double get toolbarHeight => _toolbarHeight;
 
   double get bottomBarHeight => _bottomBarHeight;

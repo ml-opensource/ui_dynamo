@@ -141,10 +141,8 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
       IconButton(
         tooltip: 'Size to Fit',
         icon: Icon(Icons.center_focus_strong),
-        onPressed: mediaQueryProvider.isAdjusted
-            ? () =>
-                mediaQueryProvider.resetScreenAdjustments(realQuery: realQuery)
-            : null,
+        onPressed: () =>
+            mediaQueryProvider.resetScreenAdjustments(realQuery: realQuery),
       ),
     ];
   }
