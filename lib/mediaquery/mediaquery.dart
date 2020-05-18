@@ -117,8 +117,11 @@ class _InteractableScreenState extends State<InteractableScreen> {
 
   double _calculateOffsetTop(
       MediaQueryData realQuery, OverrideMediaQueryProvider provider) {
-    final offsetTop = Offset(0,
-        (realQuery.size.height - provider.boundedMediaQuery.size.height) / 2);
+    final offsetTop = Offset(
+        0,
+        (realQuery.size.height -
+                provider.boundedMediaQuery.size.height - provider.toolbarHeight) /
+            2);
     return calculateTop(offsetTop, provider.currentOffset, 1.0);
   }
 
@@ -182,17 +185,21 @@ class _InteractableScreenState extends State<InteractableScreen> {
               Positioned(
                 top: topCalculated,
                 left: leftCalculated,
-                child: Stack(
-                  children: [
-                    ScalableScreen(
-                      showBorder: query.currentDevice != DeviceSizes.window,
-                      isStoryBoard: false,
-                      provider: query,
-                      base: widget.widget.base,
-                      child: widget.widget
-                          .builder(context, query.currentMediaQuery),
-                    ),
-                  ],
+                child: SizedBox(
+                  width: query.viewportWidth + 2,
+                  height: query.viewportHeight + 2,
+                  child: Stack(
+                    children: [
+                      ScalableScreen(
+                        showBorder: query.currentDevice != DeviceSizes.window,
+                        isStoryBoard: false,
+                        provider: query,
+                        base: widget.widget.base,
+                        child: widget.widget
+                            .builder(context, query.currentMediaQuery),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],

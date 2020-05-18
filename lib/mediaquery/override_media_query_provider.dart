@@ -17,7 +17,6 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
   /// this will be used when changing scale, to represent offset as function
   /// of current.
   Offset _scaledOffset = Offset.zero;
-  bool _showOffsetIndicator = false;
 
   OverrideMediaQueryProvider(this._currentDeviceSelected);
 
@@ -48,11 +47,6 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void changeOffsetIndicator(bool show) {
-    this._showOffsetIndicator = show;
-    notifyListeners();
-  }
-
   void resetScreenAdjustments(
       {DeviceInfo newDevice,
       MediaQueryData overrideData,
@@ -69,9 +63,9 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
     // use this to adjust screen size to fit.
     if (realQuery != null && _currentDeviceSelected != DeviceSizes.window) {
       final widthRatio =
-          realQuery.size.width / (boundedMediaQuery.size.width + 48);
+          realQuery.size.width / (boundedMediaQuery.size.width + 100);
       final heightRatio = viewPortHeightCalculate(realQuery.size.height) /
-          (boundedMediaQuery.size.height + 48);
+          (boundedMediaQuery.size.height + 100);
       if (widthRatio < 1 || heightRatio < 1) {
         if (widthRatio < heightRatio) {
           this._currentScreenScale = widthRatio;
@@ -127,7 +121,8 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
 
   double get scaledWidth => boundedMediaQuery.size.width * _currentScreenScale;
 
-  double get scaledHeight => viewPortHeightCalculate(boundedMediaQuery.size.height * screenScale);
+  double get scaledHeight =>
+      viewPortHeightCalculate(boundedMediaQuery.size.height * screenScale);
 }
 
 OverrideMediaQueryProvider mediaQuery(BuildContext context) {

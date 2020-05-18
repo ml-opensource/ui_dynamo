@@ -1,7 +1,17 @@
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 
 typedef void OnWidgetSizeChange(Size size);
+
+class MeasureSizeProvider extends ChangeNotifier {
+  static MeasureSizeProvider of(BuildContext context) =>
+      Provider.of<MeasureSizeProvider>(context);
+
+  void notifySizeChange() {
+    notifyListeners();
+  }
+}
 
 class MeasureSize extends StatefulWidget {
   final Widget child;
@@ -20,11 +30,23 @@ class MeasureSize extends StatefulWidget {
 class _MeasureSizeState extends State<MeasureSize> {
   @override
   Widget build(BuildContext context) {
-    SchedulerBinding.instance.addPostFrameCallback(postFrameCallback);
-    return Container(
-      key: widgetKey,
-      child: widget.child,
+    return ChangeNotifierProvider(
+      create: (context) => MeasureSizeProvider(),
+      child: Consumer<MeasureSizeProvider>(
+        builder: (context, value, child) {
+          SchedulerBinding.instance.addPostFrameCallback(postFrameCallback);
+          return Container(
+            key: widgetKey,
+            child: widget.child,
+          );
+        },
+      ),
     );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
   }
 
   var widgetKey = GlobalKey();

@@ -8,6 +8,7 @@ import 'package:flutter_storybook/mediaquery/screen_size_chooser.dart';
 import 'package:flutter_storybook/mediaquery/text_scale.dart';
 import 'package:flutter_storybook/mediaquery/zoom_controls.dart';
 import 'package:flutter_storybook/ui/utils/size+extensions.dart';
+import 'package:flutter_storybook/ui/widgets/measuresize.dart';
 
 class MediaQueryToolbar extends StatefulWidget {
   const MediaQueryToolbar({
@@ -86,8 +87,8 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
         child: VerticalDivider(),
       );
 
-  List<Widget> topBarList(OverrideMediaQueryProvider mediaQueryProvider,
-      MediaQueryData realQuery) {
+  List<Widget> topBarList(
+      OverrideMediaQueryProvider mediaQueryProvider, MediaQueryData realQuery) {
     return [
       IconButton(
         icon: Icon(mediaQueryProvider.currentMediaQuery.disableAnimations
@@ -141,8 +142,8 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
         tooltip: 'Size to Fit',
         icon: Icon(Icons.center_focus_strong),
         onPressed: mediaQueryProvider.isAdjusted
-            ? () => mediaQueryProvider.resetScreenAdjustments(
-            realQuery: realQuery)
+            ? () =>
+                mediaQueryProvider.resetScreenAdjustments(realQuery: realQuery)
             : null,
       ),
     ];
@@ -218,6 +219,7 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
                 onTap: () {
                   setState(() {
                     isExpanded = !isExpanded;
+                    MeasureSizeProvider.of(context).notifySizeChange();
                   });
                 },
               ),
