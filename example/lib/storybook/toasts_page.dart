@@ -8,7 +8,7 @@ StoryBookPage buildToastPage() => StoryBookPage.list(
       title: 'Toasts',
       icon: Icon(Icons.check_circle),
       widgets: (context) {
-        final currentMediaQuery = mediaQuery(context).currentMediaQuery;
+        final currentMediaQuery = context.mediaQueryProvider.currentMediaQuery;
         final isLight =
             currentMediaQuery.platformBrightness == Brightness.light;
         final successPropGroup = PropGroup('Success', '');
@@ -30,10 +30,10 @@ StoryBookPage buildToastPage() => StoryBookPage.list(
                 height: 16,
               ),
               AppToast(
-                onClose: actions(context).onPressed('Close Toast'),
-                message: props(context)
+                onClose: context.actions.onPressed('Close Toast'),
+                message: context.props
                     .text('Message', 'Success!', group: successPropGroup),
-                toastMode: props(context).valueSelector(
+                toastMode: context.props.valueSelector(
                   'Mode',
                   PropValues<ToastMode>(
                     selectedValue: ToastMode.Success,
@@ -49,11 +49,11 @@ StoryBookPage buildToastPage() => StoryBookPage.list(
             cardBackgroundColor: isLight ? Colors.grey : Colors.red,
             children: [
               AppToast(
-                onClose: actions(context).onPressed('Close Toast 2'),
-                message: props(context).text(
+                onClose: context.actions.onPressed('Close Toast 2'),
+                message: context.props.text(
                     'Message', 'Failure to reach network.',
                     group: errorPropGroup),
-                toastMode: props(context).radios(
+                toastMode: context.props.radios(
                   'Toast Mode 2',
                   PropValues<ToastMode>(
                     selectedValue: ToastMode.Error,
@@ -69,11 +69,11 @@ StoryBookPage buildToastPage() => StoryBookPage.list(
             cardBackgroundColor: isLight ? Colors.grey : Colors.red,
             children: [
               AppToast(
-                onClose: actions(context).onPressed('Close Toast 2'),
-                message: props(context).text(
+                onClose: context.actions.onPressed('Close Toast 2'),
+                message: context.props.text(
                     'Message', 'There might be an issue with that.',
                     group: warningPropGroup),
-                toastMode: props(context).radios(
+                toastMode: context.props.radios(
                   'Toast Mode 2',
                   PropValues<ToastMode>(
                     selectedValue: ToastMode.Warning,

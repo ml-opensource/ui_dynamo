@@ -38,6 +38,6 @@ class ActionsProvider extends ChangeNotifier {
 ActionsProvider actions(BuildContext context) =>
     Provider.of<ActionsProvider>(context);
 
-extension on BuildContext {
+extension ActionProviderExtension on BuildContext {
   ActionsProvider get actions => Provider.of<ActionsProvider>(this);
 }

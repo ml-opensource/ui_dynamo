@@ -73,15 +73,15 @@ class AppStoryBook extends StatelessWidget {
             title: Text('Main Cell Widget'),
             children: <Widget>[
               MainCell(
-                title: props(context)
+                title: context.props
                     .text('Main Title', 'Go Home', group: groupMainCell),
-                subtitle: props(context).text(
+                subtitle: context.props.text(
                     'Main Subtitle', 'This goes home good',
                     group: groupMainCell),
                 iconText: 'H',
-                count: props(context)
+                count: context.props
                     .integer('Item Count', 10, group: groupMainCell),
-                isFlipped: props(context)
+                isFlipped: context.props
                     .boolean('Flip Layout', false, group: groupMainCell),
               )
             ],
@@ -137,7 +137,7 @@ class AppStoryBook extends StatelessWidget {
                 actions: <Widget>[
                   FlatButton(
                     child: Text('Ok'),
-                    onPressed: actions(context).onPressed('Alert Ok Button'),
+                    onPressed: context.actions.onPressed('Alert Ok Button'),
                   ),
                 ],
               )
@@ -154,11 +154,11 @@ class AppStoryBook extends StatelessWidget {
                   FlatButton(
                     child: Text('Yes'),
                     color: Theme.of(context).accentColor,
-                    onPressed: actions(context).onPressed('Alert Yes Button'),
+                    onPressed: context.actions.onPressed('Alert Yes Button'),
                   ),
                   FlatButton(
                     child: Text('No'),
-                    onPressed: actions(context).onPressed('Alert No Button'),
+                    onPressed: context.actions.onPressed('Alert No Button'),
                   ),
                 ],
               )
@@ -215,11 +215,10 @@ Nunc ac pulvinar nunc. Sed blandit mauris sed aliquam lobortis. Vivamus viverra 
           WidgetContainer(title: Text("Plain Radios"), children: [
             RadioGroup(
               valueChanged: (value) {
-                actions(context).valueChanged("Plain Radio")(value);
-                final _props = props(context);
-                _props.radioChanged("Radios", value);
+                context.actions.valueChanged("Plain Radio")(value);
+                context.props.radioChanged("Radios", value);
               },
-              selectedValue: props(context).radios(
+              selectedValue: context.props.radios(
                   "Radios",
                   PropValues(
                     selectedValue: "Yellow",

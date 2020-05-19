@@ -143,3 +143,7 @@ OverrideMediaQueryProvider mediaQuery(BuildContext context) {
   );
   return provider;
 }
+
+extension OverrideMediaQueryProviderExtension on BuildContext {
+  OverrideMediaQueryProvider get mediaQueryProvider => mediaQuery(this);
+}

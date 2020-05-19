@@ -190,7 +190,7 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
     final cardmargin = isTablet(context)
         ? EdgeInsets.only(left: 4.0, right: 4.0)
         : EdgeInsets.all(0);
-    final media = mediaQuery(context);
+    final media = context.mediaQueryProvider;
     return Card(
       margin: cardmargin,
       elevation: 4.0,

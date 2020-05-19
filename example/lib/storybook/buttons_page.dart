@@ -4,8 +4,8 @@ import 'package:flutter_storybook/flutter_storybook.dart';
 StoryBookPage buildButtonsPage() => StoryBookPage.list(
       title: 'Button States',
       widgets: (context) {
-        final prop = props(context);
-        final action = actions(context);
+        final prop = context.props;
+        final action = context.actions;
         return [
           WidgetContainer(
             title: Text('Buttons'),
@@ -19,8 +19,8 @@ StoryBookPage buildButtonsPage() => StoryBookPage.list(
             children: [
               RaisedButton(
                 onPressed: action.onPressed('Primary'),
-                child: Text(prop.text('Text', 'Yes',
-                    group: PropGroup('Primary', 'p'))),
+                child: Text(
+                    prop.text('Text', 'Yes', group: PropGroup('Primary', 'p'))),
               ),
               StyledText.body(Text('Use this button for main actions.')),
             ],
@@ -36,7 +36,8 @@ StoryBookPage buildButtonsPage() => StoryBookPage.list(
                       group: PropGroup('Primary Wide', 'pw'))),
                 ),
               ),
-              StyledText.body(Text('This button is used for a very important CTA.')),
+              StyledText.body(
+                  Text('This button is used for a very important CTA.')),
             ],
           ),
           WidgetContainer(

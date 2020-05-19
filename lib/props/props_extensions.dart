@@ -206,6 +206,6 @@ class PropsProvider extends ChangeNotifier {
 PropsProvider props(BuildContext context) =>
     Provider.of<PropsProvider>(context);
 
-extension on BuildContext {
+extension PropsProviderExtension on BuildContext {
   PropsProvider get props => Provider.of<PropsProvider>(this);
 }

@@ -14,9 +14,9 @@ class DrawerProvider extends ChangeNotifier {
       {bool popDrawer = false}) {
     _selectedFolderKey = folderKey;
     _selectedPageKey = pageKey;
-    props(context).reset();
-    actions(context).reset();
-    mediaQuery(context)
+    context.props.reset();
+    context.actions.reset();
+    context.mediaQueryProvider
         .resetScreenAdjustments(realQuery: MediaQuery.of(context));
     if (popDrawer) {
       Navigator.of(context).pop();
@@ -33,8 +33,9 @@ DrawerProvider drawer(BuildContext context) =>
     Provider.of<DrawerProvider>(context);
 
 StoryBookPage selectedPageFromWidget(StoryBookData data, BuildContext context) {
-  final selectedFolderKey = drawer(context).folderKey;
-  final selectedPageKey = drawer(context).pageKey;
+  final drawer = context.drawerProvider;
+  final selectedFolderKey = drawer.folderKey;
+  final selectedPageKey = drawer.pageKey;
   if (selectedFolderKey != null && selectedPageKey != null) {
     final folder = data.items.firstWhere(
         (element) => element.key == selectedFolderKey,
@@ -44,4 +45,8 @@ StoryBookPage selectedPageFromWidget(StoryBookData data, BuildContext context) {
     }
   }
   return null;
+}
+
+extension DrawerProviderExtension on BuildContext {
+  DrawerProvider get drawerProvider => drawer(this);
 }

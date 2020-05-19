@@ -60,7 +60,7 @@ class StoryboardController extends State<StoryBoard> {
 
   @override
   Widget build(BuildContext context) {
-    final query = mediaQuery(context);
+    final query = context.mediaQueryProvider;
     final realQuery = MediaQuery.of(context);
     final mediaQueryData = query.boundedMediaQuery;
     final base = widget.child;

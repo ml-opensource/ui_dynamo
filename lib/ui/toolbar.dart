@@ -25,7 +25,7 @@ class _ToolbarPaneState extends State<ToolbarPane> {
   Widget build(BuildContext context) {
     final tabTextColor =
         TextStyle(color: Theme.of(context).textTheme.button.color);
-    final provider = mediaQuery(context);
+    final provider = context.mediaQueryProvider;
     final plugins = widget.plugins;
     final media = MediaQuery.of(context);
     return MeasureSize(

@@ -13,7 +13,7 @@ class StoryBookLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final device = mediaQuery(context).currentDevice;
+    final device = context.mediaQueryProvider.currentDevice;
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(

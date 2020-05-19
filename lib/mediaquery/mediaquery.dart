@@ -53,7 +53,7 @@ String deviceDisplay(
 class _MediaQueryChooserState extends State<MediaQueryChooser> {
   @override
   Widget build(BuildContext context) {
-    final query = mediaQuery(context);
+    final query = context.mediaQueryProvider;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -136,8 +136,7 @@ class _InteractableScreenState extends State<InteractableScreen> {
       (offset, isScrolling) => OffsetScrollEvent(offset, isScrolling),
     ).where((event) => !event.isScrolling).listen((event) {
       if (event.offset != null && !event.isScrolling) {
-        final query = mediaQuery(context);
-        query.offsetChange(event.offset);
+        context.mediaQueryProvider.offsetChange(event.offset);
       }
     }).addTo(_subscription);
     _notScrollingThrottle
@@ -156,7 +155,7 @@ class _InteractableScreenState extends State<InteractableScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final query = mediaQuery(context);
+    final query = context.mediaQueryProvider;
     final realQuery = MediaQuery.of(context);
     // if window, move back to center and do not allow panning.
     final widthSmaller = query.scaledWidth < realQuery.size.width;

@@ -137,7 +137,7 @@ class _StoryBookState extends State<StoryBook> {
         child: Builder(
           builder: (context) {
             final selectedPage = selectedPageFromWidget(widget.data, context);
-            final query = mediaQuery(context);
+            final query = context.mediaQueryProvider;
             return MaterialApp(
               theme: app.theme,
               darkTheme: app.darkTheme,
