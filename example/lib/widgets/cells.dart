@@ -69,16 +69,13 @@ class MainCellItem {
 
 class MainCellList extends StatelessWidget {
   final List<MainCellItem> items;
-  final bool shrinkWrap;
   final Function(MainCellItem) onTap;
 
-  const MainCellList({Key key, this.items, this.shrinkWrap = false, this.onTap})
-      : super(key: key);
+  const MainCellList({Key key, this.items, this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      shrinkWrap: shrinkWrap,
       itemCount: items.length,
       itemBuilder: (context, int) {
         final item = items[int];
