@@ -7,6 +7,9 @@ const PropGroup item2 = PropGroup('Item 2', 'item-2');
 StoryBookPage buildMainCellListPage() => StoryBookPage.of(
       title: 'Main Cell List',
       child: (context) => MainCellList(
+        onTap: (item) {
+          context.actions.add(ActionType('Navigation attempted', data: item));
+        },
         items: [
           MainCellItem(
             context.props.text('Avatar', 'A', group: item1),

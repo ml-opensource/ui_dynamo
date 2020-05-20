@@ -65,6 +65,11 @@ class MainCellItem {
   final int count;
 
   MainCellItem(this.iconText, this.title, this.subtitle, this.count);
+
+  @override
+  String toString() {
+    return 'MainCellItem{iconText: $iconText, title: $title, subtitle: $subtitle, count: $count}';
+  }
 }
 
 class MainCellList extends StatelessWidget {

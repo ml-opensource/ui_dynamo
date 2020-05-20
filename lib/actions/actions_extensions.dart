@@ -33,6 +33,7 @@ class ActionsProvider extends ChangeNotifier {
   ValueChanged<T> valueChanged<T>(String widgetName) {
     return (value) => this.add(ActionType('$widgetName: Value changed $value'));
   }
+
 }
 
 ActionsProvider actions(BuildContext context) =>
