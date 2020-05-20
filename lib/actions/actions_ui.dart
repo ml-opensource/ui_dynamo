@@ -53,6 +53,7 @@ class ActionLabel extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: ListTile(
         title: Text(action.name),
+        trailing: Text(action.time.toIso8601String()),
         subtitle: Text("Data ${action.data}"),
       ),
     );
