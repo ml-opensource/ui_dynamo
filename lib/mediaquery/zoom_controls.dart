@@ -25,9 +25,12 @@ class ZoomControls extends StatelessWidget {
             onPressed: () => updateScale(scale - 0.05),
           ),
         ),
-        InkWell(
-          child: Center(child: Text('${(scale * 100).round()}%')),
-          onTap: () => updateScale(1),
+        Tooltip(
+          message: 'Tap to set back to 100% scale.',
+          child: InkWell(
+            child: Center(child: Text('${(scale * 100).round()}%')),
+            onTap: () => updateScale(1),
+          ),
         ),
         HoldDetector(
           holdTimeout: Duration(milliseconds: 200),

@@ -33,7 +33,13 @@ class AdjustableNumberScaleWidget extends StatelessWidget {
             ),
           ),
           if (this.displayIcon != null) Icon(this.displayIcon),
-          Text("${scaleFactor.toStringAsFixed(2)}"),
+          Tooltip(
+            message: 'Tap to set text scale factor back to 1',
+            child: InkWell(
+              child: Text("${scaleFactor.toStringAsFixed(2)}"),
+              onTap: () => scaleFactorChanged(1.0),
+            ),
+          ),
           HoldDetector(
             holdTimeout: Duration(milliseconds: 200),
             enableHapticFeedback: true,
