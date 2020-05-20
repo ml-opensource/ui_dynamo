@@ -16,13 +16,17 @@ class StoryBookPage extends StoryBookItem {
       @required this.widget})
       : super(key, title, icon);
 
-  factory StoryBookPage.storyboard(MaterialApp app,
-      {@required String title, Map<String, List<String>> routesMapping}) {
+  factory StoryBookPage.storyboard(
+      {@required String title,
+      Map<String, List<String>> routesMapping,
+      /// supplied to override the default app passed into the storyboard widget
+      /// Used to add previewRoutes to the storyboard.
+      MaterialApp appOverride}) {
     final page = StoryBookPage(
       key: ValueKey(title),
       title: Text(title),
-      widget: StoryBookWidget((context, data) => StoryBoard(
-            child: app,
+      widget: StoryBookWidget((context, data, app) => StoryBoard(
+            child: appOverride ?? app,
             routesMapping: routesMapping,
           )),
     );
@@ -66,9 +70,6 @@ class StoryBookPage extends StoryBookItem {
 
   @override
   int get hashCode => super.hashCode ^ widget.hashCode;
-
-  build(BuildContext context, MediaQueryData data) =>
-      widget.builder(context, data);
 
   @override
   StoryBookPage pageFromKey(Key key) => this;

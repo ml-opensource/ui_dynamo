@@ -66,7 +66,7 @@ class StoryBook extends StatefulWidget {
       routes: routes,
     );
     final updatedData = data.merge(items: [
-      StoryBookPage.storyboard(copiedApp, title: 'Storyboard'),
+      StoryBookPage.storyboard(appOverride: copiedApp, title: 'Storyboard'),
       StoryBookFolder.of(
         title: 'Routes',
         pages: [
@@ -201,7 +201,7 @@ class StoryBookPageWrapperWidget extends StatelessWidget {
     return MediaQueryChooser(
       base: base,
       shouldScroll: selectedPage.shouldScroll,
-      builder: (context, data) => selectedPage.build(context, data),
+      builder: selectedPage.widget.builder,
     );
   }
 }

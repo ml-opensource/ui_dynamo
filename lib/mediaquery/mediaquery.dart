@@ -5,6 +5,7 @@ import 'package:flutter_storybook/mediaquery/device_sizes.dart';
 import 'package:flutter_storybook/mediaquery/media_query_toolbar.dart';
 import 'package:flutter_storybook/mediaquery/override_media_query_provider.dart';
 import 'package:flutter_storybook/ui/materialapp+extensions.dart';
+import 'package:flutter_storybook/ui/model/widget.dart';
 import 'package:flutter_storybook/ui/screen.dart';
 import 'package:flutter_storybook/ui/storyboard/utils.dart';
 import 'package:flutter_storybook/ui/utils/size+extensions.dart';
@@ -12,10 +13,8 @@ import 'package:flutter_storybook/ui/widgets/measuresize.dart';
 import 'package:flutter_storybook/ui/widgets/panscroll.dart';
 import 'package:rxdart/rxdart.dart';
 
-typedef MediaWidgetBuilder = Widget Function(BuildContext, MediaQueryData);
-
 class MediaQueryChooser extends StatefulWidget {
-  final MediaWidgetBuilder builder;
+  final StorybookWidgetBuilder builder;
   final bool shouldScroll;
   final MaterialApp base;
 
@@ -29,7 +28,7 @@ class MediaQueryChooser extends StatefulWidget {
   factory MediaQueryChooser.mediaQuery(
           {WidgetBuilder builder, MaterialApp base}) =>
       MediaQueryChooser(
-        builder: (context, data) =>
+        builder: (context, data, app) =>
             MediaQuery(data: data, child: builder(context)),
         base: base,
       );
@@ -63,7 +62,8 @@ class _MediaQueryChooserState extends State<MediaQueryChooser> {
             children: <Widget>[
               !widget.shouldScroll
                   ? widget.base.isolatedCopy(
-                      home: widget.builder(context, query.currentMediaQuery),
+                      home: widget.builder(
+                          context, query.currentMediaQuery, widget.base),
                       data: query.currentMediaQuery,
                     )
                   : InteractableScreen(widget: widget),
@@ -189,8 +189,8 @@ class _InteractableScreenState extends State<InteractableScreen> {
                         isStoryBoard: false,
                         provider: query,
                         base: widget.widget.base,
-                        child: widget.widget
-                            .builder(context, query.currentMediaQuery),
+                        child: widget.widget.builder(context,
+                            query.currentMediaQuery, widget.widget.base),
                       ),
                     ],
                   ),

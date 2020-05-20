@@ -1,14 +1,17 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_storybook/mediaquery/mediaquery.dart';
+
+typedef StorybookWidgetBuilder = Widget Function(
+    BuildContext context, MediaQueryData queryData, MaterialApp app);
 
 class StoryBookWidget {
-  final MediaWidgetBuilder builder;
+  final StorybookWidgetBuilder builder;
 
   StoryBookWidget(this.builder);
 
   factory StoryBookWidget.widgetBuilder(WidgetBuilder builder) =>
-      StoryBookWidget(
-          (context, data) => MediaQuery(data: data, child: builder(context)));
+      StoryBookWidget((context, data, app) =>
+          MediaQuery(data: data, child: builder(context)));
 
   @override
   bool operator ==(Object other) =>
@@ -26,7 +29,7 @@ class StoryBookWidgetList extends StoryBookWidget {
 
   StoryBookWidgetList(this.widgets)
       : super(
-          (context, data) => MediaQuery(
+          (context, data, app) => MediaQuery(
             data: data,
             child: ListView(
               children: <Widget>[

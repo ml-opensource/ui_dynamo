@@ -23,9 +23,8 @@ class AppStoryBook extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final app = buildApp();
     return StoryBook.withApp(
-      app,
+      buildApp(),
       previewRoutes: {
         '/details/:item': (context) => PersonDetail(
               item: MainCellItem(
@@ -36,20 +35,18 @@ class AppStoryBook extends StatelessWidget {
         title: Text('Example Storybook'),
         defaultDevice: DeviceSizes.iphoneX,
         items: [
-          StoryBookPage.storyboard(app, title: 'Home Flow', routesMapping: {
+          StoryBookPage.storyboard(title: 'Home Flow', routesMapping: {
             'home': [
               '/home',
               '/company',
             ],
           }),
-          StoryBookPage.storyboard(app,
-              title: 'Company Details',
-              routesMapping: {
-                'home': [
-                  '/company',
-                  '/details/:item',
-                ],
-              }),
+          StoryBookPage.storyboard(title: 'Company Details', routesMapping: {
+            'home': [
+              '/company',
+              '/details/:item',
+            ],
+          }),
           StoryBookFolder.of(title: 'Widgets', pages: [
             buildTextStylePage(),
             buildButtonsPage(),
