@@ -5,7 +5,7 @@ StoryBookPage buildAlertsPage() => StoryBookPage.list(
   title: 'Alerts',
   icon: Icon(Icons.error),
   widgets: (context) => [
-    ExpandableWidgetSection(
+    Organization.expandable(
       initiallyExpanded: true,
       title: 'Network Alert',
       children: <Widget>[
@@ -21,7 +21,7 @@ StoryBookPage buildAlertsPage() => StoryBookPage.list(
         )
       ],
     ),
-    ExpandableWidgetSection(
+    Organization.expandable(
       initiallyExpanded: true,
       title: 'Confirmation Dialog',
       children: <Widget>[

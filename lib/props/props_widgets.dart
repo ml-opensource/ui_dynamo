@@ -58,7 +58,7 @@ class PropTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PresentationWidget(
+    return Organization.presentation(
       child: Card(
         child: Padding(
           padding: const EdgeInsets.all(16.0),

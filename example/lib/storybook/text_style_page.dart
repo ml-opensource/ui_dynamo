@@ -5,23 +5,23 @@ import 'package:flutter_storybook/flutter_storybook.dart';
 StoryBookPage buildTextStylePage() => StoryBookPage.list(
       title: 'Text Style Widgets',
       widgets: (context) => [
-        ExpandableWidgetSection(
+        Organization.expandable(
             initiallyExpanded: true,
-            title: 'Header 1',
+            title: 'Main Title',
             children: [mainTitle('H1')]),
-        ExpandableWidgetSection(
+        Organization.expandable(
             initiallyExpanded: true,
             title: 'Other Headers',
             children: <Widget>[
               subTitle('H2'),
               h3('H3'),
             ]),
-        ExpandableWidgetSection(
-          title: 'Body Content',
-          subtitle: 'This is content most used in decriptions',
+        Organization.container(
+          title: Text('Body Content'),
           children: [
+            Text('This is content most used in descriptions'),
             body("""
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce suscipit iaculis velit, et ornare diam. Etiam molestie purus nec mollis malesuada. Etiam luctus, dolor eget mattis posuere, mauris turpis ullamcorper dolor, quis maximus ante erat ullamcorper tellus. Quisque sem tellus, interdum quis turpis sit amet, accumsan aliquet mi. Aliquam feugiat sapien sit amet metus tristique aliquet. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Pellentesque dignissim quam id augue efficitur varius. Phasellus sed arcu a nibh cursus fringilla blandit ac purus. Fusce diam erat, tristique eget venenatis a, gravida quis metus.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce suscipit iaculis velit, et ornare diam. Etiam molestie purus nec mollis malesuada. Etiam luctus, dolor eget mattis posuere, mauris turpis ullamcorper dolor, quis maximus ante erat ullamcorper tellus. Quisque sem tellus, interdum quis turpis sit amet, accumsan aliquet mi. Aliquam feugiat sapien sit amet metus tristique aliquet. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Pellentesque dignissim quam id augue efficitur varius. Phasellus sed arcu a nibh cursus fringilla blandit ac purus. Fusce diam erat, tristique eget venenatis a, gravida quis metus.
 
 Curabitur viverra, leo et mollis gravida, arcu diam iaculis turpis, ac sollicitudin magna ipsum nec dolor. Fusce a porttitor nisl, ut tempor quam. Nam quis lorem magna. Phasellus facilisis laoreet varius. Nullam eget leo sit amet enim faucibus euismod. Nullam tempus diam et velit eleifend, eu eleifend arcu tristique. Ut vitae luctus leo. Suspendisse aliquam velit nibh, eget scelerisque tellus condimentum vitae. Quisque pharetra iaculis suscipit.
 

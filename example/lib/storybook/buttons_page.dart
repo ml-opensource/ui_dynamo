@@ -7,14 +7,14 @@ StoryBookPage buildButtonsPage() => StoryBookPage.list(
         final prop = context.props;
         final action = context.actions;
         return [
-          WidgetContainer(
+          Organization.container(
             title: Text('Buttons'),
             children: [
               StyledText.body(Text(
                   'Buttons in our application follow a few kinds of buttons')),
             ],
           ),
-          WidgetContainer(
+          Organization.container(
             title: Text('Primary'),
             children: [
               RaisedButton(
@@ -25,7 +25,7 @@ StoryBookPage buildButtonsPage() => StoryBookPage.list(
               StyledText.body(Text('Use this button for main actions.')),
             ],
           ),
-          WidgetContainer(
+          Organization.container(
             title: Text('Primary Wide'),
             children: [
               ConstrainedBox(
@@ -40,7 +40,7 @@ StoryBookPage buildButtonsPage() => StoryBookPage.list(
                   Text('This button is used for a very important CTA.')),
             ],
           ),
-          WidgetContainer(
+          Organization.container(
             title: Text('Secondary'),
             children: [
               OutlineButton(
@@ -54,7 +54,7 @@ StoryBookPage buildButtonsPage() => StoryBookPage.list(
               )
             ],
           ),
-          WidgetContainer(
+          Organization.container(
             title: Text('Disabled'),
             children: [
               RaisedButton(

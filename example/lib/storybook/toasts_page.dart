@@ -15,14 +15,14 @@ StoryBookPage buildToastPage() => StoryBookPage.list(
         final errorPropGroup = PropGroup('Error', 'e');
         final warningPropGroup = PropGroup('Warning', 'w');
         return [
-          WidgetContainer(
+          Organization.container(
             title: Text('Toast'),
             children: <Widget>[
               StyledText.body(Text(
                   'Toast is used to display messages to the user in the UI')),
             ],
           ),
-          WidgetContainer(
+          Organization.container(
             title: Text('Success Toast'),
             cardBackgroundColor: isLight ? Colors.grey : Colors.green,
             children: [
@@ -44,7 +44,7 @@ StoryBookPage buildToastPage() => StoryBookPage.list(
               ),
             ],
           ),
-          WidgetContainer(
+          Organization.container(
             title: Text('Error Toast'),
             cardBackgroundColor: isLight ? Colors.grey : Colors.red,
             children: [
@@ -64,7 +64,7 @@ StoryBookPage buildToastPage() => StoryBookPage.list(
               ),
             ],
           ),
-          WidgetContainer(
+          Organization.container(
             title: Text('Warning Toast'),
             cardBackgroundColor: isLight ? Colors.grey : Colors.red,
             children: [
@@ -84,7 +84,7 @@ StoryBookPage buildToastPage() => StoryBookPage.list(
               ),
             ],
           ),
-          PresentationWidget(
+          Organization.presentation(
               child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: StyledText.body(

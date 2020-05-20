@@ -8,7 +8,7 @@ final groupMainCellLong = PropGroup('Main Cell Long', 'mainCellLong');
 StoryBookPage buildCellsPage() => StoryBookPage.list(
   title: 'Cells',
   widgets: (context) => [
-    WidgetContainer(
+    Organization.container(
       title: Text('Main Cell Widget'),
       children: <Widget>[
         MainCell(
@@ -25,7 +25,7 @@ StoryBookPage buildCellsPage() => StoryBookPage.list(
         )
       ],
     ),
-    WidgetContainer(
+    Organization.container(
       title: Text('Main Cell Widget With Long Text'),
       children: <Widget>[
         MainCell(

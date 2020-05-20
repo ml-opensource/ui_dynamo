@@ -2,6 +2,50 @@ import 'package:flutter/material.dart';
 import 'package:flutter_storybook/ui/widgets/text.dart';
 
 const double kMaxOrgSize = 1000.0;
+const kDefaultPadding = EdgeInsets.all(16.0);
+const kChildrenSpacing = 16.0;
+
+class Organization {
+  static presentation(
+          {Key key, double maxWidth = kMaxOrgSize, @required Widget child}) =>
+      PresentationWidget(
+        key: key,
+        maxWidth: maxWidth,
+        child: child,
+      );
+
+  static expandable(
+          {Key key,
+          @required String title,
+          @required List<Widget> children,
+          String subtitle,
+          double maxWidth = kMaxOrgSize,
+          bool initiallyExpanded = false,
+          EdgeInsets padding = kDefaultPadding}) =>
+      ExpandableWidgetSection(
+        key: key,
+        title: title,
+        children: children,
+        subtitle: subtitle,
+        maxWidth: maxWidth,
+        initiallyExpanded: initiallyExpanded,
+        padding: padding,
+      );
+
+  static container(
+          {@required List<Widget> children,
+          @required Widget title,
+          Color cardBackgroundColor,
+          EdgeInsets padding = kDefaultPadding,
+          double childrenSpacing = kChildrenSpacing}) =>
+      WidgetContainer(
+        children: children,
+        title: title,
+        cardBackgroundColor: cardBackgroundColor,
+        childrenSpacing: childrenSpacing,
+        padding: padding,
+      );
+}
 
 class PresentationWidget extends StatelessWidget {
   final Widget child;
@@ -37,6 +81,7 @@ class ExpandableWidgetSection extends StatelessWidget {
   final String subtitle;
   final bool initiallyExpanded;
   final double maxWidth;
+  final EdgeInsets padding;
 
   const ExpandableWidgetSection(
       {Key key,
@@ -44,16 +89,17 @@ class ExpandableWidgetSection extends StatelessWidget {
       @required this.children,
       this.subtitle,
       this.maxWidth = kMaxOrgSize,
-      this.initiallyExpanded = false})
+      this.initiallyExpanded = false,
+      this.padding = kDefaultPadding})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return PresentationWidget(
+    return Organization.presentation(
       child: Card(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: kDefaultPadding,
           child: Row(
             children: <Widget>[
               Expanded(
@@ -106,13 +152,13 @@ class WidgetContainer extends StatelessWidget {
     @required this.title,
     @required this.children,
     this.cardBackgroundColor,
-    this.padding = const EdgeInsets.all(16.0),
+    this.padding = kDefaultPadding,
     this.childrenSpacing = 16.0,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return PresentationWidget(
+    return Organization.presentation(
       child: Card(
         color: cardBackgroundColor,
         child: Padding(
