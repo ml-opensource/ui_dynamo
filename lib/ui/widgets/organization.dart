@@ -6,6 +6,8 @@ const kDefaultPadding = EdgeInsets.all(16.0);
 const kChildrenSpacing = 16.0;
 
 class Organization {
+  /// Creates a new PresentationWidget that centers its content with a maxWidth
+  /// so that content aligns on larger screens.
   static presentation(
           {Key key, double maxWidth = kMaxOrgSize, @required Widget child}) =>
       PresentationWidget(
@@ -14,6 +16,8 @@ class Organization {
         child: child,
       );
 
+  /// Creates a new ExpandableWidgetSection that will collapse / expand itself
+  /// to hide a larger amount of content.
   static expandable(
           {Key key,
           @required String title,
@@ -21,7 +25,8 @@ class Organization {
           String subtitle,
           double maxWidth = kMaxOrgSize,
           bool initiallyExpanded = false,
-          EdgeInsets padding = kDefaultPadding}) =>
+          EdgeInsets padding = kDefaultPadding,
+          double childrenSpacing = kChildrenSpacing}) =>
       ExpandableWidgetSection(
         key: key,
         title: title,
@@ -32,6 +37,8 @@ class Organization {
         padding: padding,
       );
 
+  /// Creates a new WidgetContainer that is useful for displaying widgets in
+  /// separated visual blocks.
   static container(
           {@required List<Widget> children,
           @required Widget title,
@@ -82,6 +89,7 @@ class ExpandableWidgetSection extends StatelessWidget {
   final bool initiallyExpanded;
   final double maxWidth;
   final EdgeInsets padding;
+  final double childrenSpacing;
 
   const ExpandableWidgetSection(
       {Key key,
@@ -90,7 +98,8 @@ class ExpandableWidgetSection extends StatelessWidget {
       this.subtitle,
       this.maxWidth = kMaxOrgSize,
       this.initiallyExpanded = false,
-      this.padding = kDefaultPadding})
+      this.padding = kDefaultPadding,
+      this.childrenSpacing = kChildrenSpacing})
       : super(key: key);
 
   @override
@@ -122,11 +131,11 @@ class ExpandableWidgetSection extends StatelessWidget {
                         color: theme.dividerColor,
                       ),
                       SizedBox(
-                        height: 16.0,
+                        height: childrenSpacing,
                       ),
                       ...children,
                       SizedBox(
-                        height: 16.0,
+                        height: childrenSpacing,
                       ),
                     ],
                   ),
