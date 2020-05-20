@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_storybook/media_utils.dart';
 import 'package:flutter_storybook/mediaquery/device_sizes.dart';
-import 'package:flutter_storybook/mediaquery/mediaquery.dart';
+import 'package:flutter_storybook/ui/page_wrapper.dart';
 
 class MediaChooserButton extends StatelessWidget {
   final Function(DeviceInfo) deviceSelected;

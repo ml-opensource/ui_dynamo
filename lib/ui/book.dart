@@ -3,7 +3,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_storybook/actions/actions_plugin.dart';
 import 'package:flutter_storybook/flutter_storybook.dart';
 import 'package:flutter_storybook/mediaquery/device_sizes.dart';
-import 'package:flutter_storybook/mediaquery/mediaquery.dart';
 import 'package:flutter_storybook/mediaquery/override_media_query_provider.dart';
 import 'package:flutter_storybook/models.dart';
 import 'package:flutter_storybook/plugins/plugin.dart';
@@ -13,6 +12,7 @@ import 'package:flutter_storybook/ui/drawer/drawer_provider.dart';
 import 'package:flutter_storybook/ui/home_page.dart';
 import 'package:flutter_storybook/ui/materialapp+extensions.dart';
 import 'package:flutter_storybook/ui/model/page.dart';
+import 'package:flutter_storybook/ui/page_wrapper.dart';
 import 'package:flutter_storybook/ui/toolbar.dart';
 import 'package:provider/provider.dart';
 
@@ -155,53 +155,34 @@ class _StoryBookState extends State<StoryBook> {
               showPerformanceOverlay: app.showPerformanceOverlay,
               showSemanticsDebugger: app.showSemanticsDebugger,
               home: Scaffold(
-                  appBar: AppBar(
-                    title: selectedPage != null
-                        ? selectedPage.title
-                        : Text('Home'),
-                  ),
-                  drawer: Builder(
-                    builder: (context) => StoryBookDrawer(
-                      data: widget.data,
-                      selectedPage: selectedPage,
-                      onSelectPage: (folder, page) =>
-                          _selectPage(page, folder, context),
-                    ),
-                  ),
-                  resizeToAvoidBottomPadding: true,
-                  bottomNavigationBar: selectedPage?.usesToolbar == true
-                      ? ToolbarPane(
-                          plugins: widget.plugins,
-                        )
-                      : null,
-                  body: StoryBookPageWrapperWidget(
+                appBar: AppBar(
+                  title:
+                      selectedPage != null ? selectedPage.title : Text('Home'),
+                ),
+                drawer: Builder(
+                  builder: (context) => StoryBookDrawer(
+                    data: widget.data,
                     selectedPage: selectedPage,
-                    base: widget.app,
-                  )),
+                    onSelectPage: (folder, page) =>
+                        _selectPage(page, folder, context),
+                  ),
+                ),
+                resizeToAvoidBottomPadding: true,
+                bottomNavigationBar: selectedPage?.usesToolbar == true
+                    ? ToolbarPane(
+                        plugins: widget.plugins,
+                      )
+                    : null,
+                body: StoryBookPageWrapper(
+                  base: app,
+                  shouldScroll: selectedPage.shouldScroll,
+                  builder: selectedPage.widget.builder,
+                ),
+              ),
             );
           },
         ),
       ),
-    );
-  }
-}
-
-class StoryBookPageWrapperWidget extends StatelessWidget {
-  const StoryBookPageWrapperWidget({
-    Key key,
-    @required this.selectedPage,
-    @required this.base,
-  }) : super(key: key);
-
-  final StoryBookPage selectedPage;
-  final MaterialApp base;
-
-  @override
-  Widget build(BuildContext context) {
-    return MediaQueryChooser(
-      base: base,
-      shouldScroll: selectedPage.shouldScroll,
-      builder: selectedPage.widget.builder,
     );
   }
 }
