@@ -8,10 +8,9 @@ StoryBookPage buildRadiosPage() => StoryBookPage.list(
       widgets: (context) => [
         Organization.container(title: Text("Plain Radios"), children: [
           RadioGroup(
-            valueChanged: (value) {
-              context.actions.valueChanged("Plain Radio")(value);
-              context.props.radioChanged("Radios", value);
-            },
+            valueChanged: context.actions.valueChanged("Plain Radio",
+                through: (value) =>
+                    context.props.radioChanged("Radios", value)),
             selectedValue: context.props.radios(
                 "Radios",
                 PropValues(
