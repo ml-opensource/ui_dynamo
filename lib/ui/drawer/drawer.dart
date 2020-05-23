@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_storybook/flutter_storybook.dart';
 import 'package:flutter_storybook/ui/model/page.dart';
 
 import '../../models.dart';
@@ -31,14 +32,8 @@ class StoryBookDrawer extends StatelessWidget {
                       spacing: 16.0,
                       runSpacing: 16.0,
                       children: [
-                        Icon(
-                          Icons.book,
-                          color: Theme.of(context).cardColor,
-                        ),
-                        DefaultTextStyle.merge(
-                          child: data.title,
-                          style: TextStyle(fontSize: 20),
-                        ),
+                        Icon(Icons.book),
+                        StyledText.header(data.title),
                       ],
                     ),
                   ],
