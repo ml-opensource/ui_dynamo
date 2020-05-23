@@ -11,8 +11,5 @@ class StoryBookPlugin<T extends ChangeNotifier> {
 
   final String bottomTabText;
 
-  StoryBookPlugin(
-      {this.provider,
-      @required this.bottomTabPane,
-      @required this.bottomTabText});
+  StoryBookPlugin({this.provider, this.bottomTabPane, this.bottomTabText});
 }

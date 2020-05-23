@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_storybook/media_utils.dart';
+import 'package:flutter_storybook/mediaquery/device_size_plugin.dart';
 import 'package:flutter_storybook/mediaquery/device_sizes.dart';
 import 'package:flutter_storybook/ui/page_wrapper.dart';
 
@@ -36,7 +37,7 @@ class MediaChooserButton extends StatelessWidget {
         ),
       ),
       onSelected: deviceSelected,
-      itemBuilder: (BuildContext context) => deviceSizes
+      itemBuilder: (BuildContext context) => context.deviceSizes.devices
           .map(
             (key) => buildDeviceOption(context, key, selectedDevice),
           )

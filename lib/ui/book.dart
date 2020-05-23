@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_storybook/actions/actions_plugin.dart';
 import 'package:flutter_storybook/flutter_storybook.dart';
+import 'package:flutter_storybook/mediaquery/device_size_plugin.dart';
 import 'package:flutter_storybook/mediaquery/device_sizes.dart';
 import 'package:flutter_storybook/mediaquery/override_media_query_provider.dart';
 import 'package:flutter_storybook/models.dart';
@@ -29,26 +30,31 @@ class StoryBook extends StatefulWidget {
   /// 2. A folder with all top-level page routes as a page.
   /// 3. Also, a default Home page using the default Storybook home page. If home
   /// is specified, render that widget instead.
-  factory StoryBook.withApp(
-    MaterialApp app, {
-    Widget home,
-    @required StoryBookData data,
+  factory StoryBook.withApp(MaterialApp app,
+      {Widget home,
+      @required StoryBookData data,
 
-    /// Preview Routes are useful to add preview-able content to a route that
-    /// typically does not exist in the normal application
-    Map<String, WidgetBuilder> previewRoutes = const {},
+      /// Preview Routes are useful to add preview-able content to a route that
+      /// typically does not exist in the normal application
+      Map<String, WidgetBuilder> previewRoutes = const {},
 
-    /// set to true to allow preview routes to override existing routes defined
-    /// in the main application.
-    bool allowPreviewRouteOverrides = false,
+      /// set to true to allow preview routes to override existing routes defined
+      /// in the main application.
+      bool allowPreviewRouteOverrides = false,
 
-    /// Define extra plugins for this app to use in inherited widgets.
-    List<StoryBookPlugin> plugins = const [],
+      /// Define extra plugins for this app to use in inherited widgets.
+      List<StoryBookPlugin> plugins = const [],
 
-    /// if true, props and actions are provided. if false, it requires using
-    /// [plugins] manually
-    bool useDefaultPlugins = true,
-  }) {
+      /// if true, props and actions are provided. if false, it requires using
+      /// [plugins] manually
+      bool useDefaultPlugins = true,
+
+      /// If specified, adds extra devices to the [DeviceSizesPlugin]
+      Iterable<DeviceInfo> extraDevices = const [],
+
+      /// If false, whatever you specify in [extraDevices] will get used
+      /// as the device sizes dropdown.
+      bool useDeviceSizeDefaults = true}) {
     final routes = app.routes ?? <String, WidgetBuilder>{};
     previewRoutes.forEach((key, value) {
       assert(() {
@@ -83,6 +89,8 @@ class StoryBook extends StatefulWidget {
         if (useDefaultPlugins) ...[
           actionsPlugin(),
           propsPlugin(),
+          deviceSizesPlugin(
+              extraDevices: extraDevices, useDefaults: useDeviceSizeDefaults),
         ]
       ],
       data: updatedData.merge(items: [
@@ -171,7 +179,9 @@ class _StoryBookState extends State<StoryBook> {
                 resizeToAvoidBottomPadding: true,
                 bottomNavigationBar: selectedPage?.usesToolbar == true
                     ? ToolbarPane(
-                        plugins: widget.plugins,
+                        plugins: widget.plugins
+                            .where((element) => element.bottomTabText != null)
+                            .toList(),
                       )
                     : null,
                 body: StoryBookPageWrapper(

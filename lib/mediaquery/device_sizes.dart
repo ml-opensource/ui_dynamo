@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+/// Defines a breakpoint for each device as what its considered as
+/// This is mostly used to display an icon for its category.
+/// [Expand] is used to describe window size.
 enum DeviceCategory { Mobile, Tablet, Desktop, Expand }
 
+/// Holds necessary information to display the device and tell Storybook
+/// what size of device and its category to render.
 class DeviceInfo {
   final String name;
   final Size logicalSize;
@@ -35,6 +40,8 @@ class DeviceInfo {
   }
 }
 
+/// List of prebundled devices. Useful for reference when initing
+/// Storybook and you want to default to a particular size.
 class DeviceSizes {
   static const window =
       DeviceInfo('Window', Size.infinite, Size.infinite, DeviceCategory.Expand);
@@ -74,6 +81,7 @@ class DeviceSizes {
       'Pixel XL', Size(411, 731), Size(1440, 2560), DeviceCategory.Mobile);
 }
 
+/// The list of supported device sizes.
 const List<DeviceInfo> deviceSizes = [
   DeviceSizes.window,
   DeviceSizes.iphone5,
