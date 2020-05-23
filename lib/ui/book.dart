@@ -65,7 +65,8 @@ class StoryBook extends StatefulWidget {
     final copiedApp = app.copyWith(
       routes: routes,
     );
-    final updatedData = data.merge(items: [
+    final updatedData =
+        data.merge(title: data.title ?? Text(app.title), items: [
       StoryBookPage.storyboard(appOverride: copiedApp, title: 'Storyboard'),
       StoryBookFolder.of(
         title: 'Routes',

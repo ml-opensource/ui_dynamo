@@ -32,7 +32,6 @@ class AppStoryBook extends StatelessWidget {
             )
       },
       data: StoryBookData(
-        title: Text('Example Storybook'),
         defaultDevice: DeviceSizes.iphoneX,
         items: [
           StoryBookPage.storyboard(title: 'Home Flow', routesMapping: {
