@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_storybook/actions/actions_extensions.dart';
+import 'package:flutter_storybook/ui/styles/text_styles.dart';
 import 'package:flutter_storybook/ui/toolbar.dart';
 import 'package:provider/provider.dart';
 
+/// Renders the current actions on screen that come in as a list.
+///
 class ActionsDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -17,28 +20,28 @@ class ActionsDisplay extends StatelessWidget {
                 TextSpan(
                   children: [
                     TextSpan(
-                        text: 'No Actions Found. Start by adding them using '),
+                        text:
+                            'No Actions Found. Start by adding them using the'),
                     TextSpan(
-                        text: 'actions(context)',
+                        text: 'context.actions extension.',
                         style: TextStyle(fontWeight: FontWeight.bold)),
                   ],
-                  style: TextStyle(fontSize: 16.0),
+                  style: bodyStyle,
                 ),
               ),
             );
           }
           return ListView.builder(
               itemCount: actionsList.length,
-              itemBuilder: (context, index) {
-                final action = actionsList[index];
-                return ActionLabel(action: action);
-              });
+              itemBuilder: (context, index) =>
+                  ActionLabel(action: actionsList[index]));
         },
       ),
     );
   }
 }
 
+/// displays a single action.
 class ActionLabel extends StatelessWidget {
   const ActionLabel({
     Key key,
