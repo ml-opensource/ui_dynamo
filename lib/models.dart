@@ -30,7 +30,10 @@ abstract class StoryBookItem {
 }
 
 class StoryBookData {
+  /// Customize the title of the storybook.
   final Widget title;
+
+  /// The list of menu items appearing as pages, folders, or storybooks.
   final List<StoryBookItem> items;
 
   /// Customize the header on the drawer. Default is DrawerHeader widget.
@@ -39,7 +42,7 @@ class StoryBookData {
   /// the initial preview size for all nested windows.
   final DeviceInfo defaultDevice;
 
-  StoryBookData(
+    StoryBookData(
       {this.title,
       @required this.items,
       this.customDrawerHeader,
