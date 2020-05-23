@@ -152,7 +152,7 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
     final expandable = isMobile(context);
     final realQuery = MediaQuery.of(context);
     if (expandable && !isExpanded) {
-      return Row(
+      return Wrap(
         children: [...topBarList(mediaQueryProvider, realQuery)],
       );
     }
@@ -191,38 +191,44 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
         ? EdgeInsets.only(left: 4.0, right: 4.0)
         : EdgeInsets.all(0);
     final media = context.mediaQueryProvider;
-    return Card(
-      margin: cardmargin,
-      elevation: 4.0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          bottomRight: Radius.circular(8.0),
-          bottomLeft: Radius.circular(8.0),
-        ),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Flexible(
-            fit: FlexFit.tight,
-            child: buildIcons(context, media),
+    return MeasureSize(
+      onChange: (size) => media.toolbarHeightChanged(size.height),
+      child: Builder(
+        builder: (context) => Card(
+          margin: cardmargin,
+          elevation: 4.0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              bottomRight: Radius.circular(8.0),
+              bottomLeft: Radius.circular(8.0),
+            ),
           ),
-          if (isMobile(context))
-            SizedBox(
-              width: 48,
-              height: 48,
-              child: InkWell(
-                borderRadius: BorderRadius.circular(96.0),
-                child: Icon(isExpanded ? Icons.expand_less : Icons.expand_more),
-                onTap: () {
-                  setState(() {
-                    isExpanded = !isExpanded;
-                    MeasureSizeProvider.of(context).notifySizeChange();
-                  });
-                },
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Flexible(
+                fit: FlexFit.tight,
+                child: buildIcons(context, media),
               ),
-            )
-        ],
+              if (isMobile(context))
+                SizedBox(
+                  width: 48,
+                  height: 48,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(96.0),
+                    child: Icon(
+                        isExpanded ? Icons.expand_less : Icons.expand_more),
+                    onTap: () {
+                      setState(() {
+                        isExpanded = !isExpanded;
+                        MeasureSizeProvider.of(context).notifySizeChange();
+                      });
+                    },
+                  ),
+                )
+            ],
+          ),
+        ),
       ),
     );
   }
