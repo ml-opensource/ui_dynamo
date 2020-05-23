@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 /// Defines a breakpoint for each device as what its considered as
 /// This is mostly used to display an icon for its category.
 /// [Expand] is used to describe window size.
-enum DeviceCategory { Mobile, Tablet, Desktop, Expand }
+enum DeviceCategory { Watch, Mobile, Tablet, Desktop, Expand }
 
 /// Holds necessary information to display the device and tell Storybook
 /// what size of device and its category to render.
@@ -33,6 +33,8 @@ class DeviceInfo {
         return Icons.tablet_mac;
       case DeviceCategory.Expand:
         return Icons.settings_ethernet;
+      case DeviceCategory.Watch:
+        return Icons.watch;
       case DeviceCategory.Mobile:
       default:
         return Icons.smartphone;
@@ -45,6 +47,10 @@ class DeviceInfo {
 class DeviceSizes {
   static const window =
       DeviceInfo('Window', Size.infinite, Size.infinite, DeviceCategory.Expand);
+  static const appleWatchSeries5_40 = DeviceInfo('Apple Watch Series 5 40mm',
+      Size(162, 197), Size(324, 394), DeviceCategory.Watch);
+  static const appleWatchSeries5_44 = DeviceInfo('Apple Watch Series 5 40mm',
+      Size(184, 224), Size(368, 448), DeviceCategory.Watch);
   static const iphone5 = DeviceInfo(
       'iPhone 5', Size(320, 568), Size(640, 1136), DeviceCategory.Mobile);
   static const iphone6 = DeviceInfo(
@@ -84,6 +90,8 @@ class DeviceSizes {
 /// The list of supported device sizes.
 const List<DeviceInfo> deviceSizes = [
   DeviceSizes.window,
+  DeviceSizes.appleWatchSeries5_40,
+  DeviceSizes.appleWatchSeries5_44,
   DeviceSizes.iphone5,
   DeviceSizes.iphone6,
   DeviceSizes.iphone678PlusZoom,

@@ -13,8 +13,12 @@ class DeviceSizesPlugin extends ChangeNotifier {
       Provider.of<DeviceSizesPlugin>(context);
 
   DeviceSizesPlugin(Iterable<DeviceInfo> extraDevices, bool useDefaults)
-      : this._devices = useDefaults ? [...deviceSizes] : extraDevices {
-    _devices.addAll(extraDevices);
+      : this._devices = useDefaults
+            ? [...deviceSizes]
+            : [DeviceSizes.window, ...extraDevices] {
+    if (useDefaults) {
+      _devices.addAll(extraDevices);
+    }
   }
 
   List<DeviceInfo> get devices => _devices;
