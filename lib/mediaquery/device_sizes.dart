@@ -52,7 +52,7 @@ class DeviceSizes {
   static const appleWatchSeries5_44 = DeviceInfo('Apple Watch Series 5 40mm',
       Size(184, 224), Size(368, 448), DeviceCategory.Watch);
   static const iphone5 = DeviceInfo(
-      'iPhone 5', Size(320, 568), Size(640, 1136), DeviceCategory.Mobile);
+      'iPhone 5', Size(320, 568), Size(640, 1136), DeviceCategory .Mobile);
   static const iphone6 = DeviceInfo(
       'iPhone 6', Size(375, 667), Size(750, 1334), DeviceCategory.Mobile);
   static const iphone678PlusZoom = DeviceInfo('iPhone 6/7/8 Plus Zoom',

@@ -20,8 +20,8 @@ class AdjustableNumberScaleWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Tooltip(
       message: tooltip,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
+      child: Wrap(
+        crossAxisAlignment: WrapCrossAlignment.center,
         children: [
           HoldDetector(
             holdTimeout: Duration(milliseconds: 200),

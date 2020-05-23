@@ -12,9 +12,8 @@ class ZoomControls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.end,
+    return Wrap(
+      crossAxisAlignment: WrapCrossAlignment.center,
       children: [
         HoldDetector(
           holdTimeout: Duration(milliseconds: 200),
@@ -28,7 +27,7 @@ class ZoomControls extends StatelessWidget {
         Tooltip(
           message: 'Tap to set back to 100% scale.',
           child: InkWell(
-            child: Center(child: Text('${(scale * 100).round()}%')),
+            child: Text('${(scale * 100).round()}%'),
             onTap: () => updateScale(1),
           ),
         ),

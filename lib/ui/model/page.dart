@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_storybook/flutter_storybook.dart';
+import 'package:flutter_storybook/media_utils.dart';
 import 'package:flutter_storybook/ui/model/widget.dart';
+import 'package:flutter_storybook/ui/styles/text_styles.dart';
 
 class StoryBookPage extends StoryBookItem {
   /// Returns the widgets to render in a page. These are loaded when page clicked.
@@ -19,6 +21,7 @@ class StoryBookPage extends StoryBookItem {
   factory StoryBookPage.storyboard(
       {@required String title,
       Map<String, List<String>> routesMapping,
+
       /// supplied to override the default app passed into the storyboard widget
       /// Used to add previewRoutes to the storyboard.
       MaterialApp appOverride}) {
@@ -97,7 +100,10 @@ class StoryBookPageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ListTile(
         leading: page.icon ?? Icon(Icons.book),
-        title: page.title,
+        title: DefaultTextStyle.merge(
+          child: page.title,
+          style: isWatch(context) ? smallStyle : null,
+        ),
         selected: selectedPage != null && selectedPage == page,
         onTap: () => onSelectPage(page),
       );

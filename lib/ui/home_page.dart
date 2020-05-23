@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_storybook/media_utils.dart';
 import 'package:flutter_storybook/mediaquery/media_query_toolbar.dart';
 import 'package:flutter_storybook/models.dart';
 import 'package:flutter_storybook/ui/drawer/drawer.dart';
@@ -44,8 +45,10 @@ class StoryBookHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final selectedPage = selectedPageFromWidget(data, context);
+    final watch = isWatch(context);
+    final padding = watch ? 8.0 : 32.0;
     return Container(
-      padding: const EdgeInsets.only(left: 32.0, right: 32.0),
+      padding: EdgeInsets.only(left: padding, right: padding),
       alignment: AlignmentDirectional.center,
       child: ListView(
         children: <Widget>[

@@ -25,7 +25,7 @@ class MediaChooserButton extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(deviceName),
+            if (!isWatch(context)) Text(deviceName),
             SizedBox(
               width: 8,
             ),
@@ -50,8 +50,9 @@ class MediaChooserButton extends StatelessWidget {
     return CheckedPopupMenuItem(
       checked: selectedDevice == deviceInfo,
       value: deviceInfo,
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
+      child: Wrap(
+        crossAxisAlignment: WrapCrossAlignment.center,
+        runSpacing: 8.0,
         children: [
           Icon(deviceInfo.iconForCategory),
           SizedBox(

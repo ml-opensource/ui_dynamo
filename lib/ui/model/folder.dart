@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_storybook/media_utils.dart';
 import 'package:flutter_storybook/models.dart';
 import 'package:flutter_storybook/ui/model/page.dart';
+import 'package:flutter_storybook/ui/styles/text_styles.dart';
 
 class StoryBookFolder extends StoryBookItem {
   final List<StoryBookPage> pages;
@@ -64,7 +66,10 @@ class StoryBookFolderWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ExpansionTile(
         leading: folder.icon ?? Icon(Icons.folder),
-        title: folder.title,
+        title: DefaultTextStyle.merge(
+          child: folder.title,
+          style: isWatch(context) ? smallStyle : null,
+        ),
         initiallyExpanded: folder.pages.contains(selectedPage),
         children: <Widget>[
           ...folder.pages.map((page) => StoryBookPageWidget(
