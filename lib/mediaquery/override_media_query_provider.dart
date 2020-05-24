@@ -77,9 +77,13 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
       {DeviceInfo newDevice,
       MediaQueryData overrideData,
       MediaQueryData realQuery,
+      Orientation overrideOrientation,
       bool shouldFlip = false}) {
     if (newDevice != null) {
       this._currentDeviceSelected = newDevice;
+    }
+    if (overrideOrientation != null) {
+      this._orientation = overrideOrientation;
     }
     if (overrideData != null) {
       _setMediaQuery(overrideData, shouldFlip);
@@ -176,10 +180,10 @@ OverrideMediaQueryProvider mediaQuery(BuildContext context) {
   final provider = Provider.of<OverrideMediaQueryProvider>(context);
   if (provider._currentMediaQuery == null) {
     provider._currentMediaQuery = MediaQuery.of(context);
+    provider._boundedMediaQuery = provider._currentMediaQuery.copyWith(
+      size: provider.currentDevice.logicalSize.boundedSize(context),
+    );
   }
-  provider._boundedMediaQuery = provider._currentMediaQuery.copyWith(
-    size: provider.currentDevice.logicalSize.boundedSize(context),
-  );
 
   return provider;
 }

@@ -32,6 +32,7 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
           size: device.logicalSize.boundedSize(context),
         ),
         realQuery: realQuery,
+        overrideOrientation: device.isExpandable ? Orientation.portrait : null,
       );
     }
   }
