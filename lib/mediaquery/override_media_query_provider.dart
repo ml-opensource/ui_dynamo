@@ -25,9 +25,18 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
   OverrideMediaQueryProvider(this._currentDeviceSelected);
 
   void selectMediaQuery(MediaQueryData query) {
-    this._currentMediaQuery = query;
-    this._boundedMediaQuery = _currentMediaQuery;
+    // if landscape flip size when chosen
+    _setMediaQuery(query);
     notifyListeners();
+  }
+
+  void _setMediaQuery(MediaQueryData query, [bool shouldFlip = false]) {
+    if (orientation == Orientation.portrait && !shouldFlip) {
+      this._currentMediaQuery = query;
+    } else {
+      this._currentMediaQuery = query.copyWith(size: query.size.flipped);
+    }
+    this._boundedMediaQuery = _currentMediaQuery;
   }
 
   void selectCurrentDevice(DeviceInfo deviceInfo) {
@@ -60,21 +69,20 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
         : Orientation.portrait;
     resetScreenAdjustments(
         realQuery: MediaQuery.of(context),
-        overrideData: this.boundedMediaQuery.copyWith(
-              size: boundedMediaQuery.size.flipped,
-            ));
+        overrideData: this.boundedMediaQuery,
+        shouldFlip: true);
   }
 
   void resetScreenAdjustments(
       {DeviceInfo newDevice,
       MediaQueryData overrideData,
-      MediaQueryData realQuery}) {
+      MediaQueryData realQuery,
+      bool shouldFlip = false}) {
     if (newDevice != null) {
       this._currentDeviceSelected = newDevice;
     }
     if (overrideData != null) {
-      this._currentMediaQuery = overrideData;
-      this._boundedMediaQuery = overrideData;
+      _setMediaQuery(overrideData, shouldFlip);
     }
     // use this to adjust screen size to fit.
     if (realQuery != null && _currentDeviceSelected != DeviceSizes.window) {
@@ -83,29 +91,21 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
       final deviceWidth = boundedMediaQuery.size.width;
       final widthRatio = realWidth /
           (deviceWidth +
-              (orientation == Orientation.landscape ? _paddingOffset : 0));
+              (orientation == Orientation.landscape
+                  ? (_paddingOffset * 2)
+                  : 0));
       final deviceHeight = boundedMediaQuery.size.height;
-      final heightRatio = realHeight /
-          (deviceHeight + bottomBarHeight + toolbarHeight + _paddingOffset * 2);
+      final heightRatio = realHeight / (deviceHeight + _paddingOffset * 2);
       if (deviceHeight > deviceWidth) {
         // if screen height smaller than device height, scale height
-        if (heightRatio < 1) {
-          this._currentScreenScale = heightRatio;
-        } else {
-          this._currentScreenScale = deviceWidth < realWidth ? 1.0 : widthRatio;
-        }
+        this._currentScreenScale = heightRatio;
       } else {
-        if (widthRatio < 1) {
-          this._currentScreenScale = widthRatio;
-        } else {
-          this._currentScreenScale =
-              deviceHeight < realHeight ? 1.0 : heightRatio;
-        }
+        this._currentScreenScale = widthRatio;
       }
     } else {
       this._currentScreenScale = 1.0;
     }
-    this._currentOffset = Offset(0, _paddingOffset / 2);
+    this._currentOffset = Offset(0, toolbarHeight / 2);
     this._scaledOffset = scaledOffsetCalculate();
     notifyListeners();
   }
