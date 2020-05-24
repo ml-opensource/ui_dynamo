@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_storybook/mediaquery/device_sizes.dart';
 import 'package:flutter_storybook/mediaquery/override_media_query_provider.dart';
 import 'package:flutter_storybook/ui/page_wrapper.dart';
 import 'package:flutter_storybook/ui/screen.dart';
@@ -82,20 +81,26 @@ class _InteractableScreenState extends State<InteractableScreen> {
     final query = context.mediaQueryProvider;
     final realQuery = MediaQuery.of(context);
     // if window, move back to center and do not allow panning.
-    final widthSmaller = query.scaledWidth < realQuery.size.width;
-    final heightSmaller = query.scaledHeight <
+    final widthSmaller = query.scaledWidth <= realQuery.size.width;
+    final heightSmaller = query.scaledHeight <=
         query.viewPortHeightCalculate(realQuery.size.height);
-    final isWindow = query.currentDevice == DeviceSizes.window;
-    double topCalculated =
-        isWindow ? query.toolbarHeight : _calculateOffsetTop(realQuery, query);
+    final isExpandableWidth = query.currentDevice.isExpandableWidth;
+    final isExpandableHeight = query.currentDevice.isExpandableHeight;
+    double topCalculated = isExpandableHeight
+        ? query.toolbarHeight
+        : _calculateOffsetTop(realQuery, query);
     double leftCalculated =
-        isWindow ? 0 : _calculateOffsetLeft(realQuery, query);
+        isExpandableWidth ? 0 : _calculateOffsetLeft(realQuery, query);
     return NotificationListener<ScrollNotification>(
       onNotification: _sendScrollNotification,
       child: PanScrollDetector(
-        isHorizontalEnabled: !widthSmaller && !isWindow && heightSmaller,
-        isVerticalEnabled: !heightSmaller && !isWindow && widthSmaller,
-        isPanningEnabled: !heightSmaller && !widthSmaller && !isWindow,
+        isHorizontalEnabled:
+            !widthSmaller && !isExpandableWidth && heightSmaller,
+        isVerticalEnabled:
+            !heightSmaller && !isExpandableHeight && widthSmaller,
+        isPanningEnabled: !heightSmaller &&
+            !widthSmaller &&
+            !(isExpandableWidth && !isExpandableHeight),
         onOffsetChange: (offset) => _sendOffsetNotification(query, offset),
         child: OverflowBox(
           child: Stack(
@@ -109,7 +114,7 @@ class _InteractableScreenState extends State<InteractableScreen> {
                   child: Stack(
                     children: [
                       ScalableScreen(
-                        showBorder: query.currentDevice != DeviceSizes.window,
+                        showBorder: !query.currentDevice.isExpandable,
                         isStoryBoard: false,
                         provider: query,
                         base: widget.widget.base,

@@ -113,13 +113,13 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
       ),
       buildDivider(),
       IconButton(
-        tooltip: mediaQueryProvider.currentDevice != DeviceSizes.window
+        tooltip: !mediaQueryProvider.currentDevice.isExpandable
             ? "Rotate"
-            : "Rotate not available for window sizing.",
+            : "Rotate not available for expandable windows.",
         icon: Icon(mediaQueryProvider.orientation == Orientation.portrait
             ? Icons.screen_lock_portrait
             : Icons.screen_lock_landscape),
-        onPressed: mediaQueryProvider.currentDevice != DeviceSizes.window
+        onPressed: !mediaQueryProvider.currentDevice.isExpandable
             ? () => mediaQueryProvider.rotate(context)
             : null,
       ),
@@ -154,7 +154,7 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
               _deviceSelected(context, value, mediaQueryProvider, realQuery),
           selectedDevice: mediaQueryProvider.currentDevice,
         ),
-        if (mediaQueryProvider.currentDevice != DeviceSizes.window) ...[
+        if (!mediaQueryProvider.currentDevice.isExpandable) ...[
           ZoomControls(
             scale: mediaQueryProvider.screenScale,
             updateScale: (value) => _updateScale(value, mediaQueryProvider),

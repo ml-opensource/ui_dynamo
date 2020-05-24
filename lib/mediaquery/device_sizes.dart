@@ -6,6 +6,14 @@ import 'package:flutter/widgets.dart';
 /// [Expand] is used to describe window size.
 enum DeviceCategory { Watch, Mobile, Tablet, Desktop, Expand }
 
+/// defines an axis for which the [DeviceInfo] expands in.
+enum ExpansionAxis {
+  Width,
+  Height,
+  Both,
+  None,
+}
+
 /// Holds necessary information to display the device and tell Storybook
 /// what size of device and its category to render.
 class DeviceInfo {
@@ -16,6 +24,20 @@ class DeviceInfo {
 
   const DeviceInfo(this.name, this.logicalSize, this.pixelSize, this.category);
 
+  ExpansionAxis get expansionAxis {
+    final infiniteHeight = this.pixelSize.height == double.infinity;
+    final infiniteWidth = this.pixelSize.width == double.infinity;
+    if (infiniteHeight && infiniteWidth) {
+      return ExpansionAxis.Both;
+    } else if (infiniteWidth) {
+      return ExpansionAxis.Width;
+    } else if (infiniteHeight) {
+      return ExpansionAxis.Height;
+    } else {
+      return ExpansionAxis.None;
+    }
+  }
+
   DeviceInfo copyWith({
     String name,
     Size logicalSize,
@@ -24,6 +46,16 @@ class DeviceInfo {
   }) =>
       DeviceInfo(name ?? this.name, logicalSize ?? this.logicalSize,
           pixelSize ?? this.pixelSize, category ?? this.category);
+
+  bool get isExpandable => expansionAxis != ExpansionAxis.None;
+
+  bool get isExpandableWidth =>
+      expansionAxis == ExpansionAxis.Width ||
+      expansionAxis == ExpansionAxis.Both;
+
+  bool get isExpandableHeight =>
+      expansionAxis == ExpansionAxis.Height ||
+          expansionAxis == ExpansionAxis.Both;
 
   IconData get iconForCategory {
     switch (category) {
@@ -47,12 +79,18 @@ class DeviceInfo {
 class DeviceSizes {
   static const window =
       DeviceInfo('Window', Size.infinite, Size.infinite, DeviceCategory.Expand);
+  static const laptop = DeviceInfo('Laptop', Size(1024, double.infinity),
+      Size(1024, double.infinity), DeviceCategory.Desktop);
+  static const laptopL = DeviceInfo('Laptop L', Size(1440, double.infinity),
+      Size(1440, double.infinity), DeviceCategory.Desktop);
+  static const screen4K = DeviceInfo('4K', Size(2560, double.infinity),
+      Size(2560, double.infinity), DeviceCategory.Desktop);
   static const appleWatchSeries5_40 = DeviceInfo('Apple Watch Series 5 40mm',
       Size(162, 197), Size(324, 394), DeviceCategory.Watch);
   static const appleWatchSeries5_44 = DeviceInfo('Apple Watch Series 5 40mm',
       Size(184, 224), Size(368, 448), DeviceCategory.Watch);
   static const iphone5 = DeviceInfo(
-      'iPhone 5', Size(320, 568), Size(640, 1136), DeviceCategory .Mobile);
+      'iPhone 5', Size(320, 568), Size(640, 1136), DeviceCategory.Mobile);
   static const iphone6 = DeviceInfo(
       'iPhone 6', Size(375, 667), Size(750, 1334), DeviceCategory.Mobile);
   static const iphone678PlusZoom = DeviceInfo('iPhone 6/7/8 Plus Zoom',
@@ -90,6 +128,9 @@ class DeviceSizes {
 /// The list of supported device sizes.
 const List<DeviceInfo> deviceSizes = [
   DeviceSizes.window,
+  DeviceSizes.laptop,
+  DeviceSizes.laptopL,
+  DeviceSizes.screen4K,
   DeviceSizes.appleWatchSeries5_40,
   DeviceSizes.appleWatchSeries5_44,
   DeviceSizes.iphone5,

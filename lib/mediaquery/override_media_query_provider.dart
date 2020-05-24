@@ -85,22 +85,25 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
       _setMediaQuery(overrideData, shouldFlip);
     }
     // use this to adjust screen size to fit.
-    if (realQuery != null && _currentDeviceSelected != DeviceSizes.window) {
-      final realWidth = realQuery.size.width;
-      final realHeight = viewPortHeightCalculate(realQuery.size.height);
+    if (realQuery != null) {
       final deviceWidth = boundedMediaQuery.size.width;
-      final widthRatio = realWidth /
-          (deviceWidth +
-              (orientation == Orientation.landscape
-                  ? (_paddingOffset * 2)
-                  : 0));
       final deviceHeight = boundedMediaQuery.size.height;
-      final heightRatio = realHeight / (deviceHeight + _paddingOffset * 2);
-      if (deviceHeight > deviceWidth) {
+
+      if (!currentDevice.isExpandableHeight && deviceHeight > deviceWidth) {
+        final realHeight = viewPortHeightCalculate(realQuery.size.height);
+        final heightRatio = realHeight / (deviceHeight + _paddingOffset * 2);
         // if screen height smaller than device height, scale height
         this._currentScreenScale = heightRatio;
-      } else {
+      } else if (!currentDevice.isExpandableWidth) {
+        final realWidth = realQuery.size.width;
+        final widthRatio = realWidth /
+            (deviceWidth +
+                (orientation == Orientation.landscape
+                    ? (_paddingOffset * 2)
+                    : 0));
         this._currentScreenScale = widthRatio;
+      } else {
+        this._currentScreenScale = 1.0;
       }
     } else {
       this._currentScreenScale = 1.0;
@@ -165,10 +168,10 @@ OverrideMediaQueryProvider mediaQuery(BuildContext context) {
   final provider = Provider.of<OverrideMediaQueryProvider>(context);
   if (provider._currentMediaQuery == null) {
     provider._currentMediaQuery = MediaQuery.of(context);
-    provider._boundedMediaQuery = provider._currentMediaQuery.copyWith(
-      size: provider.currentDevice.logicalSize.boundedSize(context),
-    );
   }
+  provider._boundedMediaQuery = provider._currentMediaQuery.copyWith(
+    size: provider.currentDevice.logicalSize.boundedSize(context),
+  );
 
   return provider;
 }
