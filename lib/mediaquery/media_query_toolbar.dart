@@ -33,6 +33,8 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
         ),
         realQuery: realQuery,
         overrideOrientation: device.isExpandable ? Orientation.portrait : null,
+        shouldFlip: !device.isExpandable &&
+            mediaQueryProvider.orientation == Orientation.landscape,
       );
     }
   }

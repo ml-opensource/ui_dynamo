@@ -31,7 +31,7 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
   }
 
   void _setMediaQuery(MediaQueryData query, [bool shouldFlip = false]) {
-    if (orientation == Orientation.portrait && !shouldFlip) {
+    if (!shouldFlip) {
       this._currentMediaQuery = query;
     } else {
       this._currentMediaQuery = query.copyWith(size: query.size.flipped);
