@@ -96,23 +96,22 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
       final realHeight = viewPortHeightCalculate(realQuery.size.height);
       final heightRatio = realHeight / (deviceHeight + _paddingOffset * 2);
       final realWidth = realQuery.size.width;
-
+      final widthRatio = realWidth /
+          (deviceWidth +
+              (orientation == Orientation.landscape
+                  ? (_paddingOffset * 2)
+                  : 0));
       if (deviceHeight > deviceWidth) {
         // if calculated screen height taller than device height, set to 1.0
         if ((heightRatio * deviceWidth) > realWidth) {
-          this._currentScreenScale = 1.0;
+          this._currentScreenScale = widthRatio;
         } else {
           this._currentScreenScale = heightRatio;
         }
       } else {
-        final widthRatio = realWidth /
-            (deviceWidth +
-                (orientation == Orientation.landscape
-                    ? (_paddingOffset * 2)
-                    : 0));
         // if calculated size going to be taller than real height, make it 1.0
         if ((widthRatio * deviceHeight) > realHeight) {
-          this._currentScreenScale = 1.0;
+          this._currentScreenScale = heightRatio;
         } else {
           this._currentScreenScale = widthRatio;
         }
