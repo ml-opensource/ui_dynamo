@@ -131,8 +131,6 @@ const List<DeviceInfo> deviceSizes = [
   DeviceSizes.laptop,
   DeviceSizes.laptopL,
   DeviceSizes.screen4K,
-  DeviceSizes.appleWatchSeries5_40,
-  DeviceSizes.appleWatchSeries5_44,
   DeviceSizes.iphone5,
   DeviceSizes.iphone6,
   DeviceSizes.iphone678PlusZoom,
@@ -150,4 +148,6 @@ const List<DeviceInfo> deviceSizes = [
   DeviceSizes.nexus6P,
   DeviceSizes.pixel,
   DeviceSizes.pixelXL,
+  DeviceSizes.appleWatchSeries5_40,
+  DeviceSizes.appleWatchSeries5_44,
 ];
