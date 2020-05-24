@@ -1,12 +1,13 @@
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_storybook/plugins/safe_provider.dart';
 import 'package:provider/provider.dart';
 
 typedef void OnWidgetSizeChange(Size size);
 
 class MeasureSizeProvider extends ChangeNotifier {
   static MeasureSizeProvider of(BuildContext context) =>
-      Provider.of<MeasureSizeProvider>(context);
+      SafeProvider.of<MeasureSizeProvider>(context);
 
   void notifySizeChange() {
     notifyListeners();

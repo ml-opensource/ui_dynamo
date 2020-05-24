@@ -230,7 +230,7 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
                   onTap: () {
                     setState(() {
                       isExpanded = !isExpanded;
-                      MeasureSizeProvider.of(context).notifySizeChange();
+                      MeasureSizeProvider.of(context)?.notifySizeChange();
                     });
                   },
                 ),
