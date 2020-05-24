@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_storybook/media_utils.dart';
 
 class MainCell extends StatelessWidget {
   final String iconText;
@@ -21,15 +22,53 @@ class MainCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final trailing =
+        isFlipped ? MainCellAvatar(iconText: iconText) : buildText();
+    final leading =
+        isFlipped ? buildText() : MainCellAvatar(iconText: iconText);
+    final titleText = Text(title);
+    final subtitleText = Text(subtitle);
+    if (isWatch(context)) {
+      return Card(
+        child: Padding(
+          padding: EdgeInsets.all(8.0),
+          child: InkWell(
+            onTap: onTap,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    leading,
+                    Flexible(
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 4.0),
+                        child: titleText,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 4.0,
+                ),
+                subtitleText,
+                trailing,
+              ],
+            ),
+          ),
+        ),
+      );
+    }
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: ListTile(
-          leading: isFlipped ? buildText() : MainCellAvatar(iconText: iconText),
-          title: Text(title),
-          subtitle: Text(subtitle),
-          trailing:
-              isFlipped ? MainCellAvatar(iconText: iconText) : buildText(),
+          leading: leading,
+          title: titleText,
+          subtitle: subtitleText,
+          trailing: trailing,
           onTap: this.onTap,
         ),
       ),
