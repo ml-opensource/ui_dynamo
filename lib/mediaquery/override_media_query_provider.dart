@@ -85,25 +85,33 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
       _setMediaQuery(overrideData, shouldFlip);
     }
     // use this to adjust screen size to fit.
-    if (realQuery != null) {
+    if (realQuery != null &&
+        currentDevice.expansionAxis != ExpansionAxis.Both) {
       final deviceWidth = boundedMediaQuery.size.width;
       final deviceHeight = boundedMediaQuery.size.height;
+      final realHeight = viewPortHeightCalculate(realQuery.size.height);
+      final heightRatio = realHeight / (deviceHeight + _paddingOffset * 2);
+      final realWidth = realQuery.size.width;
 
-      if (!currentDevice.isExpandableHeight && deviceHeight > deviceWidth) {
-        final realHeight = viewPortHeightCalculate(realQuery.size.height);
-        final heightRatio = realHeight / (deviceHeight + _paddingOffset * 2);
-        // if screen height smaller than device height, scale height
-        this._currentScreenScale = heightRatio;
-      } else if (!currentDevice.isExpandableWidth) {
-        final realWidth = realQuery.size.width;
+      if (deviceHeight > deviceWidth) {
+        // if calculated screen height taller than device height, set to 1.0
+        if ((heightRatio * deviceWidth) > realWidth) {
+          this._currentScreenScale = 1.0;
+        } else {
+          this._currentScreenScale = heightRatio;
+        }
+      } else {
         final widthRatio = realWidth /
             (deviceWidth +
                 (orientation == Orientation.landscape
                     ? (_paddingOffset * 2)
                     : 0));
-        this._currentScreenScale = widthRatio;
-      } else {
-        this._currentScreenScale = 1.0;
+        // if calculated size going to be taller than real height, make it 1.0
+        if ((widthRatio * deviceHeight) > realHeight) {
+          this._currentScreenScale = 1.0;
+        } else {
+          this._currentScreenScale = widthRatio;
+        }
       }
     } else {
       this._currentScreenScale = 1.0;
