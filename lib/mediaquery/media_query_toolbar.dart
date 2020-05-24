@@ -91,39 +91,6 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
       OverrideMediaQueryProvider mediaQueryProvider, MediaQueryData realQuery) {
     return [
       IconButton(
-        icon: Icon(mediaQueryProvider.currentMediaQuery.disableAnimations
-            ? Icons.directions_walk
-            : Icons.directions_run),
-        tooltip: 'Toggle Animations ' +
-            (mediaQueryProvider.currentMediaQuery.disableAnimations
-                ? 'On'
-                : 'Off'),
-        onPressed: () => _toggleAnimations(mediaQueryProvider),
-      ),
-      buildDivider(),
-      IconButton(
-        icon: Icon(
-          mediaQueryProvider.currentMediaQuery.invertColors
-              ? Icons.invert_colors
-              : Icons.invert_colors_off,
-        ),
-        tooltip: 'Invert Colors ' +
-            (mediaQueryProvider.currentMediaQuery.invertColors ? 'Off' : 'On'),
-        onPressed: () => _toggleInvertColors(mediaQueryProvider),
-      ),
-      buildDivider(),
-      IconButton(
-        icon: Icon(
-          mediaQueryProvider.currentMediaQuery.highContrast
-              ? Icons.tonality
-              : Icons.panorama_fish_eye,
-        ),
-        tooltip: 'High Contrast ' +
-            (mediaQueryProvider.currentMediaQuery.highContrast ? 'Off' : 'On'),
-        onPressed: () => _toggleHighContrast(mediaQueryProvider),
-      ),
-      buildDivider(),
-      IconButton(
         icon: Icon(mediaQueryProvider.currentMediaQuery.platformBrightness ==
                 Brightness.light
             ? Icons.brightness_7
@@ -143,6 +110,12 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
         icon: Icon(Icons.center_focus_strong),
         onPressed: () =>
             mediaQueryProvider.resetScreenAdjustments(realQuery: realQuery),
+      ),
+      buildDivider(),
+      IconButton(
+        tooltip: "Rotate. Current ${mediaQueryProvider.orientation}",
+        icon: Icon(Icons.rotate_right),
+        onPressed: () => mediaQueryProvider.rotate(context),
       ),
     ];
   }
@@ -180,6 +153,42 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
             scale: mediaQueryProvider.screenScale,
             updateScale: (value) => _updateScale(value, mediaQueryProvider),
           ),
+          IconButton(
+            icon: Icon(mediaQueryProvider.currentMediaQuery.disableAnimations
+                ? Icons.directions_walk
+                : Icons.directions_run),
+            tooltip: 'Toggle Animations ' +
+                (mediaQueryProvider.currentMediaQuery.disableAnimations
+                    ? 'On'
+                    : 'Off'),
+            onPressed: () => _toggleAnimations(mediaQueryProvider),
+          ),
+          buildDivider(),
+          IconButton(
+            icon: Icon(
+              mediaQueryProvider.currentMediaQuery.invertColors
+                  ? Icons.invert_colors
+                  : Icons.invert_colors_off,
+            ),
+            tooltip: 'Invert Colors ' +
+                (mediaQueryProvider.currentMediaQuery.invertColors
+                    ? 'Off'
+                    : 'On'),
+            onPressed: () => _toggleInvertColors(mediaQueryProvider),
+          ),
+          buildDivider(),
+          IconButton(
+            icon: Icon(
+              mediaQueryProvider.currentMediaQuery.highContrast
+                  ? Icons.tonality
+                  : Icons.panorama_fish_eye,
+            ),
+            tooltip: 'High Contrast ' +
+                (mediaQueryProvider.currentMediaQuery.highContrast
+                    ? 'Off'
+                    : 'On'),
+            onPressed: () => _toggleHighContrast(mediaQueryProvider),
+          ),
         ],
       ],
     );
@@ -191,43 +200,40 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
         ? EdgeInsets.only(left: 4.0, right: 4.0)
         : EdgeInsets.all(0);
     final media = context.mediaQueryProvider;
-    return MeasureSize(
-      onChange: (size) => media.toolbarHeightChanged(size.height),
-      child: Builder(
-        builder: (context) => Card(
-          margin: cardmargin,
-          elevation: 4.0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-              bottomRight: Radius.circular(8.0),
-              bottomLeft: Radius.circular(8.0),
+    return Builder(
+      builder: (context) => Card(
+        margin: cardmargin,
+        elevation: 4.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            bottomRight: Radius.circular(8.0),
+            bottomLeft: Radius.circular(8.0),
+          ),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Flexible(
+              fit: FlexFit.tight,
+              child: buildIcons(context, media),
             ),
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Flexible(
-                fit: FlexFit.tight,
-                child: buildIcons(context, media),
-              ),
-              if (isMobile(context))
-                SizedBox(
-                  width: 48,
-                  height: 48,
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(96.0),
-                    child: Icon(
-                        isExpanded ? Icons.expand_less : Icons.expand_more),
-                    onTap: () {
-                      setState(() {
-                        isExpanded = !isExpanded;
-                        MeasureSizeProvider.of(context).notifySizeChange();
-                      });
-                    },
-                  ),
-                )
-            ],
-          ),
+            if (isMobile(context))
+              SizedBox(
+                width: 48,
+                height: 48,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(96.0),
+                  child:
+                      Icon(isExpanded ? Icons.expand_less : Icons.expand_more),
+                  onTap: () {
+                    setState(() {
+                      isExpanded = !isExpanded;
+                      MeasureSizeProvider.of(context).notifySizeChange();
+                    });
+                  },
+                ),
+              )
+          ],
         ),
       ),
     );

@@ -18,6 +18,8 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
   /// of current.
   Offset _scaledOffset = Offset.zero;
 
+  Orientation _orientation = Orientation.portrait;
+
   OverrideMediaQueryProvider(this._currentDeviceSelected);
 
   void selectMediaQuery(MediaQueryData query) {
@@ -50,6 +52,18 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void rotate(BuildContext context) {
+    _orientation = _orientation == Orientation.portrait
+        ? Orientation.landscape
+        : Orientation.portrait;
+    resetScreenAdjustments(
+        realQuery: MediaQuery.of(context),
+        overrideData: this.boundedMediaQuery.copyWith(
+              size: Size(
+                  boundedMediaQuery.size.height, boundedMediaQuery.size.width),
+            ));
+  }
+
   void resetScreenAdjustments(
       {DeviceInfo newDevice,
       MediaQueryData overrideData,
@@ -63,23 +77,28 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
     }
     // use this to adjust screen size to fit.
     if (realQuery != null && _currentDeviceSelected != DeviceSizes.window) {
-      final widthRatio =
-          realQuery.size.width / (boundedMediaQuery.size.width + 100);
-      final heightRatio = viewPortHeightCalculate(realQuery.size.height) /
-          (boundedMediaQuery.size.height + 100);
-      if (widthRatio < 1 || heightRatio < 1) {
-        if (widthRatio < heightRatio) {
-          this._currentScreenScale = widthRatio;
-        } else {
+      final realWidth = realQuery.size.width;
+      final realHeight = viewPortHeightCalculate(realQuery.size.height);
+      final deviceWidth = boundedMediaQuery.size.width;
+      final widthRatio = realWidth / deviceWidth;
+      final deviceHeight = boundedMediaQuery.size.height;
+      final heightRatio =
+          realHeight / (deviceHeight + bottomBarHeight + toolbarHeight + 96);
+      if (deviceHeight > deviceWidth) {
+        // if screen height smaller than device height, scale height
+        if (heightRatio < 1) {
           this._currentScreenScale = heightRatio;
+        } else {
+          this._currentScreenScale = deviceWidth < realWidth ? 1.0 : widthRatio;
         }
       } else {
-        this._currentScreenScale = 1.0;
+        this._currentScreenScale =
+            deviceHeight < realHeight ? 1.0 : heightRatio;
       }
     } else {
       this._currentScreenScale = 1.0;
     }
-    this._currentOffset = Offset(0, 0 - (bottomBarHeight / 2));
+    this._currentOffset = Offset(0, 24);
     this._scaledOffset = scaledOffsetCalculate();
     notifyListeners();
   }
@@ -131,16 +150,19 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
 
   double viewPortOffsetLeft(MediaQueryData realQuery) =>
       (realQuery.size.width - boundedMediaQuery.size.width) / 2;
+
+  Orientation get orientation => _orientation;
 }
 
 OverrideMediaQueryProvider mediaQuery(BuildContext context) {
   final provider = Provider.of<OverrideMediaQueryProvider>(context);
   if (provider._currentMediaQuery == null) {
     provider._currentMediaQuery = MediaQuery.of(context);
+    provider._boundedMediaQuery = provider._currentMediaQuery.copyWith(
+      size: provider.currentDevice.logicalSize.boundedSize(context),
+    );
   }
-  provider._boundedMediaQuery = provider._currentMediaQuery.copyWith(
-    size: provider.currentDevice.logicalSize.boundedSize(context),
-  );
+
   return provider;
 }
 

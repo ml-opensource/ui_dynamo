@@ -86,12 +86,12 @@ class StoryBook extends StatefulWidget {
       app: copiedApp,
       plugins: [
         ...plugins,
+        deviceSizesPlugin(
+            extraDevices: extraDevices, useDefaults: useDeviceSizeDefaults),
         if (useDefaultPlugins) ...[
           actionsPlugin(),
           propsPlugin(),
-          deviceSizesPlugin(
-              extraDevices: extraDevices, useDefaults: useDeviceSizeDefaults),
-        ]
+        ],
       ],
       data: updatedData.merge(items: [
         // merge with the folder routes so the home page can capture the data.

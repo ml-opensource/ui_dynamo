@@ -29,17 +29,20 @@ class MeasureSize extends StatefulWidget {
 
 class _MeasureSizeState extends State<MeasureSize> {
   @override
+  void initState() {
+    SchedulerBinding.instance.addPostFrameCallback(postFrameCallback);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => MeasureSizeProvider(),
       child: Consumer<MeasureSizeProvider>(
-        builder: (context, value, child) {
-          SchedulerBinding.instance.addPostFrameCallback(postFrameCallback);
-          return Container(
-            key: widgetKey,
-            child: widget.child,
-          );
-        },
+        builder: (context, value, child) => Container(
+          key: widgetKey,
+          child: widget.child,
+        ),
       ),
     );
   }

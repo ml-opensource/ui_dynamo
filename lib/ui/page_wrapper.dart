@@ -8,6 +8,7 @@ import 'package:flutter_storybook/ui/interactable_screen.dart';
 import 'package:flutter_storybook/ui/materialapp+extensions.dart';
 import 'package:flutter_storybook/ui/model/widget.dart';
 import 'package:flutter_storybook/ui/utils/size+extensions.dart';
+import 'package:flutter_storybook/ui/widgets/measuresize.dart';
 
 class StoryBookPageWrapper extends StatefulWidget {
   final StorybookWidgetBuilder builder;
@@ -73,5 +74,7 @@ class _StoryBookPageWrapperState extends State<StoryBookPageWrapper> {
 
   buildMediaQueryToolbar(
           BuildContext context, OverrideMediaQueryProvider provider) =>
-      MediaQueryToolbar();
+      MeasureSize(
+          onChange: (size) => provider.toolbarHeightChanged(size.height),
+          child: MediaQueryToolbar());
 }
