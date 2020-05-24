@@ -113,8 +113,10 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
       ),
       buildDivider(),
       IconButton(
-        tooltip: "Rotate. Current ${mediaQueryProvider.orientation}",
-        icon: Icon(Icons.rotate_right),
+        tooltip: "Rotate",
+        icon: Icon(mediaQueryProvider.orientation == Orientation.portrait
+            ? Icons.screen_lock_landscape
+            : Icons.screen_lock_portrait),
         onPressed: () => mediaQueryProvider.rotate(context),
       ),
     ];

@@ -4,6 +4,8 @@ import 'package:flutter_storybook/ui/utils/size+extensions.dart';
 import 'package:provider/provider.dart';
 
 class OverrideMediaQueryProvider extends ChangeNotifier {
+  static const _paddingOffset = 48.0;
+
   MediaQueryData _currentMediaQuery;
   MediaQueryData _boundedMediaQuery;
   DeviceInfo _currentDeviceSelected;
@@ -59,8 +61,7 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
     resetScreenAdjustments(
         realQuery: MediaQuery.of(context),
         overrideData: this.boundedMediaQuery.copyWith(
-              size: Size(
-                  boundedMediaQuery.size.height, boundedMediaQuery.size.width),
+              size: boundedMediaQuery.size.flipped,
             ));
   }
 
@@ -80,10 +81,12 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
       final realWidth = realQuery.size.width;
       final realHeight = viewPortHeightCalculate(realQuery.size.height);
       final deviceWidth = boundedMediaQuery.size.width;
-      final widthRatio = realWidth / deviceWidth;
+      final widthRatio = realWidth /
+          (deviceWidth +
+              (orientation == Orientation.landscape ? _paddingOffset : 0));
       final deviceHeight = boundedMediaQuery.size.height;
-      final heightRatio =
-          realHeight / (deviceHeight + bottomBarHeight + toolbarHeight + 96);
+      final heightRatio = realHeight /
+          (deviceHeight + bottomBarHeight + toolbarHeight + _paddingOffset * 2);
       if (deviceHeight > deviceWidth) {
         // if screen height smaller than device height, scale height
         if (heightRatio < 1) {
@@ -92,13 +95,17 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
           this._currentScreenScale = deviceWidth < realWidth ? 1.0 : widthRatio;
         }
       } else {
-        this._currentScreenScale =
-            deviceHeight < realHeight ? 1.0 : heightRatio;
+        if (widthRatio < 1) {
+          this._currentScreenScale = widthRatio;
+        } else {
+          this._currentScreenScale =
+              deviceHeight < realHeight ? 1.0 : heightRatio;
+        }
       }
     } else {
       this._currentScreenScale = 1.0;
     }
-    this._currentOffset = Offset(0, 24);
+    this._currentOffset = Offset(0, _paddingOffset / 2);
     this._scaledOffset = scaledOffsetCalculate();
     notifyListeners();
   }
@@ -135,7 +142,7 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
   }
 
   double viewPortHeightCalculate(double height) =>
-      height - toolbarHeight - bottomBarHeight - 48;
+      height - toolbarHeight - bottomBarHeight - _paddingOffset;
 
   double get viewportWidth => boundedMediaQuery.size.width;
 
