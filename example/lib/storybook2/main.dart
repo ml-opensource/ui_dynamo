@@ -9,15 +9,18 @@ void main() => runApp(AppStoryBook());
 class AppStoryBook extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return StoryBook.withApp(buildApp(),
-        useDeviceSizeDefaults: false,
-        extraDevices: [
-          DeviceInfo('Custom Device', Size(1000, 1000), Size(1000, 1000),
-              DeviceCategory.Desktop),
-          DeviceSizes.appleWatchSeries5_44,
-        ],
-        data: StoryBookData(
-          items: [],
-        ));
+    return StoryBook.withApp(
+      buildApp(),
+      useDeviceSizeDefaults: false,
+      extraDevices: [
+        DeviceInfo('Custom Device', Size(1000, 1000), Size(1000, 1000),
+            DeviceCategory.Desktop),
+        DeviceSizes.appleWatchSeries5_44,
+      ],
+      useDefaultPlugins: false,
+      data: StoryBookData(
+        items: [],
+      ),
+    );
   }
 }

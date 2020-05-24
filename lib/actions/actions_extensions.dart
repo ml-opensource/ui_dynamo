@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter_storybook/plugins/safe_provider.dart';
 import 'package:provider/provider.dart';
 
 /// Represents an Action. Name is required. Data will be stringified and time
@@ -64,4 +65,6 @@ class ActionsProvider extends ChangeNotifier {
 /// Helpful extension to get the current [ActionsProvider] from the [BuildContext]
 extension ActionProviderExtension on BuildContext {
   ActionsProvider get actions => ActionsProvider.of(this);
+
+  ActionsProvider get safeActions => SafeProvider.of<ActionsProvider>(this);
 }

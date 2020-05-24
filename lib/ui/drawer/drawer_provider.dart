@@ -14,8 +14,8 @@ class DrawerProvider extends ChangeNotifier {
       {bool popDrawer = false}) {
     _selectedFolderKey = folderKey;
     _selectedPageKey = pageKey;
-    context.props.reset();
-    context.actions.reset();
+    context.safeProps?.reset();
+    context.safeActions?.reset();
     context.mediaQueryProvider
         .resetScreenAdjustments(realQuery: MediaQuery.of(context));
     if (popDrawer) {

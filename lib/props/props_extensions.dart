@@ -2,6 +2,7 @@ import 'dart:core';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_storybook/plugins/safe_provider.dart';
 import 'package:flutter_storybook/props/props_models.dart';
 import 'package:provider/provider.dart';
 
@@ -141,8 +142,8 @@ class PropsProvider extends ChangeNotifier {
         prop.value.copyWith(selectedValue: newValue));
   }
 
-  dynamic _value<T>(String label, T defaultValue, PropConstructor<T> propConstructor,
-      PropGroup group) {
+  dynamic _value<T>(String label, T defaultValue,
+      PropConstructor<T> propConstructor, PropGroup group) {
     final retrievedGroup = retrieveOrAddGroup(group ?? _defaultGroup);
     final existing = retrievePropByGroup<dynamic>(label, retrievedGroup);
     if (existing == null) {
@@ -208,4 +209,6 @@ PropsProvider props(BuildContext context) =>
 
 extension PropsProviderExtension on BuildContext {
   PropsProvider get props => Provider.of<PropsProvider>(this);
+
+  PropsProvider get safeProps => SafeProvider.of<PropsProvider>(this);
 }
