@@ -47,25 +47,39 @@ class MediaChooserButton extends StatelessWidget {
 
   PopupMenuItem<DeviceInfo> buildDeviceOption(
       BuildContext context, DeviceInfo deviceInfo, DeviceInfo selectedDevice) {
+    final useWrap = isWatch(context);
+
+    Widget child;
+    final text = Text(
+      deviceDisplay(context, deviceInfo),
+      style: TextStyle(fontSize: 12.0),
+    );
+    final children = [
+      Icon(deviceInfo.iconForCategory),
+      SizedBox(
+        width: 15,
+      ),
+      if (!useWrap)
+        Flexible(
+          child: text,
+        ),
+      if (useWrap) text,
+    ];
+    if (useWrap) {
+      child = Wrap(
+        crossAxisAlignment: WrapCrossAlignment.center,
+        runSpacing: 8.0,
+        children: children,
+      );
+    } else {
+      child = Row(
+        children: children,
+      );
+    }
     return CheckedPopupMenuItem(
       checked: selectedDevice == deviceInfo,
       value: deviceInfo,
-      child: Wrap(
-        crossAxisAlignment: WrapCrossAlignment.center,
-        runSpacing: 8.0,
-        children: [
-          Icon(deviceInfo.iconForCategory),
-          SizedBox(
-            width: 15,
-          ),
-          Flexible(
-            child: Text(
-              deviceDisplay(context, deviceInfo),
-              style: TextStyle(fontSize: 12.0),
-            ),
-          ),
-        ],
-      ),
+      child: child,
     );
   }
 }
