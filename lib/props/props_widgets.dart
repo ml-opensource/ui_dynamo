@@ -28,6 +28,7 @@ class PropTable extends StatelessWidget {
   final Widget title;
   final double maxCellWidth;
   final double minCellWidth;
+  final double dataRowHeight;
 
   const PropTable({
     Key key,
@@ -35,12 +36,13 @@ class PropTable extends StatelessWidget {
     this.title = const Text('Props'),
     this.maxCellWidth = 200,
     this.minCellWidth = 0,
+    this.dataRowHeight = 100,
   }) : super(key: key);
 
   BoxConstraints _cellConstraints() =>
       BoxConstraints(maxWidth: maxCellWidth, minWidth: minCellWidth);
 
-  DataRow _buildTableRow(PropTableItem e) => DataRow(
+  DataRow _buildTableRow(PropTableItem e, bool hasExample) => DataRow(
         cells: [
           DataCell(
               Container(constraints: _cellConstraints(), child: Text(e.name))),
@@ -51,13 +53,16 @@ class PropTable extends StatelessWidget {
           if (e.example != null)
             DataCell(
                 Container(constraints: _cellConstraints(), child: e.example))
-          else
+          else if (hasExample)
             DataCell(Text(''))
         ],
       );
 
   @override
   Widget build(BuildContext context) {
+    final hasExample = items.firstWhere((element) => element.example != null,
+            orElse: () => null) !=
+        null;
     return Organization.presentation(
       child: Card(
         child: Padding(
@@ -78,9 +83,13 @@ class PropTable extends StatelessWidget {
                     DataColumn(label: Text('Name')),
                     DataColumn(label: Text('Description')),
                     DataColumn(label: Text('Default Value')),
-                    DataColumn(label: Text('Example')),
+                    if (hasExample) DataColumn(label: Text('Example')),
                   ],
-                  rows: this.items.map((e) => _buildTableRow(e)).toList(),
+                  dataRowHeight: dataRowHeight,
+                  rows: this
+                      .items
+                      .map((e) => _buildTableRow(e, hasExample))
+                      .toList(),
                 ),
               ),
             ],
