@@ -6,7 +6,7 @@ StoryBookPage buildRadiosPage() => StoryBookPage.list(
       title: "Radios",
       icon: Icon(Icons.radio_button_checked),
       widgets: (context) {
-        final radio = context.props.radio(
+        final radio = context.props.radioProp(
             'Radios',
             PropValues(
               selectedValue: "Yellow",

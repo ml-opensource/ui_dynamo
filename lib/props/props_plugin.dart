@@ -149,6 +149,14 @@ class PropsProvider extends ChangeNotifier {
     }
   }
 
+  void booleanChanged(String label, bool newValue,
+      [String groupId = defaultGroupId]) {
+    final prop = _retrieveProp<bool>(label, groupId);
+    if (prop is BooleanPropHandle) {
+      booleanChangedByProp(prop, newValue);
+    }
+  }
+
   /// Adds or retrieves a value from the underlying props data.
   /// This is not strictly safe, though surface methods handle the type-safety.
   dynamic _addOrRetrieveValue<T>(String label, T defaultValue,
