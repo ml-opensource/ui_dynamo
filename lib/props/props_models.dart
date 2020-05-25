@@ -150,11 +150,3 @@ class RadioValuesHandle<T> extends PropHandle<PropValues<T>> {
   @override
   String get textValue => value.toString();
 }
-
-/// Data object for convenience.
-class InputProp {
-  final String value;
-  final ValueChanged<String> onChanged;
-
-  InputProp(this.value, this.onChanged);
-}

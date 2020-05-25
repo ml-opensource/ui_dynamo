@@ -5,23 +5,27 @@ import 'package:flutter_storybook/flutter_storybook.dart';
 StoryBookPage buildRadiosPage() => StoryBookPage.list(
       title: "Radios",
       icon: Icon(Icons.radio_button_checked),
-      widgets: (context) => [
-        Organization.container(title: Text("Plain Radios"), children: [
-          RadioGroup(
-            valueChanged: context.actions.valueChanged("Plain Radio",
-                through: (value) =>
-                    context.props.radioChanged("Radios", value)),
-            selectedValue: context.props.radios(
-                "Radios",
-                PropValues(
-                  selectedValue: "Yellow",
-                  values: [
-                    "Yellow",
-                    "Red",
-                    "Green",
-                  ],
-                )),
+      widgets: (context) {
+        final radio = context.props.radio(
+            'Radios',
+            PropValues(
+              selectedValue: "Yellow",
+              values: [
+                "Yellow",
+                "Red",
+                "Green",
+              ],
+            ));
+        return [
+          Organization.container(
+            title: Text("Plain Radios"),
+            children: [
+              RadioGroup(
+                  valueChanged: context.actions
+                      .valueChanged("Plain Radio", through: radio.onChanged),
+                  selectedValue: radio.value),
+            ],
           ),
-        ]),
-      ],
+        ];
+      },
     );
