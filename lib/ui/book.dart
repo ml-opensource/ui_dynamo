@@ -221,6 +221,12 @@ class _StoryBookState extends State<StoryBook> {
                     ),
                     if (desktop)
                       Container(
+                        decoration: BoxDecoration(
+                          border: Border(
+                            left: BorderSide(
+                                color: Theme.of(context).dividerColor),
+                          ),
+                        ),
                         constraints: BoxConstraints(
                             maxWidth: max((media.size.width / 3),
                                 min((media.size.width / 2), 300))),
