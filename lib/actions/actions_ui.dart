@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_storybook/actions/actions_extensions.dart';
 import 'package:flutter_storybook/ui/styles/text_styles.dart';
 import 'package:flutter_storybook/ui/toolbar.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 /// Renders the current actions on screen that come in as a list.
@@ -31,7 +32,10 @@ class ActionsDisplay extends StatelessWidget {
               ),
             );
           }
-          return ListView.builder(
+          return ListView.separated(
+              separatorBuilder: (context, index) => Divider(
+                    height: 1,
+                  ),
               itemCount: actionsList.length,
               itemBuilder: (context, index) =>
                   ActionLabel(action: actionsList[index]));
@@ -56,8 +60,9 @@ class ActionLabel extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: ListTile(
         title: Text(action.name),
-        trailing: Text(action.time.toIso8601String()),
-        subtitle: Text("Data ${action.data}"),
+        trailing: Text(DateFormat.jms().format(action.time)),
+        subtitle:
+            action.data != null ? Text("Data ${action.data}") : Text("No Data"),
       ),
     );
   }
