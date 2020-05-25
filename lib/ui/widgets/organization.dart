@@ -40,8 +40,8 @@ class Organization {
   /// Creates a new WidgetContainer that is useful for displaying widgets in
   /// separated visual blocks.
   static container(
-          {@required List<Widget> children,
-          @required Widget title,
+          {@required Widget title,
+          @required List<Widget> children,
           Color cardBackgroundColor,
           EdgeInsets padding = kDefaultPadding,
           double childrenSpacing = kChildrenSpacing}) =>
