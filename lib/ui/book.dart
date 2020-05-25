@@ -1,7 +1,10 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_storybook/actions/actions_plugin.dart';
 import 'package:flutter_storybook/flutter_storybook.dart';
+import 'package:flutter_storybook/media_utils.dart';
 import 'package:flutter_storybook/mediaquery/device_size_plugin.dart';
 import 'package:flutter_storybook/mediaquery/device_sizes.dart';
 import 'package:flutter_storybook/mediaquery/override_media_query_provider.dart';
@@ -165,6 +168,16 @@ class _StoryBookState extends State<StoryBook> {
           builder: (context) {
             final selectedPage = selectedPageFromWidget(widget.data, context);
             final query = context.mediaQueryProvider;
+            final desktop = context.isDesktop;
+            final toolbarPane = selectedPage?.usesToolbar == true
+                ? ToolbarPane(
+                    expandable: !desktop,
+                    plugins: widget.plugins
+                        .where((element) => element.bottomTabText != null)
+                        .toList(),
+                  )
+                : null;
+            final media = MediaQuery.of(context);
             return MaterialApp(
               theme: app.theme,
               darkTheme: app.darkTheme,
@@ -195,17 +208,25 @@ class _StoryBookState extends State<StoryBook> {
                   ),
                 ),
                 resizeToAvoidBottomPadding: true,
-                bottomNavigationBar: selectedPage?.usesToolbar == true
-                    ? ToolbarPane(
-                        plugins: widget.plugins
-                            .where((element) => element.bottomTabText != null)
-                            .toList(),
-                      )
-                    : null,
-                body: StoryBookPageWrapper(
-                  base: app,
-                  shouldScroll: selectedPage.shouldScroll,
-                  builder: selectedPage.widget.builder,
+                bottomNavigationBar: desktop ? null : toolbarPane,
+                body: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Flexible(
+                      child: StoryBookPageWrapper(
+                        base: app,
+                        shouldScroll: selectedPage.shouldScroll,
+                        builder: selectedPage.widget.builder,
+                      ),
+                    ),
+                    if (desktop)
+                      Container(
+                        constraints: BoxConstraints(
+                            maxWidth: max((media.size.width / 3),
+                                min((media.size.width / 2), 300))),
+                        child: toolbarPane,
+                      ),
+                  ],
                 ),
               ),
             );

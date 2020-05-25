@@ -68,7 +68,7 @@ class StoryBookFolderWidget extends StatelessWidget {
         leading: folder.icon ?? Icon(Icons.folder),
         title: DefaultTextStyle.merge(
           child: folder.title,
-          style: isWatch(context) ? smallStyle : null,
+          style: context.isWatch ? smallStyle : null,
         ),
         initiallyExpanded: folder.pages.contains(selectedPage),
         children: <Widget>[

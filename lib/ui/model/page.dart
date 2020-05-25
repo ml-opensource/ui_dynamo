@@ -102,7 +102,7 @@ class StoryBookPageWidget extends StatelessWidget {
         leading: page.icon ?? Icon(Icons.book),
         title: DefaultTextStyle.merge(
           child: page.title,
-          style: isWatch(context) ? smallStyle : null,
+          style: context.isWatch ? smallStyle : null,
         ),
         selected: selectedPage != null && selectedPage == page,
         onTap: () => onSelectPage(page),

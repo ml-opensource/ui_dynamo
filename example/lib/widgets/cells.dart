@@ -28,7 +28,7 @@ class MainCell extends StatelessWidget {
         isFlipped ? buildText() : MainCellAvatar(iconText: iconText);
     final titleText = Text(title);
     final subtitleText = Text(subtitle);
-    if (isWatch(context)) {
+    if (context.isWatch) {
       return Card(
         child: Padding(
           padding: EdgeInsets.all(8.0),

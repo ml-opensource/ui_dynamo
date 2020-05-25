@@ -81,7 +81,8 @@ class _InteractableScreenState extends State<InteractableScreen> {
     final query = context.mediaQueryProvider;
     final realQuery = MediaQuery.of(context);
     // if window, move back to center and do not allow panning.
-    final widthSmaller = query.scaledWidth <= realQuery.size.width;
+    final widthSmaller =
+        query.scaledWidth <= query.viewPortWidthCalculate(realQuery.size.width);
     final heightSmaller = query.scaledHeight <=
         query.viewPortHeightCalculate(realQuery.size.height);
     final isExpandableWidth = query.currentDevice.isExpandableWidth;

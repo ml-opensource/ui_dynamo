@@ -11,7 +11,8 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
   DeviceInfo _currentDeviceSelected;
   double _currentScreenScale = 1.0;
   double _toolbarHeight = 0;
-  double _bottomBarHeight = 0;
+  Size _pluginsSize = Size.zero;
+  double _bottomBarWidth = 0;
 
   /// this will be offset at scale 1.0
   Offset _currentOffset = Offset.zero;
@@ -95,7 +96,7 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
       final deviceHeight = boundedMediaQuery.size.height;
       final realHeight = viewPortHeightCalculate(realQuery.size.height);
       final heightRatio = realHeight / (deviceHeight + _paddingOffset * 2);
-      final realWidth = realQuery.size.width;
+      final realWidth = viewPortWidthCalculate(realQuery.size.width);
       final widthRatio = realWidth /
           (deviceWidth +
               (orientation == Orientation.landscape
@@ -129,8 +130,8 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void bottomBarHeightChanged(double height) {
-    this._bottomBarHeight = height;
+  void pluginsUISizeChanged(Size size) {
+    this._pluginsSize = size;
     notifyListeners();
   }
 
@@ -146,21 +147,34 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
 
   double get toolbarHeight => _toolbarHeight;
 
-  double get bottomBarHeight => _bottomBarHeight;
+  double get pluginsHeight => _pluginsSize.height;
+
+  double get pluginsWidth => _pluginsSize.width;
+
+  Size get pluginsSize => _pluginsSize;
 
   double get viewportHeight {
-    if (currentDevice != DeviceSizes.window) {
+    if (!currentDevice.isExpandableHeight) {
       return boundedMediaQuery.size.height;
     }
     return viewPortHeightCalculate(boundedMediaQuery.size.height);
   }
 
   double viewPortHeightCalculate(double height) =>
-      height - toolbarHeight - bottomBarHeight - _paddingOffset;
+      height - toolbarHeight - pluginsHeight - _paddingOffset;
 
-  double get viewportWidth => boundedMediaQuery.size.width;
+  double viewPortWidthCalculate(double width) =>
+      width - pluginsWidth - _paddingOffset;
 
-  double get scaledWidth => boundedMediaQuery.size.width * _currentScreenScale;
+  double get viewportWidth {
+    if (!currentDevice.isExpandableWidth) {
+      return boundedMediaQuery.size.width;
+    }
+    return viewPortWidthCalculate(boundedMediaQuery.size.width);
+  }
+
+  double get scaledWidth => viewPortWidthCalculate(
+      boundedMediaQuery.size.width * _currentScreenScale);
 
   double get scaledHeight =>
       viewPortHeightCalculate(boundedMediaQuery.size.height * screenScale);
@@ -170,7 +184,7 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
       2;
 
   double viewPortOffsetLeft(MediaQueryData realQuery) =>
-      (realQuery.size.width - boundedMediaQuery.size.width) / 2;
+      (realQuery.size.width - boundedMediaQuery.size.width - pluginsWidth) / 2;
 
   Orientation get orientation => _orientation;
 }

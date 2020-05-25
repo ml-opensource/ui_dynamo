@@ -45,7 +45,7 @@ class StoryBookHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final selectedPage = selectedPageFromWidget(data, context);
-    final watch = isWatch(context);
+    final watch = context.isWatch;
     final padding = watch ? 8.0 : 32.0;
     return Container(
       padding: EdgeInsets.only(left: padding, right: padding),

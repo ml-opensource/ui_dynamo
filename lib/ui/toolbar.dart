@@ -8,10 +8,12 @@ import 'package:flutter_storybook/ui/widgets/measuresize.dart';
 
 class ToolbarPane extends StatefulWidget {
   final List<StoryBookPlugin> plugins;
+  final bool expandable;
 
   const ToolbarPane({
     Key key,
     this.plugins = const [],
+    this.expandable,
   }) : super(key: key);
 
   @override
@@ -31,65 +33,85 @@ class _ToolbarPaneState extends State<ToolbarPane> {
     return Visibility(
       visible: plugins.length > 0,
       child: MeasureSize(
-        onChange: (size) => provider.bottomBarHeightChanged(size.height),
+        onChange: (size) {
+          if (widget.expandable) {
+            provider.pluginsUISizeChanged(Size(0, size.height));
+          } else {
+            provider.pluginsUISizeChanged(Size(size.width, 0));
+          }
+        },
         child: Builder(
-          builder: (context) => DefaultTabController(
-            length: plugins.length,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Divider(
-                  thickness: 2,
-                  height: 2,
-                ),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: TabBar(
-                        onTap: (index) {
-                          setState(() {
-                            toolbarOpen = true;
-                          });
-                        },
-                        isScrollable: true,
-                        tabs: [
-                          ...plugins.map((e) => Tab(
-                                child: Text(
-                                  e.bottomTabText,
-                                  style: tabTextColor,
-                                ),
-                              )),
+          builder: (context) {
+            var viewPortHeightCalculate =
+                provider.viewPortHeightCalculate(media.size.height);
+            return DefaultTabController(
+              length: plugins.length,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Divider(
+                    thickness: 2,
+                    height: 2,
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: TabBar(
+                          onTap: (index) {
+                            setState(() {
+                              toolbarOpen = true;
+                            });
+                          },
+                          isScrollable: true,
+                          tabs: [
+                            ...plugins.map((e) => Tab(
+                                  child: Text(
+                                    e.bottomTabText,
+                                    style: tabTextColor,
+                                  ),
+                                )),
+                          ],
+                        ),
+                      ),
+                      if (widget.expandable)
+                        IconButton(
+                          icon: Icon(toolbarOpen
+                              ? Icons.expand_less
+                              : Icons.expand_more),
+                          onPressed: () {
+                            setState(() {
+                              toolbarOpen = !toolbarOpen;
+                              MeasureSizeProvider.of(context)
+                                  .notifySizeChange();
+                            });
+                          },
+                        ),
+                    ],
+                  ),
+                  Flexible(
+                    child: Container(
+                      height: widget.expandable
+                          ? (toolbarOpen
+                              ? max(
+                                  (media.size.height / 3) -
+                                      provider.toolbarHeight,
+                                  min(
+                                      (media.size.height / 2) -
+                                          provider.toolbarHeight,
+                                      300))
+                              : 0)
+                          : viewPortHeightCalculate,
+                      child: TabBarView(
+                        children: <Widget>[
+                          ...plugins.map((e) => e.bottomTabPane(context)),
                         ],
                       ),
                     ),
-                    IconButton(
-                      icon: Icon(
-                          toolbarOpen ? Icons.expand_less : Icons.expand_more),
-                      onPressed: () {
-                        setState(() {
-                          toolbarOpen = !toolbarOpen;
-                          MeasureSizeProvider.of(context).notifySizeChange();
-                        });
-                      },
-                    ),
-                  ],
-                ),
-                Container(
-                  height: toolbarOpen
-                      ? max(
-                          (media.size.height / 3) - provider.toolbarHeight,
-                          min((media.size.height / 2) - provider.toolbarHeight,
-                              300))
-                      : 0,
-                  child: TabBarView(
-                    children: <Widget>[
-                      ...plugins.map((e) => e.bottomTabPane(context)),
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
+                  )
+                ],
+              ),
+            );
+          },
         ),
       ),
     );

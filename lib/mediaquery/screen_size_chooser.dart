@@ -17,7 +17,7 @@ class MediaChooserButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final deviceName =
-        deviceDisplay(context, selectedDevice, shortName: isMobile(context));
+        deviceDisplay(context, selectedDevice, shortName: context.isMobile);
     return PopupMenuButton(
       tooltip: 'Choose Preview Window Size',
       child: Padding(
@@ -25,7 +25,7 @@ class MediaChooserButton extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (!isWatch(context)) Text(deviceName),
+            if (!context.isWatch) Text(deviceName),
             SizedBox(
               width: 8,
             ),
@@ -47,7 +47,7 @@ class MediaChooserButton extends StatelessWidget {
 
   PopupMenuItem<DeviceInfo> buildDeviceOption(
       BuildContext context, DeviceInfo deviceInfo, DeviceInfo selectedDevice) {
-    final useWrap = isWatch(context);
+    final useWrap = context.isWatch;
 
     Widget child;
     final text = Text(

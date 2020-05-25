@@ -131,7 +131,7 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
 
   buildIcons(
       BuildContext context, OverrideMediaQueryProvider mediaQueryProvider) {
-    final expandable = isMobile(context);
+    final expandable = context.isMobile;
     final realQuery = MediaQuery.of(context);
     if (expandable && !isExpanded) {
       return Wrap(
@@ -205,7 +205,7 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
 
   @override
   Widget build(BuildContext context) {
-    final cardmargin = isTablet(context)
+    final cardmargin = context.isTablet
         ? EdgeInsets.only(left: 4.0, right: 4.0)
         : EdgeInsets.all(0);
     final media = context.mediaQueryProvider;
@@ -226,7 +226,7 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
               fit: FlexFit.tight,
               child: buildIcons(context, media),
             ),
-            if (isMobile(context))
+            if (context.isMobile)
               SizedBox(
                 width: 48,
                 height: 48,
