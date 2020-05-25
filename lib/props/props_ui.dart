@@ -132,21 +132,23 @@ class EditablePropField extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Row(
         children: <Widget>[
-          Container(
-            constraints: maxWidth,
-            child: TextField(
-              keyboardType: prop is NumberPropHandle
-                  ? TextInputType.number
-                  : TextInputType.text,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: prop.label,
+          Flexible(
+            child: Container(
+              constraints: maxWidth,
+              child: TextField(
+                keyboardType: prop is NumberPropHandle
+                    ? TextInputType.number
+                    : TextInputType.text,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: prop.label,
+                ),
+                controller: TextEditingController.fromValue(TextEditingValue(
+                    text: prop.textValue,
+                    selection: TextSelection.collapsed(
+                        offset: prop.value.toString().length))),
+                onChanged: (value) => textChanged(prop, value),
               ),
-              controller: TextEditingController.fromValue(TextEditingValue(
-                  text: prop.textValue,
-                  selection: TextSelection.collapsed(
-                      offset: prop.value.toString().length))),
-              onChanged: (value) => textChanged(prop, value),
             ),
           ),
         ],
