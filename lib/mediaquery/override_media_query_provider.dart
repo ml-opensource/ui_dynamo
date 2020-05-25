@@ -12,7 +12,6 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
   double _currentScreenScale = 1.0;
   double _toolbarHeight = 0;
   Size _pluginsSize = Size.zero;
-  double _bottomBarWidth = 0;
 
   /// this will be offset at scale 1.0
   Offset _currentOffset = Offset.zero;
@@ -163,8 +162,7 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
   double viewPortHeightCalculate(double height) =>
       height - toolbarHeight - pluginsHeight - _paddingOffset;
 
-  double viewPortWidthCalculate(double width) =>
-      width - pluginsWidth - _paddingOffset;
+  double viewPortWidthCalculate(double width) => width - pluginsWidth;
 
   double get viewportWidth {
     if (!currentDevice.isExpandableWidth) {
@@ -197,7 +195,13 @@ OverrideMediaQueryProvider mediaQuery(BuildContext context) {
       size: provider.currentDevice.logicalSize.boundedSize(context),
     );
   }
-
+  // if expandable, we dont rotate, so we adjust its size everytime its needed.
+  // in future it should be more efficient.
+  if (provider.currentDevice.isExpandable) {
+    provider._boundedMediaQuery = provider._currentMediaQuery.copyWith(
+      size: provider.currentDevice.logicalSize.boundedSize(context),
+    );
+  }
   return provider;
 }
 

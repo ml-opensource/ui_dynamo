@@ -50,7 +50,7 @@ class _StoryBookPageWrapperState extends State<StoryBookPageWrapper> {
   @override
   Widget build(BuildContext context) {
     final query = context.mediaQueryProvider;
-    return  Row(
+    return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Flexible(
