@@ -3,38 +3,48 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_storybook/props/props_models.dart';
 import 'package:flutter_storybook/props/props_plugin.dart';
 
-extension PropsProviderConvenienceExtension on PropsProvider {
+extension TwoWayBindingExtension on PropsProvider {
+  TwoWayBindingGenerator get twoWay => TwoWayBindingGenerator(this);
+}
+
+/// Generates two-way bindings from [PropsProvider] to supply conveniences
+/// for props and responding to actions on the UI.
+class TwoWayBindingGenerator {
+  final PropsProvider provider;
+
+  TwoWayBindingGenerator(this.provider);
+
   /// Provides an [ValueProp] to use for text field convenience.
   /// The [value] is used to supply to an input field, while
   /// the [onChange] is used for convenience to send it back to the Props UI on
   /// change.
-  ValueProp<String> textProp(String label, String defaultValue,
+  ValueProp<String> text(String label, String defaultValue,
       {PropGroup group = defaultGroup}) {
-    final value = text(label, defaultValue, group: group);
+    final value = provider.text(label, defaultValue, group: group);
     return ValueProp<String>(
-        value, (value) => textChanged(label, value, group.groupId));
+        value, (value) => provider.textChanged(label, value, group.groupId));
   }
 
   /// Provides an [ValueProp] to use for [RadioListTile] field convenience.
   /// The [value] is used to supply to an input field, while
   /// the [onChange] is used for convenience to send it back to the Props UI on
   /// change.
-  ValueProp<T> radioProp<T>(String label, PropValues<T> values,
+  ValueProp<T> radio<T>(String label, PropValues<T> values,
       {PropGroup group = defaultGroup}) {
-    final value = radios(label, values, group: group);
+    final value = provider.radios(label, values, group: group);
     return ValueProp<T>(
-        value, (value) => radioChanged(label, value, group.groupId));
+        value, (value) => provider.radioChanged(label, value, group.groupId));
   }
 
   /// Provides an [ValueProp] to use for [Checkbox] field-like convenience.
   /// The [value] is used to supply to an input field, while
   /// the [onChange] is used for convenience to send it back to the Props UI on
   /// change.
-  ValueProp<bool> booleanProp(String label, bool defaultValue,
+  ValueProp<bool> boolean(String label, bool defaultValue,
       {PropGroup group = defaultGroup}) {
-    final value = boolean(label, defaultValue, group: group);
+    final value = provider.boolean(label, defaultValue, group: group);
     return ValueProp<bool>(
-        value, (value) => booleanChanged(label, value, group.groupId));
+        value, (value) => provider.booleanChanged(label, value, group.groupId));
   }
 }
 

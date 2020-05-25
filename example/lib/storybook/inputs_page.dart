@@ -7,9 +7,9 @@ StoryBookPage buildInputsPage() => StoryBookPage.list(
     title: 'Inputs',
     icon: Icon(Icons.input),
     widgets: (context) {
-      final input = context.props.textProp('Input', 'Primary Input');
-      final errorInput = context.props.textProp('Error Input', '');
-      final counterInput = context.props.textProp('Counter Input', 'Characters');
+      final input = context.props.twoWay.text('Input', 'Primary Input');
+      final errorInput = context.props.twoWay.text('Error Input', '');
+      final counterInput = context.props.twoWay.text('Counter Input', 'Characters');
       return [
         Organization.container(
           title: Text('Basic Input'),
