@@ -171,7 +171,7 @@ class _StoryBookState extends State<StoryBook> {
             final desktop = context.isDesktop;
             final toolbarPane = selectedPage?.usesToolbar == true
                 ? ToolbarPane(
-                    expandable: !desktop,
+                    onBottom: !desktop,
                     plugins: widget.plugins
                         .where((element) => element.bottomTabText != null)
                         .toList(),
@@ -220,18 +220,7 @@ class _StoryBookState extends State<StoryBook> {
                       ),
                     ),
                     if (desktop && toolbarPane != null)
-                      Container(
-                        decoration: BoxDecoration(
-                          border: Border(
-                            left: BorderSide(
-                                color: Theme.of(context).dividerColor),
-                          ),
-                        ),
-                        constraints: BoxConstraints(
-                            maxWidth: max((media.size.width / 3),
-                                min((media.size.width / 2), 300))),
-                        child: toolbarPane,
-                      ),
+                      toolbarPane,
                   ],
                 ),
               ),

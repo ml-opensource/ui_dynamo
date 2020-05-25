@@ -8,12 +8,12 @@ import 'package:flutter_storybook/ui/widgets/measuresize.dart';
 
 class ToolbarPane extends StatefulWidget {
   final List<StoryBookPlugin> plugins;
-  final bool expandable;
+  final bool onBottom;
 
   const ToolbarPane({
     Key key,
     this.plugins = const [],
-    this.expandable,
+    this.onBottom,
   }) : super(key: key);
 
   @override
@@ -34,7 +34,7 @@ class _ToolbarPaneState extends State<ToolbarPane> {
       visible: plugins.length > 0,
       child: MeasureSize(
         onChange: (size) {
-          if (widget.expandable) {
+          if (widget.onBottom) {
             provider.pluginsUISizeChanged(Size(0, size.height));
           } else {
             provider.pluginsUISizeChanged(Size(size.width, 0));
@@ -44,40 +44,35 @@ class _ToolbarPaneState extends State<ToolbarPane> {
           builder: (context) {
             var viewPortHeightCalculate =
                 provider.viewPortHeightCalculate(media.size.height);
-            return DefaultTabController(
-              length: plugins.length,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Divider(
-                    thickness: 2,
-                    height: 2,
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: TabBar(
-                          onTap: (index) {
-                            setState(() {
-                              toolbarOpen = true;
-                            });
-                          },
-                          isScrollable: true,
-                          tabs: [
-                            ...plugins.map((e) => Tab(
-                                  child: Text(
-                                    e.bottomTabText,
-                                    style: tabTextColor,
-                                  ),
-                                )),
-                          ],
-                        ),
+            return Container(
+              decoration: widget.onBottom
+                  ? null
+                  : BoxDecoration(
+                      border: Border(
+                        left: BorderSide(color: Theme.of(context).dividerColor),
                       ),
-                      if (widget.expandable)
+                    ),
+              constraints: widget.onBottom
+                  ? null
+                  : BoxConstraints(maxWidth: toolbarWidth(media)),
+              child: DefaultTabController(
+                length: plugins.length,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Divider(
+                      thickness: 2,
+                      height: 2,
+                    ),
+                    Row(
+                      children: <Widget>[
+                        if (widget.onBottom || toolbarOpen)
+                          buildTabBar(plugins, tabTextColor),
                         IconButton(
-                          icon: Icon(toolbarOpen
-                              ? Icons.expand_less
-                              : Icons.expand_more),
+                          tooltip: toolbarOpen
+                              ? "Close Plugins Toolbar"
+                              : "Open Plugins Toolbar",
+                          icon: buildIconForToolbar(),
                           onPressed: () {
                             setState(() {
                               toolbarOpen = !toolbarOpen;
@@ -86,35 +81,73 @@ class _ToolbarPaneState extends State<ToolbarPane> {
                             });
                           },
                         ),
-                    ],
-                  ),
-                  Flexible(
-                    child: Container(
-                      height: widget.expandable
-                          ? (toolbarOpen
-                              ? max(
-                                  (media.size.height / 3) -
-                                      provider.toolbarHeight,
-                                  min(
-                                      (media.size.height / 2) -
-                                          provider.toolbarHeight,
-                                      300))
-                              : 0)
-                          : viewPortHeightCalculate,
-                      child: TabBarView(
-                        children: <Widget>[
-                          ...plugins.map((e) => e.bottomTabPane(context)),
-                        ],
-                      ),
+                      ],
                     ),
-                  )
-                ],
+                    Flexible(
+                      child: Container(
+                        width: (widget.onBottom || toolbarOpen) ? null : 0,
+                        height: widget.onBottom
+                            ? toolbarHeight(media, provider)
+                            : viewPortHeightCalculate,
+                        child: TabBarView(
+                          children: <Widget>[
+                            ...plugins.map((e) => e.bottomTabPane(context)),
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ),
             );
           },
         ),
       ),
     );
+  }
+
+  Expanded buildTabBar(
+      List<StoryBookPlugin<ChangeNotifier>> plugins, TextStyle tabTextColor) {
+    return Expanded(
+      child: TabBar(
+        onTap: (index) {
+          setState(() {
+            toolbarOpen = true;
+          });
+        },
+        isScrollable: true,
+        tabs: [
+          ...plugins.map((e) => Tab(
+                child: Text(
+                  e.bottomTabText,
+                  style: tabTextColor,
+                ),
+              )),
+        ],
+      ),
+    );
+  }
+
+  double toolbarWidth(MediaQueryData media) {
+    return toolbarOpen
+        ? max((media.size.width / 3), min((media.size.width / 2), 300))
+        : 50;
+  }
+
+  Icon buildIconForToolbar() {
+    if (widget.onBottom) {
+      return Icon(toolbarOpen ? Icons.expand_less : Icons.expand_more);
+    } else {
+      return Icon(toolbarOpen ? Icons.arrow_right : Icons.arrow_left);
+    }
+  }
+
+  double toolbarHeight(
+      MediaQueryData media, OverrideMediaQueryProvider provider) {
+    return toolbarOpen
+        ? max((media.size.height / 3) - provider.toolbarHeight,
+            min((media.size.height / 2) - provider.toolbarHeight, 300))
+        : 0;
   }
 }
 
