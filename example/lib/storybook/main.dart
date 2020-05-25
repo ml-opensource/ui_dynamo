@@ -3,6 +3,7 @@ import 'package:example/pages/person_detail.dart';
 import 'package:example/storybook/alerts_page.dart';
 import 'package:example/storybook/buttons_page.dart';
 import 'package:example/storybook/cells_page.dart';
+import 'package:example/storybook/inputs_page.dart';
 import 'package:example/storybook/main_cell_list_page.dart';
 import 'package:example/storybook/radios_page.dart';
 import 'package:example/storybook/text_style_page.dart';
@@ -51,6 +52,7 @@ class AppStoryBook extends StatelessWidget {
             buildButtonsPage(),
             buildToastPage(),
             buildRadiosPage(),
+            buildInputsPage(),
           ]),
           StoryBookFolder.of(title: 'Composite', pages: [
             buildAlertsPage(),

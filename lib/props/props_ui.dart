@@ -43,20 +43,20 @@ class PropsDisplay extends StatelessWidget {
                   return EditablePropField(
                     maxWidth: maxWidth,
                     prop: prop,
-                    textChanged: props.textChanged,
+                    textChanged: props.textChangedByProp,
                   );
                 } else if (prop is NumberPropHandle) {
                   return EditablePropField(
                     maxWidth: maxWidth,
                     prop: prop,
                     textChanged: (prop, text) {
-                      props.numberChanged(prop, num.parse(text));
+                      props.numberChangedByProp(prop, num.parse(text));
                     },
                   );
                 } else if (prop is BooleanPropHandle) {
                   return CheckablePropField(
                     checkboxChanged: (prop, value) {
-                      props.booleanChanged(prop, value);
+                      props.booleanChangedByProp(prop, value);
                     },
                     maxWidth: maxWidth,
                     prop: prop,
@@ -65,14 +65,14 @@ class PropsDisplay extends StatelessWidget {
                   return RangePropField(
                     prop: prop,
                     rangeChanged: (prop, value) {
-                      props.rangeChanged(prop, value);
+                      props.rangeChangedByProp(prop, value);
                     },
                   );
                 } else if (prop is PropValuesHandle) {
                   return ValueSelectorField(
                     prop: prop,
                     valueChanged: (prop, value) {
-                      props.valueChanged(prop, value);
+                      props.valueChangedByProp(prop, value);
                     },
                   );
                 } else if (prop is RadioValuesHandle) {

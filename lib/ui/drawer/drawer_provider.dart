@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_storybook/actions/actions_extensions.dart';
 import 'package:flutter_storybook/mediaquery/override_media_query_provider.dart';
 import 'package:flutter_storybook/models.dart';
-import 'package:flutter_storybook/props/props_extensions.dart';
+import 'package:flutter_storybook/props/props_plugin.dart';
 import 'package:flutter_storybook/ui/model/page.dart';
 import 'package:provider/provider.dart';
 

@@ -1,5 +1,14 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_storybook/props/props_extensions.dart';
+
+class PropGroup {
+  final String label;
+  final String groupId;
+
+  const PropGroup(this.label, this.groupId);
+}
+
+typedef PropConstructor<T> = PropHandle<T> Function(
+    String label, T value, String groupId);
 
 class Range {
   final double min;
@@ -140,4 +149,12 @@ class RadioValuesHandle<T> extends PropHandle<PropValues<T>> {
 
   @override
   String get textValue => value.toString();
+}
+
+/// Data object for convenience.
+class InputProp {
+  final String value;
+  final ValueChanged<String> onChanged;
+
+  InputProp(this.value, this.onChanged);
 }
