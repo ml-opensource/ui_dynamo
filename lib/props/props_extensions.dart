@@ -26,6 +26,8 @@ class PropsProvider extends ChangeNotifier {
 
   final Map<PropGroup, List<PropHandle>> props = {};
 
+  PropsProvider();
+
   /// Returns a flat [List] where each [PropGroup] key interwoven
   /// with [PropHandle] lists.
   List propsAndGroups() {
@@ -39,17 +41,16 @@ class PropsProvider extends ChangeNotifier {
     return propsAndGroups;
   }
 
-  PropHandle<T> retrieveProp<T>(String label,
+  /// Retrieves a prop after finding the group by [groupId].
+  PropHandle<T> _retrieveProp<T>(String label,
       [String groupId = _defaultGroupId]) {
-    PropGroup group = findGroupById(groupId);
-    if (group != null) {
-      return props[group]
-          .firstWhere((element) => element.label == label, orElse: () => null);
-    }
-    return null;
+    PropGroup group = _findGroupById(groupId);
+    return _retrievePropByGroup(label, group);
   }
 
-  PropHandle<T> retrievePropByGroup<T>(String label, PropGroup group) {
+  /// Looks up a [PropHandle] by [label]. If the label changes, the prop will no
+  /// longer exist potentially.
+  PropHandle<T> _retrievePropByGroup<T>(String label, PropGroup group) {
     if (group != null) {
       final prop = props[group];
       return prop.firstWhere((element) => element.label == label,
@@ -58,17 +59,19 @@ class PropsProvider extends ChangeNotifier {
     return null;
   }
 
-  PropGroup findGroupById(String groupId) {
+  /// Looks up a [PropGroup] by id.
+  PropGroup _findGroupById(String groupId) {
     final group = props.keys.firstWhere((element) => element.groupId == groupId,
         orElse: () => null);
     return group;
   }
 
-  PropGroup retrieveOrAddGroup(PropGroup propGroup) {
+  /// Retrieves or adds a group depending on if it exists in list.
+  PropGroup _retrieveOrAddGroup(PropGroup propGroup) {
     if (propGroup == null) {
       return _defaultGroup;
     }
-    final group = findGroupById(propGroup.groupId);
+    final group = _findGroupById(propGroup.groupId);
     if (group != null) {
       return group;
     } else {
@@ -83,10 +86,12 @@ class PropsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Called when value changes. For internal use, and replaces
+  /// the prop handle on every change.
   void _valueChanged<T>(
       PropHandle<T> prop, PropConstructor<T> propConstructor, T newValue) {
-    final group = findGroupById(prop.groupId);
-    final existing = retrievePropByGroup(prop.label, group);
+    final group = _findGroupById(prop.groupId);
+    final existing = _retrievePropByGroup(prop.label, group);
     final propsList = props[group];
     final propHandle = propConstructor(prop.label, newValue, prop.groupId);
     if (existing == null) {
@@ -136,7 +141,7 @@ class PropsProvider extends ChangeNotifier {
   /// the Props UI.
   void radioChanged<T>(String label, T newValue,
       [String groupId = _defaultGroupId]) {
-    final prop = retrieveProp<dynamic>(label, groupId);
+    final prop = _retrieveProp<dynamic>(label, groupId);
     if (prop is RadioValuesHandle<dynamic>) {
       radioChangedByProp<dynamic>(prop, newValue);
     }
@@ -146,8 +151,8 @@ class PropsProvider extends ChangeNotifier {
   /// This is not strictly safe, though surface methods handle the type-safety.
   dynamic _addOrRetrieveValue<T>(String label, T defaultValue,
       PropConstructor<T> propConstructor, PropGroup group) {
-    final retrievedGroup = retrieveOrAddGroup(group ?? _defaultGroup);
-    final existing = retrievePropByGroup<dynamic>(label, retrievedGroup);
+    final retrievedGroup = _retrieveOrAddGroup(group ?? _defaultGroup);
+    final existing = _retrievePropByGroup<dynamic>(label, retrievedGroup);
     if (existing == null) {
       props[retrievedGroup]
           .add(propConstructor(label, defaultValue, retrievedGroup?.groupId));
