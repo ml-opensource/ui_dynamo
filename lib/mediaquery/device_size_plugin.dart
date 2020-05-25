@@ -15,7 +15,7 @@ class DeviceSizesPlugin extends ChangeNotifier {
   DeviceSizesPlugin(Iterable<DeviceInfo> extraDevices, bool useDefaults)
       : this._devices = useDefaults
             ? [...deviceSizes]
-            : [DeviceSizes.window, ...extraDevices] {
+            : [DeviceSizes.viewPort, ...extraDevices] {
     if (useDefaults) {
       _devices.addAll(extraDevices);
     }

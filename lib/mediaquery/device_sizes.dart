@@ -55,7 +55,7 @@ class DeviceInfo {
 
   bool get isExpandableHeight =>
       expansionAxis == ExpansionAxis.Height ||
-          expansionAxis == ExpansionAxis.Both;
+      expansionAxis == ExpansionAxis.Both;
 
   IconData get iconForCategory {
     switch (category) {
@@ -77,8 +77,8 @@ class DeviceInfo {
 /// List of prebundled devices. Useful for reference when initing
 /// Storybook and you want to default to a particular size.
 class DeviceSizes {
-  static const window =
-      DeviceInfo('Window', Size.infinite, Size.infinite, DeviceCategory.Expand);
+  static const viewPort = DeviceInfo(
+      'Viewport', Size.infinite, Size.infinite, DeviceCategory.Expand);
   static const laptop = DeviceInfo('Laptop', Size(1024, double.infinity),
       Size(1024, double.infinity), DeviceCategory.Desktop);
   static const laptopL = DeviceInfo('Laptop L', Size(1440, double.infinity),
@@ -127,7 +127,7 @@ class DeviceSizes {
 
 /// The list of supported device sizes.
 const List<DeviceInfo> deviceSizes = [
-  DeviceSizes.window,
+  DeviceSizes.viewPort,
   DeviceSizes.laptop,
   DeviceSizes.laptopL,
   DeviceSizes.screen4K,

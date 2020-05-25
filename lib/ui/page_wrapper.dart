@@ -43,7 +43,9 @@ String deviceDisplay(
     return deviceInfo.name;
   }
   final boundedSize = deviceInfo.pixelSize.boundedSize(context);
-  return "${deviceInfo.name} (${boundedSize.width.truncate()}x${boundedSize.height.truncate()})";
+  final width = context.mediaQueryProvider.viewPortWidthCalculate(boundedSize.width);
+  final height = context.mediaQueryProvider.viewPortHeightCalculate(boundedSize.height);
+  return "${deviceInfo.name} (${width.truncate()}x${height.truncate()})";
 }
 
 class _StoryBookPageWrapperState extends State<StoryBookPageWrapper> {
