@@ -93,37 +93,24 @@ class PropsProvider extends ChangeNotifier {
   }
 
   void textChanged(PropHandle prop, String newValue) {
-    _valueChanged(
-        prop,
-        (label, value, groupId) => TextPropHandle(label, value, groupId),
-        newValue);
+    _valueChanged<String>(prop, TextPropHandle.propConstructor, newValue);
   }
 
   void numberChanged(PropHandle prop, num newValue) {
-    _valueChanged(
-        prop,
-        (label, value, groupId) => NumberPropHandle(label, value, groupId),
-        newValue);
+    _valueChanged<num>(prop, NumberPropHandle.propConstructor, newValue);
   }
 
   void booleanChanged(BooleanPropHandle prop, bool newValue) {
-    _valueChanged(
-        prop,
-        (label, value, groupId) => BooleanPropHandle(label, value, groupId),
-        newValue);
+    _valueChanged(prop, BooleanPropHandle.propConstructor, newValue);
   }
 
   void rangeChanged(RangePropHandle prop, double newValue) {
-    _valueChanged(
-        prop,
-        (label, value, groupId) => RangePropHandle(label, value, groupId),
+    _valueChanged(prop, RangePropHandle.propConstructor,
         prop.value.copyWith(currentValue: newValue));
   }
 
   void valueChanged<T>(PropValuesHandle<T> prop, T newValue) {
-    _valueChanged(
-        prop,
-        (label, value, groupId) => PropValuesHandle<T>(label, value, groupId),
+    _valueChanged(prop, PropValuesHandle.propConstructor,
         prop.value.copyWith(selectedValue: newValue));
   }
 
@@ -136,9 +123,7 @@ class PropsProvider extends ChangeNotifier {
   }
 
   void radioChangedByProp<T>(RadioValuesHandle<T> prop, T newValue) {
-    _valueChanged(
-        prop,
-        (label, value, groupId) => RadioValuesHandle<T>(label, value, groupId),
+    _valueChanged(prop, RadioValuesHandle.propConstructor,
         prop.value.copyWith(selectedValue: newValue));
   }
 
@@ -155,52 +140,32 @@ class PropsProvider extends ChangeNotifier {
     }
   }
 
-  String text(String label, String defaultValue, {PropGroup group}) => _value(
-      label,
-      defaultValue,
-      (label, value, groupId) => TextPropHandle(label, value, groupId),
-      group);
+  String text(String label, String defaultValue, {PropGroup group}) =>
+      _value(label, defaultValue, TextPropHandle.propConstructor, group);
 
-  num number(String label, num defaultValue, {PropGroup group}) => _value(
-      label,
-      defaultValue,
-      (label, value, groupId) => NumberPropHandle(label, value, groupId),
-      group);
+  num number(String label, num defaultValue, {PropGroup group}) =>
+      _value(label, defaultValue, NumberPropHandle.propConstructor, group);
 
   int integer(String label, int defaultValue, {PropGroup group}) =>
       number(label, defaultValue, group: group).toInt();
 
-  bool boolean(String label, bool defaultValue, {PropGroup group}) => _value(
-      label,
-      defaultValue,
-      (label, value, groupId) => BooleanPropHandle(label, value, groupId),
-      group);
+  bool boolean(String label, bool defaultValue, {PropGroup group}) =>
+      _value(label, defaultValue, BooleanPropHandle.propConstructor, group);
 
   /// Builds a range slider.
-  double range(String label, Range defaultRange, {PropGroup group}) => _value(
-          label,
-          defaultRange,
-          (label, value, groupId) => RangePropHandle(label, value, groupId),
-          group)
-      .currentValue;
+  double range(String label, Range defaultRange, {PropGroup group}) =>
+      _value(label, defaultRange, RangePropHandle.propConstructor, group)
+          .currentValue;
 
   T valueSelector<T>(String label, PropValues<T> defaultValues,
           {PropGroup group}) =>
       _value<dynamic>(
-              label,
-              defaultValues,
-              (label, value, groupId) =>
-                  PropValuesHandle<dynamic>(label, value, groupId),
-              group)
+              label, defaultValues, PropValuesHandle.propConstructor, group)
           .selectedValue;
 
   T radios<T>(String label, PropValues<T> defaultValues, {PropGroup group}) =>
       _value<dynamic>(
-              label,
-              defaultValues,
-              (label, value, groupId) =>
-                  RadioValuesHandle<dynamic>(label, value, groupId),
-              group)
+              label, defaultValues, RadioValuesHandle.propConstructor, group)
           .selectedValue;
 }
 

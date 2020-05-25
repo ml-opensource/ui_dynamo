@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_storybook/props/props_extensions.dart';
 
 class Range {
   final double min;
@@ -49,6 +50,9 @@ abstract class PropHandle<T> {
 }
 
 class TextPropHandle extends PropHandle<String> {
+  static PropConstructor<String> propConstructor =
+      (label, value, groupId) => TextPropHandle(label, value, groupId);
+
   const TextPropHandle(String label, String value, String groupId)
       : super(label, value, groupId);
 
@@ -57,6 +61,9 @@ class TextPropHandle extends PropHandle<String> {
 }
 
 class NumberPropHandle extends PropHandle<num> {
+  static PropConstructor<num> propConstructor =
+      (label, value, groupId) => NumberPropHandle(label, value, groupId);
+
   const NumberPropHandle(String label, num value, String groupId)
       : super(label, value, groupId);
 
@@ -65,6 +72,9 @@ class NumberPropHandle extends PropHandle<num> {
 }
 
 class BooleanPropHandle extends PropHandle<bool> {
+  static PropConstructor<bool> propConstructor =
+      (label, value, groupId) => BooleanPropHandle(label, value, groupId);
+
   const BooleanPropHandle(String label, bool value, String groupId)
       : super(label, value, groupId);
 
@@ -73,6 +83,9 @@ class BooleanPropHandle extends PropHandle<bool> {
 }
 
 class RangePropHandle extends PropHandle<Range> {
+  static PropConstructor<Range> propConstructor =
+      (label, value, groupId) => RangePropHandle(label, value, groupId);
+
   RangePropHandle(String label, Range value, String groupId)
       : super(label, value, groupId);
 
@@ -108,6 +121,9 @@ class PropValues<T> {
 }
 
 class PropValuesHandle<T> extends PropHandle<PropValues<T>> {
+  static PropConstructor<dynamic> propConstructor = (label, value, groupId) =>
+      PropValuesHandle<dynamic>(label, value, groupId);
+
   PropValuesHandle(String label, PropValues<T> value, String groupId)
       : super(label, value, groupId);
 
@@ -116,10 +132,12 @@ class PropValuesHandle<T> extends PropHandle<PropValues<T>> {
 }
 
 class RadioValuesHandle<T> extends PropHandle<PropValues<T>> {
+  static PropConstructor<dynamic> propConstructor = (label, value, groupId) =>
+      RadioValuesHandle<dynamic>(label, value, groupId);
+
   RadioValuesHandle(String label, PropValues<T> value, String groupId)
       : super(label, value, groupId);
 
   @override
   String get textValue => value.toString();
 }
-
