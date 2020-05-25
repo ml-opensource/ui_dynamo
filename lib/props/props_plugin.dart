@@ -131,9 +131,7 @@ class PropsProvider extends ChangeNotifier {
         prop.value.copyWith(selectedValue: newValue));
   }
 
-  /// Called when a [Radio] changes. Use this in a [RadioGroup] to introduce
-  /// bidirectionality when changing the value from the main UI instead of from
-  /// the Props UI.
+  /// Called when a [Radio] changes.
   void radioChanged<T>(String label, T newValue,
       [String groupId = defaultGroupId]) {
     final prop = _retrieveProp<dynamic>(label, groupId);
@@ -142,6 +140,7 @@ class PropsProvider extends ChangeNotifier {
     }
   }
 
+  /// Called when an input or text value changes.
   void textChanged(String label, String newValue,
       [String groupId = defaultGroupId]) {
     final prop = _retrieveProp<String>(label, groupId);
@@ -150,6 +149,7 @@ class PropsProvider extends ChangeNotifier {
     }
   }
 
+  /// Called when a [bool] value changes.
   void booleanChanged(String label, bool newValue,
       [String groupId = defaultGroupId]) {
     final prop = _retrieveProp<bool>(label, groupId);

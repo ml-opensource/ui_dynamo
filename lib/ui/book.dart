@@ -31,7 +31,23 @@ class StoryBook extends StatefulWidget {
   /// 3. Also, a default Home page using the default Storybook home page. If home
   /// is specified, render that widget instead.
   factory StoryBook.withApp(MaterialApp app,
-      {Widget home,
+      {
+
+      /// use this to replace the default home widget.
+      Widget home,
+
+      /// If true, all provided static routes from the provided [app]
+      /// are added as pages in a directory called "Routes".
+      bool createRoutePages = true,
+
+      /// If true, a default "Storyboard" containing all of the app's routes
+      /// (including preview routes) get added to one board. This can grow
+      /// large if the app has many screens. You can set this to false, and
+      /// alternatively create a custom [StoryBookPage.storyboard] instead with
+      /// a provided [StoryBoard.routesMapping].
+      bool createAppStoryBoard = true,
+
+      /// The data to render each page and define how storybook operates.
       @required StoryBookData data,
 
       /// Preview Routes are useful to add preview-able content to a route that
@@ -73,14 +89,16 @@ class StoryBook extends StatefulWidget {
     );
     final updatedData =
         data.merge(title: data.title ?? Text(app.title), items: [
-      StoryBookPage.storyboard(appOverride: copiedApp, title: 'Storyboard'),
-      StoryBookFolder.of(
-        title: 'Routes',
-        pages: [
-          ...app.routes.entries.map((entry) =>
-              StoryBookPage.of(title: entry.key, child: entry.value)),
-        ],
-      ),
+      if (createAppStoryBoard)
+        StoryBookPage.storyboard(appOverride: copiedApp, title: 'Storyboard'),
+      if (createRoutePages)
+        StoryBookFolder.of(
+          title: 'Routes',
+          pages: [
+            ...app.routes.entries.map((entry) =>
+                StoryBookPage.of(title: entry.key, child: entry.value)),
+          ],
+        ),
     ]);
     return StoryBook(
       app: copiedApp,
