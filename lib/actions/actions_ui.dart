@@ -22,10 +22,13 @@ class ActionsDisplay extends StatelessWidget {
                   children: [
                     TextSpan(
                         text:
-                            'No Actions Found. Start by adding them using the'),
+                            'Waiting for Actions!. Start by adding them using the '),
                     TextSpan(
-                        text: 'context.actions extension.',
+                        text: 'context.actions ',
                         style: TextStyle(fontWeight: FontWeight.bold)),
+                    TextSpan(
+                      text: 'extension',
+                    ),
                   ],
                   style: bodyStyle,
                 ),

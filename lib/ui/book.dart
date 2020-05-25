@@ -110,8 +110,8 @@ class StoryBook extends StatefulWidget {
         deviceSizesPlugin(
             extraDevices: extraDevices, useDefaults: useDeviceSizeDefaults),
         if (useDefaultPlugins) ...[
-          actionsPlugin(),
           propsPlugin(),
+          actionsPlugin(),
         ],
       ],
       data: updatedData.merge(items: [
