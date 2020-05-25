@@ -26,6 +26,8 @@ class PropsProvider extends ChangeNotifier {
 
   final Map<PropGroup, List<PropHandle>> props = {};
 
+  /// Returns a flat [List] where each [PropGroup] key interwoven
+  /// with [PropHandle] lists.
   List propsAndGroups() {
     final propsAndGroups = [];
     props.forEach((key, value) {
@@ -96,28 +98,42 @@ class PropsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Called when text changes from Props UI. For internal use.
   void textChanged(PropHandle prop, String newValue) {
     _valueChanged<String>(prop, TextPropHandle.propConstructor, newValue);
   }
 
+  /// Called when number changes from Props UI. For internal use.
   void numberChanged(PropHandle prop, num newValue) {
     _valueChanged<num>(prop, NumberPropHandle.propConstructor, newValue);
   }
 
+  /// Called when boolean changes from Props UI. For internal use.
   void booleanChanged(BooleanPropHandle prop, bool newValue) {
     _valueChanged(prop, BooleanPropHandle.propConstructor, newValue);
   }
 
+  /// Called when Range changes from Props UI. For internal use.
   void rangeChanged(RangePropHandle prop, double newValue) {
     _valueChanged(prop, RangePropHandle.propConstructor,
         prop.value.copyWith(currentValue: newValue));
   }
 
+  /// Called when value changes from Props UI. For internal use.
   void valueChanged<T>(PropValuesHandle<T> prop, T newValue) {
     _valueChanged(prop, PropValuesHandle.propConstructor,
         prop.value.copyWith(selectedValue: newValue));
   }
 
+  /// Called when radio changes from Props UI. For internal use.
+  void radioChangedByProp<T>(RadioValuesHandle<T> prop, T newValue) {
+    _valueChanged(prop, RadioValuesHandle.propConstructor,
+        prop.value.copyWith(selectedValue: newValue));
+  }
+
+  /// Called when a [Radio] changes. Use this in a [RadioGroup] to introduce
+  /// bidirectionality when changing the value from the main UI instead of from
+  /// the Props UI.
   void radioChanged<T>(String label, T newValue,
       [String groupId = _defaultGroupId]) {
     final prop = retrieveProp<dynamic>(label, groupId);
@@ -126,12 +142,9 @@ class PropsProvider extends ChangeNotifier {
     }
   }
 
-  void radioChangedByProp<T>(RadioValuesHandle<T> prop, T newValue) {
-    _valueChanged(prop, RadioValuesHandle.propConstructor,
-        prop.value.copyWith(selectedValue: newValue));
-  }
-
-  dynamic _value<T>(String label, T defaultValue,
+  /// Adds or retrieves a value from the underlying props data.
+  /// This is not strictly safe, though surface methods handle the type-safety.
+  dynamic _addOrRetrieveValue<T>(String label, T defaultValue,
       PropConstructor<T> propConstructor, PropGroup group) {
     final retrievedGroup = retrieveOrAddGroup(group ?? _defaultGroup);
     final existing = retrievePropByGroup<dynamic>(label, retrievedGroup);
@@ -149,14 +162,16 @@ class PropsProvider extends ChangeNotifier {
   /// Specify a [PropGroup] to group each prop in the UI. By default, fills the
   /// default group.
   String text(String label, String defaultValue, {PropGroup group}) =>
-      _value(label, defaultValue, TextPropHandle.propConstructor, group);
+      _addOrRetrieveValue(
+          label, defaultValue, TextPropHandle.propConstructor, group);
 
   /// Constructs [NumberPropHandle] to fill a [num] property field. In the props
   /// UI this is a [TextField] of type [TextInputType.number].
   /// Specify a [PropGroup] to group each prop in the UI. By default, fills the
   /// default group.
   num number(String label, num defaultValue, {PropGroup group}) =>
-      _value(label, defaultValue, NumberPropHandle.propConstructor, group);
+      _addOrRetrieveValue(
+          label, defaultValue, NumberPropHandle.propConstructor, group);
 
   /// Constructs [NumberPropHandle] to fill a [num] property field as an [int].
   /// In the props UI this is a [TextField] of type [TextInputType.number].
@@ -170,14 +185,16 @@ class PropsProvider extends ChangeNotifier {
   /// Specify a [PropGroup] to group each prop in the UI. By default, fills the
   /// default group.
   bool boolean(String label, bool defaultValue, {PropGroup group}) =>
-      _value(label, defaultValue, BooleanPropHandle.propConstructor, group);
+      _addOrRetrieveValue(
+          label, defaultValue, BooleanPropHandle.propConstructor, group);
 
   /// Constructs [RangePropHandle] to fill a [Range] property field for a
   /// range slider value. In the props UI this is a [RangeSlider].
   /// Specify a [PropGroup] to group each prop in the UI. By default, fills the
   /// default group.
   double range(String label, Range defaultRange, {PropGroup group}) =>
-      _value(label, defaultRange, RangePropHandle.propConstructor, group)
+      _addOrRetrieveValue(
+              label, defaultRange, RangePropHandle.propConstructor, group)
           .currentValue;
 
   /// Constructs [PropValuesHandle] to fill a [T] property field. In the props UI
@@ -185,7 +202,7 @@ class PropsProvider extends ChangeNotifier {
   /// to group each prop in the UI. By default, fills the default group.
   T valueSelector<T>(String label, PropValues<T> defaultValues,
           {PropGroup group}) =>
-      _value<dynamic>(
+      _addOrRetrieveValue<dynamic>(
               label, defaultValues, PropValuesHandle.propConstructor, group)
           .selectedValue;
 
@@ -193,7 +210,7 @@ class PropsProvider extends ChangeNotifier {
   /// this is a List of [RadioListTile] with selector options. Specify a [PropGroup]
   /// to group each prop in the UI. By default, fills the default group.
   T radios<T>(String label, PropValues<T> defaultValues, {PropGroup group}) =>
-      _value<dynamic>(
+      _addOrRetrieveValue<dynamic>(
               label, defaultValues, RadioValuesHandle.propConstructor, group)
           .selectedValue;
 }
