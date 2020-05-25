@@ -219,7 +219,7 @@ class _StoryBookState extends State<StoryBook> {
                         builder: selectedPage.widget.builder,
                       ),
                     ),
-                    if (desktop)
+                    if (desktop && toolbarPane != null)
                       Container(
                         decoration: BoxDecoration(
                           border: Border(
