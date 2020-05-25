@@ -2,6 +2,7 @@ import 'dart:core';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_storybook/plugins/safe_provider.dart';
 import 'package:flutter_storybook/props/props_models.dart';
 import 'package:provider/provider.dart';
@@ -20,6 +21,9 @@ const _defaultGroupId = '';
 const _defaultGroup = PropGroup('', _defaultGroupId);
 
 class PropsProvider extends ChangeNotifier {
+  factory PropsProvider.of(BuildContext context) =>
+      Provider.of<PropsProvider>(context);
+
   final Map<PropGroup, List<PropHandle>> props = {};
 
   List propsAndGroups() {
@@ -140,37 +144,59 @@ class PropsProvider extends ChangeNotifier {
     }
   }
 
+  /// Constructs [TextPropHandle] to fill a [String] property field. In the props
+  /// UI this is a [TextField].
+  /// Specify a [PropGroup] to group each prop in the UI. By default, fills the
+  /// default group.
   String text(String label, String defaultValue, {PropGroup group}) =>
       _value(label, defaultValue, TextPropHandle.propConstructor, group);
 
+  /// Constructs [NumberPropHandle] to fill a [num] property field. In the props
+  /// UI this is a [TextField] of type [TextInputType.number].
+  /// Specify a [PropGroup] to group each prop in the UI. By default, fills the
+  /// default group.
   num number(String label, num defaultValue, {PropGroup group}) =>
       _value(label, defaultValue, NumberPropHandle.propConstructor, group);
 
+  /// Constructs [NumberPropHandle] to fill a [num] property field as an [int].
+  /// In the props UI this is a [TextField] of type [TextInputType.number].
+  /// Specify a [PropGroup] to group each prop in the UI. By default, fills the
+  /// default group.
   int integer(String label, int defaultValue, {PropGroup group}) =>
       number(label, defaultValue, group: group).toInt();
 
+  /// Constructs [BooleanPropHandle] to fill a [bool] property field. In the
+  /// props UI this is a [Checkbox].
+  /// Specify a [PropGroup] to group each prop in the UI. By default, fills the
+  /// default group.
   bool boolean(String label, bool defaultValue, {PropGroup group}) =>
       _value(label, defaultValue, BooleanPropHandle.propConstructor, group);
 
-  /// Builds a range slider.
+  /// Constructs [RangePropHandle] to fill a [Range] property field for a
+  /// range slider value. In the props UI this is a [RangeSlider].
+  /// Specify a [PropGroup] to group each prop in the UI. By default, fills the
+  /// default group.
   double range(String label, Range defaultRange, {PropGroup group}) =>
       _value(label, defaultRange, RangePropHandle.propConstructor, group)
           .currentValue;
 
+  /// Constructs [PropValuesHandle] to fill a [T] property field. In the props UI
+  /// this is a [DropdownButton] with selector options. Specify a [PropGroup]
+  /// to group each prop in the UI. By default, fills the default group.
   T valueSelector<T>(String label, PropValues<T> defaultValues,
           {PropGroup group}) =>
       _value<dynamic>(
               label, defaultValues, PropValuesHandle.propConstructor, group)
           .selectedValue;
 
+  /// Constructs [RadioValuesHandle] to fill a [T] property field. In the props UI
+  /// this is a List of [RadioListTile] with selector options. Specify a [PropGroup]
+  /// to group each prop in the UI. By default, fills the default group.
   T radios<T>(String label, PropValues<T> defaultValues, {PropGroup group}) =>
       _value<dynamic>(
               label, defaultValues, RadioValuesHandle.propConstructor, group)
           .selectedValue;
 }
-
-PropsProvider props(BuildContext context) =>
-    Provider.of<PropsProvider>(context);
 
 extension PropsProviderExtension on BuildContext {
   PropsProvider get props => Provider.of<PropsProvider>(this);
