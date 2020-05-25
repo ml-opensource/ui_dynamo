@@ -47,18 +47,19 @@ class ActionsDisplay extends StatelessWidget {
 
 /// displays a single action.
 class ActionLabel extends StatelessWidget {
+  final ActionType action;
+
   const ActionLabel({
     Key key,
     @required this.action,
   }) : super(key: key);
-
-  final ActionType action;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ListTile(
+        leading: Icon(action.icon),
         title: Text(action.name),
         trailing: Text(DateFormat.jms().format(action.time)),
         subtitle:

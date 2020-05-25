@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_storybook/plugins/safe_provider.dart';
 import 'package:provider/provider.dart';
@@ -8,8 +9,9 @@ class ActionType {
   final String name;
   final Object data;
   final DateTime time;
+  final IconData icon;
 
-  ActionType(this.name, {this.data, DateTime time})
+  ActionType(this.name, {this.data, DateTime time, this.icon})
       : this.time = time ?? DateTime.now();
 
   @override
@@ -47,7 +49,7 @@ class ActionsProvider extends ChangeNotifier {
   GestureTapCallback onPressed(String buttonName,
           {GestureTapCallback through}) =>
       () {
-        this.add(ActionType('$buttonName: Tap'));
+        this.add(ActionType('Tap -> $buttonName', icon: Icons.touch_app));
         through();
       };
 
@@ -57,7 +59,8 @@ class ActionsProvider extends ChangeNotifier {
   ValueChanged<T> valueChanged<T>(String widgetName,
           {ValueChanged<T> through}) =>
       (value) {
-        this.add(ActionType('$widgetName: Value changed', data: value));
+        this.add(ActionType('Value Changed -> $widgetName',
+            data: value, icon: Icons.track_changes));
         through(value);
       };
 }
