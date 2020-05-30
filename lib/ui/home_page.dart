@@ -65,7 +65,7 @@ class StoryBookHomePage extends StatelessWidget {
                 size: 50,
               ),
               Text(
-                'Welcome to Flutter Storybook. ',
+                "Welcome to Flutter Storybook.",
                 style: TextStyle(fontSize: 30),
               ),
             ],

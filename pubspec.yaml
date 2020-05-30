@@ -11,6 +11,9 @@ dependencies:
   flutter:
     sdk: flutter
 
+  flutter_localizations:
+    sdk: flutter
+
   provider: ^3.0.0
   rxdart: ^0.24.0
   intl: ^0.16.1

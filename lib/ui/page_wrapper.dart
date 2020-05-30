@@ -63,6 +63,7 @@ class _StoryBookPageWrapperState extends State<StoryBookPageWrapper> {
             children: <Widget>[
               !widget.shouldScroll
                   ? widget.base.isolatedCopy(
+                      context,
                       home: widget.builder(
                           context, query.currentMediaQuery, widget.base),
                       data: query.currentMediaQuery,

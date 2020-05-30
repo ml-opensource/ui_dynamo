@@ -49,6 +49,7 @@ class ScalableScreen extends StatelessWidget {
                   child: ClipRect(
                     clipper: CustomRect(Offset(0, 0)),
                     child: base.isolatedCopy(
+                      context,
                       data: mediaQueryData,
                       // patch when you use a home route with /, dont use child
                       home: isStoryBoard

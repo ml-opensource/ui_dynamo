@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 extension MaterialAppCopy on MaterialApp {
-  MaterialApp isolatedCopy(
+  MaterialApp isolatedCopy(BuildContext context,
           {@required Widget home,
           @required MediaQueryData data,
           @required Locale overrideLocale}) =>
@@ -17,7 +18,7 @@ extension MaterialAppCopy on MaterialApp {
         locale: overrideLocale ?? locale,
         localeListResolutionCallback: localeListResolutionCallback,
         localeResolutionCallback: localeResolutionCallback,
-        localizationsDelegates: localizationsDelegates,
+        localizationsDelegates: delegates,
         supportedLocales: supportedLocales,
         debugShowMaterialGrid: debugShowMaterialGrid,
         showPerformanceOverlay: showPerformanceOverlay,
@@ -25,7 +26,13 @@ extension MaterialAppCopy on MaterialApp {
         themeMode: data.platformBrightness == Brightness.light
             ? ThemeMode.light
             : ThemeMode.dark,
-        home: Material(child: home),
+        home: Material(
+            child: Localizations.override(
+          child: home,
+          locale: overrideLocale,
+          context: context,
+          delegates: delegates,
+        )),
       );
 
   MaterialApp copyWith({
@@ -99,4 +106,13 @@ extension MaterialAppCopy on MaterialApp {
         shortcuts: shortcuts ?? this.shortcuts,
         actions: actions ?? this.actions,
       );
+
+  List<LocalizationsDelegate> get delegates {
+    return [
+      GlobalMaterialLocalizations.delegate,
+      GlobalWidgetsLocalizations.delegate,
+      GlobalCupertinoLocalizations.delegate,
+      if (localizationsDelegates != null) ...localizationsDelegates,
+    ];
+  }
 }
