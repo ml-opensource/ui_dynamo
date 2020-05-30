@@ -43,8 +43,10 @@ String deviceDisplay(
     return deviceInfo.name;
   }
   final boundedSize = deviceInfo.pixelSize.boundedSize(context);
-  final width = context.mediaQueryProvider.viewPortWidthCalculate(boundedSize.width);
-  final height = context.mediaQueryProvider.viewPortHeightCalculate(boundedSize.height);
+  final width =
+      context.mediaQueryProvider.viewPortWidthCalculate(boundedSize.width);
+  final height =
+      context.mediaQueryProvider.viewPortHeightCalculate(boundedSize.height);
   return "${deviceInfo.name} (${width.truncate()}x${height.truncate()})";
 }
 
@@ -64,6 +66,7 @@ class _StoryBookPageWrapperState extends State<StoryBookPageWrapper> {
                       home: widget.builder(
                           context, query.currentMediaQuery, widget.base),
                       data: query.currentMediaQuery,
+                      overrideLocale: query.overrideLocale,
                     )
                   : InteractableScreen(widget: widget),
               buildMediaQueryToolbar(context, query),

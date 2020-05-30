@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 extension MaterialAppCopy on MaterialApp {
   MaterialApp isolatedCopy(
-          {@required Widget home, @required MediaQueryData data}) =>
+          {@required Widget home,
+          @required MediaQueryData data,
+          @required Locale overrideLocale}) =>
       MaterialApp(
         // don't need checked banner, its part of top-level app.
         debugShowCheckedModeBanner: false,
@@ -12,6 +14,7 @@ extension MaterialAppCopy on MaterialApp {
         onUnknownRoute: onUnknownRoute,
         theme: theme,
         darkTheme: darkTheme,
+        locale: overrideLocale ?? locale,
         localeListResolutionCallback: localeListResolutionCallback,
         localeResolutionCallback: localeResolutionCallback,
         localizationsDelegates: localizationsDelegates,

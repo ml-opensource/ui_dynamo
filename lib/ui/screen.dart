@@ -57,6 +57,7 @@ class ScalableScreen extends StatelessWidget {
                               data: mediaQueryData,
                             )
                           : child,
+                      overrideLocale: provider.overrideLocale,
                     ),
                   ),
                 ),
