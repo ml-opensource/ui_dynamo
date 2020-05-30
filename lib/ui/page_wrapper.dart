@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_storybook/localization/localizations_plugin.dart';
 import 'package:flutter_storybook/mediaquery/device_sizes.dart';
 import 'package:flutter_storybook/mediaquery/media_query_toolbar.dart';
 import 'package:flutter_storybook/mediaquery/override_media_query_provider.dart';
@@ -54,6 +55,7 @@ class _StoryBookPageWrapperState extends State<StoryBookPageWrapper> {
   @override
   Widget build(BuildContext context) {
     final query = context.mediaQueryProvider;
+    final localizations = context.locales;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -67,7 +69,8 @@ class _StoryBookPageWrapperState extends State<StoryBookPageWrapper> {
                       home: widget.builder(
                           context, query.currentMediaQuery, widget.base),
                       data: query.currentMediaQuery,
-                      overrideLocale: query.overrideLocale,
+                      overrideLocale: localizations.overrideLocale,
+                      supportedLocales: localizations.supportedLocales,
                     )
                   : InteractableScreen(widget: widget),
               buildMediaQueryToolbar(context, query),

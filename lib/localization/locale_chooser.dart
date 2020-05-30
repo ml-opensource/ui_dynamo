@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_storybook/mediaquery/override_media_query_provider.dart';
+import 'package:flutter_storybook/localization/localizations_plugin.dart';
 
 const defaultLocales = [
   Locale('en'),
@@ -9,25 +9,24 @@ const defaultLocales = [
 class LocaleChooser extends StatelessWidget {
   final List<Locale> supportedLocales;
 
-  const LocaleChooser({Key key, this.supportedLocales = defaultLocales})
+  const LocaleChooser({Key key, @required this.supportedLocales})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final provider = context.mediaQueryProvider;
-    final selectedLocale = provider.overrideLocale;
+    final selectedLocale = context.locales;
     return PopupMenuButton(
       tooltip: 'Choose current Locale',
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: buildLocaleItem(selectedLocale),
+        child: buildLocaleItem(selectedLocale.overrideLocale),
       ),
-      onSelected: (l) => provider.localeChanged(l),
-      itemBuilder: (context) => supportedLocales
+      onSelected: (l) => selectedLocale.localeChanged(l),
+      itemBuilder: (context) => selectedLocale.supportedLocales
           .map((e) => CheckedPopupMenuItem(
                 value: e,
                 child: buildLocaleItem(e),
-                checked: selectedLocale == e,
+                checked: selectedLocale.overrideLocale == e,
               ))
           .toList(),
     );

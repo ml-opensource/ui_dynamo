@@ -55,6 +55,10 @@ MaterialApp buildApp() => MaterialApp(
         '/home': (context) => MainPage(),
         '/company': (context) => CompanyListing(),
       },
+      supportedLocales: [
+        Locale('en', 'US'),
+        Locale('es'),
+      ],
       onGenerateRoute: (settings) {
         if (settings.name == '/detail') {
           final PersonDetailArguments args = settings.arguments;

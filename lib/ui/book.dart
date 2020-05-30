@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_storybook/actions/actions_plugin.dart';
 import 'package:flutter_storybook/flutter_storybook.dart';
+import 'package:flutter_storybook/localization/localizations_plugin.dart';
 import 'package:flutter_storybook/media_utils.dart';
 import 'package:flutter_storybook/mediaquery/device_size_plugin.dart';
 import 'package:flutter_storybook/mediaquery/device_sizes.dart';
-import 'package:flutter_storybook/mediaquery/locale_chooser.dart';
 import 'package:flutter_storybook/mediaquery/override_media_query_provider.dart';
 import 'package:flutter_storybook/models.dart';
 import 'package:flutter_storybook/plugins/plugin.dart';
@@ -108,6 +108,7 @@ class StoryBook extends StatefulWidget {
         ...plugins,
         deviceSizesPlugin(
             extraDevices: extraDevices, useDefaults: useDeviceSizeDefaults),
+        localizationsPlugin(supportedLocales: app.supportedLocales),
         if (useDefaultPlugins) ...[
           propsPlugin(),
           actionsPlugin(),
@@ -158,7 +159,6 @@ class _StoryBookState extends State<StoryBook> {
           ChangeNotifierProvider(
             create: (context) => OverrideMediaQueryProvider(
               widget.data.defaultDevice ?? deviceSizes[0],
-              defaultLocales[0],
             ),
           ),
           ...widget.plugins.map(
@@ -178,7 +178,6 @@ class _StoryBookState extends State<StoryBook> {
                         .toList(),
                   )
                 : null;
-            final media = MediaQuery.of(context);
             return MaterialApp(
               theme: app.theme,
               darkTheme: app.darkTheme,

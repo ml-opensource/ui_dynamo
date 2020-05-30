@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_storybook/localization/localizations_plugin.dart';
 import 'package:flutter_storybook/mediaquery/override_media_query_provider.dart';
 import 'package:flutter_storybook/ui/materialapp+extensions.dart';
 import 'package:flutter_storybook/ui/storyboard/custom_rect.dart';
@@ -30,6 +31,7 @@ class ScalableScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mediaQueryData = provider.boundedMediaQuery;
+    final localizations = context.locales;
     return Transform.scale(
       scale: provider.screenScale,
       child: Column(
@@ -58,7 +60,8 @@ class ScalableScreen extends StatelessWidget {
                               data: mediaQueryData,
                             )
                           : child,
-                      overrideLocale: provider.overrideLocale,
+                      overrideLocale: localizations.overrideLocale,
+                      supportedLocales: localizations.supportedLocales,
                     ),
                   ),
                 ),

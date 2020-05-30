@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_storybook/localization/localizations_file.dart';
-import 'package:flutter_storybook/mediaquery/locale_chooser.dart';
+import 'package:flutter_storybook/localization/locale_chooser.dart';
 
 class StoryBookLocalizations {
   final Locale locale;

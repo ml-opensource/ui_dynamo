@@ -22,10 +22,7 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
 
   Orientation _orientation = Orientation.portrait;
 
-  /// overrides app-level locales.
-  Locale _overrideLocale;
-
-  OverrideMediaQueryProvider(this._currentDeviceSelected, this._overrideLocale);
+  OverrideMediaQueryProvider(this._currentDeviceSelected);
 
   void selectMediaQuery(MediaQueryData query) {
     // if landscape flip size when chosen
@@ -137,11 +134,6 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void localeChanged(Locale locale) {
-    this._overrideLocale = locale;
-    notifyListeners();
-  }
-
   MediaQueryData get currentMediaQuery => _currentMediaQuery;
 
   MediaQueryData get boundedMediaQuery => _boundedMediaQuery;
@@ -194,7 +186,6 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
 
   Orientation get orientation => _orientation;
 
-  Locale get overrideLocale => _overrideLocale;
 }
 
 OverrideMediaQueryProvider mediaQuery(BuildContext context) {

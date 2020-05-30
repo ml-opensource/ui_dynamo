@@ -3,10 +3,13 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_storybook/localization/localizations.dart';
 
 extension MaterialAppCopy on MaterialApp {
-  MaterialApp isolatedCopy(BuildContext context,
-          {@required Widget home,
-          @required MediaQueryData data,
-          @required Locale overrideLocale}) =>
+  MaterialApp isolatedCopy(
+    BuildContext context, {
+    @required Widget home,
+    @required MediaQueryData data,
+    @required Locale overrideLocale,
+    @required List<Locale> supportedLocales,
+  }) =>
       MaterialApp(
         // don't need checked banner, its part of top-level app.
         debugShowCheckedModeBanner: false,
