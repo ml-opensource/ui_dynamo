@@ -17,5 +17,17 @@ const Map<String, Map<String, String>> localizedValues = {
   },
   'es': {
     'homeTitle': 'Bienvenido a Flutter Storybook',
+    'description1':
+        'Comience con el guión gráfico {{image1}} para ver toda su aplicación en una pantalla.',
+    'description2':
+        '2. Seleccione una {{folder}} para elegir una página para obtener una ' +
+            'vista previa. El cajón {{menu}} también contiene lo mismo.',
+    'description3': '3. Utilice la barra de herramientas en la parte superior' +
+        ' para cambiar MediaQueryData transmitido a las pantallas renderizadas.' +
+        ' Cada página en el libro de cuentos / guión gráfico es un' +
+        'experiencia de aplicación separada.',
+    'description4': '4. Utilice Props para obtener una vista previa de' +
+        ' los datos de prueba y experimente cómo se representan los ' +
+        'widgets. Utilice acciones para depurar rápidamente secuencias de acciones.',
   },
 };
