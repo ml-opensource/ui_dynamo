@@ -30,6 +30,7 @@ class ScalableScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final provider = this.provider ?? context.mediaQueryProvider;
     final mediaQueryData = provider.boundedMediaQuery;
     final localizations = context.locales;
     return Transform.scale(
