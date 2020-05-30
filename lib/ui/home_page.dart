@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_storybook/localization/localizations.dart';
 import 'package:flutter_storybook/media_utils.dart';
 import 'package:flutter_storybook/mediaquery/media_query_toolbar.dart';
 import 'package:flutter_storybook/models.dart';
@@ -47,6 +48,7 @@ class StoryBookHomePage extends StatelessWidget {
     final selectedPage = selectedPageFromWidget(data, context);
     final watch = context.isWatch;
     final padding = watch ? 8.0 : 32.0;
+    final localizations = StoryBookLocalizations.of(context);
     return Container(
       padding: EdgeInsets.only(left: padding, right: padding),
       alignment: AlignmentDirectional.center,
@@ -65,7 +67,7 @@ class StoryBookHomePage extends StatelessWidget {
                 size: 50,
               ),
               Text(
-                "Welcome to Flutter Storybook.",
+                localizations.homeTitle,
                 style: TextStyle(fontSize: 30),
               ),
             ],
@@ -75,9 +77,8 @@ class StoryBookHomePage extends StatelessWidget {
           ),
           Text.rich(
             TextSpan(children: [
-              TextSpan(text: 'Start with the storyboard '),
-              WidgetSpan(child: Icon(Icons.book)),
-              TextSpan(text: ' to view your whole app on one screen.')
+              ...localizations.description1
+                  .toWidgetSpan({'image1': Icon(Icons.book)}),
             ]),
             style: TextStyle(fontSize: 20),
           ),
@@ -88,12 +89,10 @@ class StoryBookHomePage extends StatelessWidget {
           ),
           Text.rich(
             TextSpan(children: [
-              TextSpan(text: ' Select a '),
-              WidgetSpan(child: Icon(Icons.folder)),
-              TextSpan(text: ' to pick a page to preview.'),
-              TextSpan(text: ' The drawer '),
-              WidgetSpan(child: Icon(Icons.menu)),
-              TextSpan(text: ' also contains the same.')
+              ...localizations.description2.toWidgetSpan({
+                'folder': Icon(Icons.folder),
+                'menu': Icon(Icons.menu),
+              }),
             ]),
             style: TextStyle(fontSize: 20),
           ),
@@ -103,9 +102,7 @@ class StoryBookHomePage extends StatelessWidget {
             height: 16,
           ),
           Text(
-            '3. Utilize the toolbar at the top to change MediaQueryData passed '
-            'down to the rendered screens. Each page in the storybook / storyboard is a '
-            'separate app experience.',
+            localizations.description3,
             style: TextStyle(fontSize: 20),
           ),
           SizedBox(
@@ -122,9 +119,7 @@ class StoryBookHomePage extends StatelessWidget {
             height: 16,
           ),
           Text(
-            '4. Utilize Props to preview test data and experiment with '
-            'how widgets get rendered. Utilize actions to quickly debug action '
-            'streams.',
+            localizations.description4,
             style: TextStyle(fontSize: 20),
           ),
         ],

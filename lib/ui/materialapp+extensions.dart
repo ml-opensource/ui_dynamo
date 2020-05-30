@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_storybook/localization/localizations.dart';
 
 extension MaterialAppCopy on MaterialApp {
   MaterialApp isolatedCopy(BuildContext context,
@@ -112,6 +113,7 @@ extension MaterialAppCopy on MaterialApp {
       GlobalMaterialLocalizations.delegate,
       GlobalWidgetsLocalizations.delegate,
       GlobalCupertinoLocalizations.delegate,
+      StoryBookLocalizations.delegate,
       if (localizationsDelegates != null) ...localizationsDelegates,
     ];
   }
