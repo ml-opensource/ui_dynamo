@@ -108,7 +108,9 @@ class StoryBook extends StatefulWidget {
         ...plugins,
         deviceSizesPlugin(
             extraDevices: extraDevices, useDefaults: useDeviceSizeDefaults),
-        localizationsPlugin(supportedLocales: app.supportedLocales),
+        localizationsPlugin(
+            supportedLocales: app.supportedLocales,
+            localizationDisplay: app.localizationsDelegates),
         if (useDefaultPlugins) ...[
           propsPlugin(),
           actionsPlugin(),
@@ -174,7 +176,7 @@ class _StoryBookState extends State<StoryBook> {
                 ? ToolbarPane(
                     onBottom: !desktop,
                     plugins: widget.plugins
-                        .where((element) => element.bottomTabText != null)
+                        .where((element) => element.tabText != null)
                         .toList(),
                   )
                 : null;

@@ -8,8 +8,8 @@ import 'package:provider/provider.dart';
 
 StoryBookPlugin propsPlugin() => StoryBookPlugin<PropsProvider>(
       provider: ChangeNotifierProvider(create: (context) => PropsProvider()),
-      bottomTabText: 'Props',
-      bottomTabPane: (context) => PropsDisplay(),
+      tabText: 'Props',
+      tabPane: (context) => PropsDisplay(),
     );
 
 const defaultGroupId = '';

@@ -91,7 +91,7 @@ class _ToolbarPaneState extends State<ToolbarPane> {
                             : viewPortHeightCalculate,
                         child: TabBarView(
                           children: <Widget>[
-                            ...plugins.map((e) => e.bottomTabPane(context)),
+                            ...plugins.map((e) => e.tabPane(context)),
                           ],
                         ),
                       ),
@@ -119,7 +119,7 @@ class _ToolbarPaneState extends State<ToolbarPane> {
         tabs: [
           ...plugins.map((e) => Tab(
                 child: Text(
-                  e.bottomTabText,
+                  e.tabText,
                   style: tabTextColor,
                 ),
               )),

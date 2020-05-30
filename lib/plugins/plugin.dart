@@ -7,9 +7,9 @@ import 'package:provider/provider.dart';
 class StoryBookPlugin<T extends ChangeNotifier> {
   final ChangeNotifierProvider<T> provider;
 
-  final WidgetBuilder bottomTabPane;
+  final WidgetBuilder tabPane;
 
-  final String bottomTabText;
+  final String tabText;
 
-  StoryBookPlugin({this.provider, this.bottomTabPane, this.bottomTabText});
+  StoryBookPlugin({this.provider, this.tabPane, this.tabText});
 }

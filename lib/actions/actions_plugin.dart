@@ -6,6 +6,6 @@ import 'package:provider/provider.dart';
 /// Returns a plugin instance for [ActionsProvider] with a bottom tab text display.
 StoryBookPlugin actionsPlugin() => StoryBookPlugin<ActionsProvider>(
       provider: ChangeNotifierProvider(create: (context) => ActionsProvider()),
-      bottomTabText: 'Actions',
-      bottomTabPane: (context) => ActionsDisplay(),
+      tabText: 'Actions',
+      tabPane: (context) => ActionsDisplay(),
     );
