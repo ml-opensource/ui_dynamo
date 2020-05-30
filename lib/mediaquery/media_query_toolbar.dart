@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_storybook/media_utils.dart';
 import 'package:flutter_storybook/mediaquery/device_sizes.dart';
+import 'package:flutter_storybook/mediaquery/locale_chooser.dart';
 import 'package:flutter_storybook/mediaquery/override_media_query_provider.dart';
 import 'package:flutter_storybook/mediaquery/screen_size_chooser.dart';
 import 'package:flutter_storybook/mediaquery/text_scale.dart';
@@ -126,6 +127,8 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
             ? () => mediaQueryProvider.rotate(context)
             : null,
       ),
+      buildDivider(),
+      LocaleChooser(),
     ];
   }
 
@@ -135,6 +138,7 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
     final realQuery = MediaQuery.of(context);
     if (expandable && !isExpanded) {
       return Wrap(
+        crossAxisAlignment: WrapCrossAlignment.center,
         children: [...topBarList(mediaQueryProvider, realQuery)],
       );
     }
