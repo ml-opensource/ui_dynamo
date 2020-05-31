@@ -146,6 +146,7 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
         ],
       );
     }
+    final currentMediaQuery = mediaQueryProvider.currentMediaQuery;
     return Wrap(
       direction: Axis.horizontal,
       crossAxisAlignment: WrapCrossAlignment.center,
@@ -153,7 +154,7 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
         ...topBarList(mediaQueryProvider, realQuery, offsetProvider),
         _MediaQueryDivider(),
         AdjustableNumberScaleWidget(
-          scaleFactor: mediaQueryProvider.currentMediaQuery.textScaleFactor,
+          scaleFactor: currentMediaQuery.textScaleFactor,
           scaleFactorChanged: (value) =>
               _textScaleFactorChanged(value, mediaQueryProvider),
           displayIcon: Icons.text_fields,
@@ -170,41 +171,19 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
             scale: offsetProvider.screenScale,
             updateScale: (value) => _updateScale(value, offsetProvider),
           ),
-          IconButton(
-            icon: Icon(mediaQueryProvider.currentMediaQuery.disableAnimations
-                ? Icons.directions_walk
-                : Icons.directions_run),
-            tooltip: 'Toggle Animations ' +
-                (mediaQueryProvider.currentMediaQuery.disableAnimations
-                    ? 'On'
-                    : 'Off'),
-            onPressed: () => _toggleAnimations(mediaQueryProvider),
+          _AnimationsIcon(
+            currentMediaQuery: currentMediaQuery,
+            toggle: () => _toggleAnimations(mediaQueryProvider),
           ),
           _MediaQueryDivider(),
-          IconButton(
-            icon: Icon(
-              mediaQueryProvider.currentMediaQuery.invertColors
-                  ? Icons.invert_colors
-                  : Icons.invert_colors_off,
-            ),
-            tooltip: 'Invert Colors ' +
-                (mediaQueryProvider.currentMediaQuery.invertColors
-                    ? 'Off'
-                    : 'On'),
-            onPressed: () => _toggleInvertColors(mediaQueryProvider),
+          _InvertColorsButton(
+            currentMediaQuery: currentMediaQuery,
+            toggle: () => _toggleInvertColors(mediaQueryProvider),
           ),
           _MediaQueryDivider(),
-          IconButton(
-            icon: Icon(
-              mediaQueryProvider.currentMediaQuery.highContrast
-                  ? Icons.tonality
-                  : Icons.panorama_fish_eye,
-            ),
-            tooltip: 'High Contrast ' +
-                (mediaQueryProvider.currentMediaQuery.highContrast
-                    ? 'Off'
-                    : 'On'),
-            onPressed: () => _toggleHighContrast(mediaQueryProvider),
+          _HighContrastIcon(
+            currentMediaQuery: currentMediaQuery,
+            toggle: () => _toggleHighContrast(mediaQueryProvider),
           ),
         ],
       ],
@@ -269,4 +248,80 @@ class _MediaQueryDivider extends StatelessWidget {
       child: VerticalDivider(),
     );
   }
+}
+
+abstract class _ToggleIcon extends StatelessWidget {
+  final GestureTapCallback toggle;
+  final IconData activeIcon;
+  final IconData inactiveIcon;
+  final String label;
+
+  const _ToggleIcon(
+      {Key key,
+      @required this.toggle,
+      @required this.activeIcon,
+      @required this.inactiveIcon,
+      @required this.label})
+      : super(key: key);
+
+  bool get isActivated;
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: Icon(
+        isActivated ? activeIcon : inactiveIcon,
+      ),
+      tooltip: '$label ' + (isActivated ? 'Off' : 'On'),
+      onPressed: toggle,
+    );
+  }
+}
+
+class _HighContrastIcon extends _ToggleIcon {
+  final MediaQueryData currentMediaQuery;
+  final GestureTapCallback toggle;
+
+  const _HighContrastIcon({Key key, this.currentMediaQuery, this.toggle})
+      : super(
+            key: key,
+            toggle: toggle,
+            activeIcon: Icons.tonality,
+            inactiveIcon: Icons.panorama_fish_eye,
+            label: 'High Contrast');
+
+  @override
+  bool get isActivated => currentMediaQuery.highContrast;
+}
+
+class _InvertColorsButton extends _ToggleIcon {
+  final MediaQueryData currentMediaQuery;
+  final GestureTapCallback toggle;
+
+  const _InvertColorsButton({Key key, this.currentMediaQuery, this.toggle})
+      : super(
+            key: key,
+            toggle: toggle,
+            activeIcon: Icons.invert_colors,
+            inactiveIcon: Icons.invert_colors_off,
+            label: 'Invert Colors');
+
+  @override
+  bool get isActivated => currentMediaQuery.invertColors;
+}
+
+class _AnimationsIcon extends _ToggleIcon {
+  final MediaQueryData currentMediaQuery;
+  final GestureTapCallback toggle;
+
+  const _AnimationsIcon({Key key, this.currentMediaQuery, this.toggle})
+      : super(
+            key: key,
+            toggle: toggle,
+            activeIcon: Icons.directions_walk,
+            inactiveIcon: Icons.directions_run,
+            label: 'Toggle Animations');
+
+  @override
+  bool get isActivated => !currentMediaQuery.disableAnimations;
 }

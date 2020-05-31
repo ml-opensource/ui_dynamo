@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_storybook/mediaquery/offset_plugin.dart';
 import 'package:flutter_storybook/mediaquery/override_media_query_plugin.dart';
+import 'package:flutter_storybook/ui/model/widget.dart';
 import 'package:flutter_storybook/ui/page_wrapper.dart';
 import 'package:flutter_storybook/ui/screen.dart';
 import 'package:flutter_storybook/ui/storyboard/utils.dart';
@@ -105,33 +106,13 @@ class _InteractableScreenState extends State<InteractableScreen> {
             !widthSmaller &&
             !(isExpandableWidth && !isExpandableHeight),
         onOffsetChange: (offset) => _sendOffsetNotification(query, offset),
-        child: OverflowBox(
-          child: Stack(
-            children: [
-              Positioned(
-                top: topCalculated,
-                left: leftCalculated,
-                child: SizedBox(
-                  width: query.viewportWidth + 2,
-                  height: query.viewportHeight + 2,
-                  child: Stack(
-                    children: [
-                      ScalableScreen(
-                        showBorder: !query.currentDevice.isExpandable,
-                        isStoryBoard: false,
-                        viewPortSize: query.viewportSize,
-                        screenScale: offset.screenScale,
-                        boundedMediaQuery: query.boundedMediaQuery,
-                        base: widget.widget.base,
-                        child: widget.widget.builder(context,
-                            query.currentMediaQuery, widget.widget.base),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
+        child: _OverflowSizedScreen(
+          topCalculated: topCalculated,
+          leftCalculated: leftCalculated,
+          query: query,
+          offset: offset,
+          builder: widget.widget.builder,
+          base: widget.widget.base,
         ),
       ),
     );
@@ -149,5 +130,55 @@ class _InteractableScreenState extends State<InteractableScreen> {
       _notScrollingThrottle.add(null);
     }
     return false;
+  }
+}
+
+class _OverflowSizedScreen extends StatelessWidget {
+  const _OverflowSizedScreen({
+    Key key,
+    @required this.topCalculated,
+    @required this.leftCalculated,
+    @required this.query,
+    @required this.offset,
+    @required this.base,
+    @required this.builder,
+  }) : super(key: key);
+
+  final double topCalculated;
+  final double leftCalculated;
+  final OverrideMediaQueryProvider query;
+  final OffsetProvider offset;
+  final MaterialApp base;
+  final StorybookWidgetBuilder builder;
+
+  @override
+  Widget build(BuildContext context) {
+    return OverflowBox(
+      child: Stack(
+        children: [
+          Positioned(
+            top: topCalculated,
+            left: leftCalculated,
+            child: SizedBox(
+              width: query.viewportWidth + 2,
+              height: query.viewportHeight + 2,
+              child: Stack(
+                children: [
+                  ScalableScreen(
+                    showBorder: !query.currentDevice.isExpandable,
+                    isStoryBoard: false,
+                    viewPortSize: query.viewportSize,
+                    screenScale: offset.screenScale,
+                    boundedMediaQuery: query.boundedMediaQuery,
+                    base: base,
+                    child: builder(context, query.currentMediaQuery, base),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
