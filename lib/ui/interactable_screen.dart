@@ -117,7 +117,9 @@ class _InteractableScreenState extends State<InteractableScreen> {
                       ScalableScreen(
                         showBorder: !query.currentDevice.isExpandable,
                         isStoryBoard: false,
-                        provider: query,
+                        viewPortSize: query.viewportSize,
+                        screenScale: query.screenScale,
+                        boundedMediaQuery: query.boundedMediaQuery,
                         base: widget.widget.base,
                         child: widget.widget.builder(context,
                             query.currentMediaQuery, widget.widget.base),

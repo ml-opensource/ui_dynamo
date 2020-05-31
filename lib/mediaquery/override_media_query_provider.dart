@@ -171,6 +171,8 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
     return viewPortWidthCalculate(boundedMediaQuery.size.width);
   }
 
+  Size get viewportSize => Size(viewportWidth, viewportHeight);
+
   double get scaledWidth => viewPortWidthCalculate(
       boundedMediaQuery.size.width * _currentScreenScale);
 

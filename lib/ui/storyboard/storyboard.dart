@@ -128,9 +128,11 @@ class StoryboardController extends State<StoryBoard> {
       child: ScalableScreen(
         base: widget.child,
         child: child,
-        provider: provider,
         label: label,
         routeName: routeName,
+        viewPortSize: provider.viewportSize,
+        screenScale: provider.screenScale,
+        boundedMediaQuery: provider.boundedMediaQuery,
       ),
     );
   }
@@ -151,10 +153,12 @@ class StoryboardController extends State<StoryBoard> {
       child: ScalableScreen(
         base: widget.child,
         child: FlowStart(label: label),
-        provider: provider,
         label: label,
         isFlowStart: true,
         routeName: nextRoute,
+        viewPortSize: provider.viewportSize,
+        boundedMediaQuery: provider.boundedMediaQuery,
+        screenScale: provider.screenScale,
       ),
     );
   }

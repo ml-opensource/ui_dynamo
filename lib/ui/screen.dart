@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_storybook/localization/localizations_plugin.dart';
-import 'package:flutter_storybook/mediaquery/override_media_query_provider.dart';
 import 'package:flutter_storybook/ui/materialapp+extensions.dart';
 import 'package:flutter_storybook/ui/storyboard/custom_rect.dart';
 import 'package:flutter_storybook/ui/storyboard/label.dart';
@@ -14,11 +13,12 @@ class ScalableScreen extends StatelessWidget {
   final bool isStoryBoard;
   final bool isFlowStart;
   final bool showBorder;
-  final OverrideMediaQueryProvider provider;
+  final double screenScale;
+  final Size viewPortSize;
+  final MediaQueryData boundedMediaQuery;
 
   const ScalableScreen({
     Key key,
-    @required this.provider,
     @required this.base,
     this.label,
     @required this.child,
@@ -26,15 +26,17 @@ class ScalableScreen extends StatelessWidget {
     this.isStoryBoard = true,
     this.showBorder = true,
     this.isFlowStart = false,
+    @required this.screenScale,
+    @required this.viewPortSize,
+    @required this.boundedMediaQuery,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final provider = this.provider ?? context.mediaQueryProvider;
-    final mediaQueryData = provider.boundedMediaQuery;
+    final mediaQueryData = boundedMediaQuery;
     final localizations = context.locales;
     return Transform.scale(
-      scale: provider.screenScale,
+      scale: screenScale,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -45,8 +47,8 @@ class ScalableScreen extends StatelessWidget {
                     )
                   : null,
               child: SizedBox(
-                width: provider.viewportWidth,
-                height: provider.viewportHeight,
+                width: viewPortSize.width,
+                height: viewPortSize.height,
                 child: Material(
                   elevation: 4,
                   child: ClipRect(

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_storybook/localization/locale_chooser.dart';
 import 'package:flutter_storybook/media_utils.dart';
 import 'package:flutter_storybook/mediaquery/device_sizes.dart';
-import 'package:flutter_storybook/localization/locale_chooser.dart';
 import 'package:flutter_storybook/mediaquery/override_media_query_provider.dart';
 import 'package:flutter_storybook/mediaquery/screen_size_chooser.dart';
 import 'package:flutter_storybook/mediaquery/text_scale.dart';
@@ -86,11 +86,6 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
     mediaQueryProvider.selectScreenScale(scale);
   }
 
-  Widget buildDivider() => Container(
-        height: 15,
-        child: VerticalDivider(),
-      );
-
   List<Widget> topBarList(
       OverrideMediaQueryProvider mediaQueryProvider, MediaQueryData realQuery) {
     return [
@@ -108,14 +103,14 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
           _toggleBrightness(mediaQueryProvider);
         },
       ),
-      buildDivider(),
+      _MediaQueryDivider(),
       IconButton(
         tooltip: 'Size to Fit',
         icon: Icon(Icons.center_focus_strong),
         onPressed: () =>
             mediaQueryProvider.resetScreenAdjustments(realQuery: realQuery),
       ),
-      buildDivider(),
+      _MediaQueryDivider(),
       IconButton(
         tooltip: !mediaQueryProvider.currentDevice.isExpandable
             ? "Rotate"
@@ -127,7 +122,7 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
             ? () => mediaQueryProvider.rotate(context)
             : null,
       ),
-      buildDivider(),
+      _MediaQueryDivider(),
       LocaleChooser(),
     ];
   }
@@ -147,7 +142,7 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
       crossAxisAlignment: WrapCrossAlignment.center,
       children: <Widget>[
         ...topBarList(mediaQueryProvider, realQuery),
-        buildDivider(),
+        _MediaQueryDivider(),
         AdjustableNumberScaleWidget(
           scaleFactor: mediaQueryProvider.currentMediaQuery.textScaleFactor,
           scaleFactorChanged: (value) =>
@@ -155,7 +150,7 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
           displayIcon: Icons.text_fields,
           tooltip: 'Select a Text Scale',
         ),
-        buildDivider(),
+        _MediaQueryDivider(),
         MediaChooserButton(
           deviceSelected: (value) =>
               _deviceSelected(context, value, mediaQueryProvider, realQuery),
@@ -176,7 +171,7 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
                     : 'Off'),
             onPressed: () => _toggleAnimations(mediaQueryProvider),
           ),
-          buildDivider(),
+          _MediaQueryDivider(),
           IconButton(
             icon: Icon(
               mediaQueryProvider.currentMediaQuery.invertColors
@@ -189,7 +184,7 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
                     : 'On'),
             onPressed: () => _toggleInvertColors(mediaQueryProvider),
           ),
-          buildDivider(),
+          _MediaQueryDivider(),
           IconButton(
             icon: Icon(
               mediaQueryProvider.currentMediaQuery.highContrast
@@ -249,6 +244,20 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _MediaQueryDivider extends StatelessWidget {
+  const _MediaQueryDivider({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 15,
+      child: VerticalDivider(),
     );
   }
 }
