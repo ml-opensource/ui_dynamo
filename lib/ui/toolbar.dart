@@ -84,15 +84,17 @@ class _ToolbarPaneState extends State<ToolbarPane> {
                       ],
                     ),
                     Flexible(
-                      child: Container(
-                        width: (widget.onBottom || toolbarOpen) ? null : 0,
-                        height: widget.onBottom
-                            ? toolbarHeight(media, provider)
-                            : viewPortHeightCalculate,
-                        child: TabBarView(
-                          children: <Widget>[
-                            ...plugins.map((e) => e.tabPane(context)),
-                          ],
+                      child: Visibility(
+                        visible: (widget.onBottom || toolbarOpen),
+                        child: Container(
+                          height: widget.onBottom
+                              ? toolbarHeight(media, provider)
+                              : viewPortHeightCalculate,
+                          child: TabBarView(
+                            children: <Widget>[
+                              ...plugins.map((e) => e.tabPane(context)),
+                            ],
+                          ),
                         ),
                       ),
                     )
