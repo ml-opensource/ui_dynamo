@@ -133,8 +133,10 @@ class _LocalizationPaneState extends State<LocalizationPane> {
           if (data.isEmpty) {
             return EmptyToolbarView(
               text: StyledText.body(
-                Text('No LocalizationDelegates Found. You can can add them '
-                    'to your app to see them here.'),
+                Text(
+                    'No LocalizationDelegates Found. Add localizationDelegates '
+                    'to your MaterialApp and implement Localizable to see '
+                    'all localizations here.'),
               ),
             );
           }
