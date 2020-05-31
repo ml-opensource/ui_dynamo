@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_storybook/mediaquery/device_sizes.dart';
+import 'package:flutter_storybook/mediaquery/offset_plugin.dart';
 import 'package:flutter_storybook/plugins/plugin.dart';
 import 'package:flutter_storybook/ui/utils/size+extensions.dart';
 import 'package:provider/provider.dart';
@@ -10,16 +11,8 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
   MediaQueryData _currentMediaQuery;
   MediaQueryData _boundedMediaQuery;
   DeviceInfo _currentDeviceSelected;
-  double _currentScreenScale = 1.0;
   double _toolbarHeight = 0;
   Size _pluginsSize = Size.zero;
-
-  /// this will be offset at scale 1.0
-  Offset _currentOffset = Offset.zero;
-
-  /// this will be used when changing scale, to represent offset as function
-  /// of current.
-  Offset _scaledOffset = Offset.zero;
 
   Orientation _orientation = Orientation.portrait;
 
@@ -45,36 +38,19 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void selectScreenScale(double scale) {
-    this._currentScreenScale = scale;
-    this._scaledOffset = scaledOffsetCalculate();
-    this._currentOffset = currentOffsetFromScale();
-    notifyListeners();
-  }
-
-  Offset currentOffsetFromScale() =>
-      Offset(_scaledOffset.dx / screenScale, _scaledOffset.dy / screenScale);
-
-  Offset scaledOffsetCalculate() => Offset(
-      (_currentOffset.dx * screenScale), (_currentOffset.dy * screenScale));
-
-  void offsetChange(Offset delta) {
-    this._scaledOffset = _scaledOffset + delta;
-    this._currentOffset = currentOffsetFromScale();
-    notifyListeners();
-  }
-
   void rotate(BuildContext context) {
     _orientation = _orientation == Orientation.portrait
         ? Orientation.landscape
         : Orientation.portrait;
     resetScreenAdjustments(
-        realQuery: MediaQuery.of(context),
-        overrideData: this.boundedMediaQuery,
-        shouldFlip: true);
+      context.offsetProvider,
+      realQuery: MediaQuery.of(context),
+      overrideData: this.boundedMediaQuery,
+      shouldFlip: true,
+    );
   }
 
-  void resetScreenAdjustments(
+  void resetScreenAdjustments(OffsetProvider offsetProvider,
       {DeviceInfo newDevice,
       MediaQueryData overrideData,
       MediaQueryData realQuery,
@@ -89,6 +65,8 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
     if (overrideData != null) {
       _setMediaQuery(overrideData, shouldFlip);
     }
+
+    double newScale = 1.0;
     // use this to adjust screen size to fit.
     if (realQuery != null &&
         currentDevice.expansionAxis != ExpansionAxis.Both) {
@@ -105,23 +83,21 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
       if (deviceHeight > deviceWidth) {
         // if calculated screen height taller than device height, set to 1.0
         if ((heightRatio * deviceWidth) > realWidth) {
-          this._currentScreenScale = widthRatio;
+          newScale = widthRatio;
         } else {
-          this._currentScreenScale = heightRatio;
+          newScale = heightRatio;
         }
       } else {
         // if calculated size going to be taller than real height, make it 1.0
         if ((widthRatio * deviceHeight) > realHeight) {
-          this._currentScreenScale = heightRatio;
+          newScale = heightRatio;
         } else {
-          this._currentScreenScale = widthRatio;
+          newScale = widthRatio;
         }
       }
-    } else {
-      this._currentScreenScale = 1.0;
     }
-    this._currentOffset = Offset(0, toolbarHeight / 2);
-    this._scaledOffset = scaledOffsetCalculate();
+    final newOffset = Offset(0, toolbarHeight / 2);
+    offsetProvider.selectScreenScale(newScale, newOffset: newOffset);
     notifyListeners();
   }
 
@@ -140,10 +116,6 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
   MediaQueryData get boundedMediaQuery => _boundedMediaQuery;
 
   DeviceInfo get currentDevice => _currentDeviceSelected;
-
-  double get screenScale => _currentScreenScale;
-
-  Offset get currentOffset => _scaledOffset;
 
   double get toolbarHeight => _toolbarHeight;
 
@@ -174,11 +146,11 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
 
   Size get viewportSize => Size(viewportWidth, viewportHeight);
 
-  double get scaledWidth => viewPortWidthCalculate(
-      boundedMediaQuery.size.width * _currentScreenScale);
+  double scaledWidth(OffsetProvider provider) => viewPortWidthCalculate(
+      boundedMediaQuery.size.width * provider.screenScale);
 
-  double get scaledHeight =>
-      viewPortHeightCalculate(boundedMediaQuery.size.height * screenScale);
+  double scaledHeight(OffsetProvider provider) => viewPortHeightCalculate(
+      boundedMediaQuery.size.height * provider.screenScale);
 
   double viewPortOffsetTop(MediaQueryData realQuery) =>
       (realQuery.size.height - boundedMediaQuery.size.height - toolbarHeight) /

@@ -6,6 +6,7 @@ import 'package:flutter_storybook/localization/localizations_plugin.dart';
 import 'package:flutter_storybook/media_utils.dart';
 import 'package:flutter_storybook/mediaquery/device_size_plugin.dart';
 import 'package:flutter_storybook/mediaquery/device_sizes.dart';
+import 'package:flutter_storybook/mediaquery/offset_plugin.dart';
 import 'package:flutter_storybook/mediaquery/override_media_query_plugin.dart';
 import 'package:flutter_storybook/models.dart';
 import 'package:flutter_storybook/plugins/plugin.dart';
@@ -112,6 +113,7 @@ class StoryBook extends StatefulWidget {
             supportedLocales: app.supportedLocales,
             localizationDisplay: app.localizationsDelegates ?? []),
         overrideMediaQueryPlugin(defaultDevice: data.defaultDevice),
+        offsetPlugin(),
         if (useDefaultPlugins) ...[
           propsPlugin(),
           actionsPlugin(),

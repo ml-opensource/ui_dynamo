@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_storybook/localization/locale_chooser.dart';
 import 'package:flutter_storybook/media_utils.dart';
 import 'package:flutter_storybook/mediaquery/device_sizes.dart';
+import 'package:flutter_storybook/mediaquery/offset_plugin.dart';
 import 'package:flutter_storybook/mediaquery/override_media_query_plugin.dart';
 import 'package:flutter_storybook/mediaquery/screen_size_chooser.dart';
 import 'package:flutter_storybook/mediaquery/text_scale.dart';
@@ -23,11 +24,16 @@ class MediaQueryToolbar extends StatefulWidget {
 class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
   bool isExpanded = false;
 
-  void _deviceSelected(BuildContext context, DeviceInfo device,
-      OverrideMediaQueryProvider mediaQueryProvider, MediaQueryData realQuery) {
+  void _deviceSelected(
+      BuildContext context,
+      DeviceInfo device,
+      OverrideMediaQueryProvider mediaQueryProvider,
+      MediaQueryData realQuery,
+      OffsetProvider offsetProvider) {
     // reset scale, offset back to 100% when changing device
     if (device != mediaQueryProvider.currentDevice) {
       mediaQueryProvider.resetScreenAdjustments(
+        offsetProvider,
         newDevice: device,
         overrideData: mediaQueryProvider.currentMediaQuery.copyWith(
           size: device.logicalSize.boundedSize(context),
@@ -81,13 +87,12 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
     ));
   }
 
-  void _updateScale(
-      double scale, OverrideMediaQueryProvider mediaQueryProvider) {
-    mediaQueryProvider.selectScreenScale(scale);
+  void _updateScale(double scale, OffsetProvider provider) {
+    provider.selectScreenScale(scale);
   }
 
-  List<Widget> topBarList(
-      OverrideMediaQueryProvider mediaQueryProvider, MediaQueryData realQuery) {
+  List<Widget> topBarList(OverrideMediaQueryProvider mediaQueryProvider,
+      MediaQueryData realQuery, OffsetProvider offsetProvider) {
     return [
       IconButton(
         icon: Icon(mediaQueryProvider.currentMediaQuery.platformBrightness ==
@@ -107,8 +112,8 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
       IconButton(
         tooltip: 'Size to Fit',
         icon: Icon(Icons.center_focus_strong),
-        onPressed: () =>
-            mediaQueryProvider.resetScreenAdjustments(realQuery: realQuery),
+        onPressed: () => mediaQueryProvider
+            .resetScreenAdjustments(offsetProvider, realQuery: realQuery),
       ),
       _MediaQueryDivider(),
       IconButton(
@@ -128,20 +133,24 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
   }
 
   buildIcons(
-      BuildContext context, OverrideMediaQueryProvider mediaQueryProvider) {
+      BuildContext context,
+      OverrideMediaQueryProvider mediaQueryProvider,
+      OffsetProvider offsetProvider) {
     final expandable = context.isMobile;
     final realQuery = MediaQuery.of(context);
     if (expandable && !isExpanded) {
       return Wrap(
         crossAxisAlignment: WrapCrossAlignment.center,
-        children: [...topBarList(mediaQueryProvider, realQuery)],
+        children: [
+          ...topBarList(mediaQueryProvider, realQuery, offsetProvider)
+        ],
       );
     }
     return Wrap(
       direction: Axis.horizontal,
       crossAxisAlignment: WrapCrossAlignment.center,
       children: <Widget>[
-        ...topBarList(mediaQueryProvider, realQuery),
+        ...topBarList(mediaQueryProvider, realQuery, offsetProvider),
         _MediaQueryDivider(),
         AdjustableNumberScaleWidget(
           scaleFactor: mediaQueryProvider.currentMediaQuery.textScaleFactor,
@@ -152,14 +161,14 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
         ),
         _MediaQueryDivider(),
         MediaChooserButton(
-          deviceSelected: (value) =>
-              _deviceSelected(context, value, mediaQueryProvider, realQuery),
+          deviceSelected: (value) => _deviceSelected(
+              context, value, mediaQueryProvider, realQuery, offsetProvider),
           selectedDevice: mediaQueryProvider.currentDevice,
         ),
         if (!mediaQueryProvider.currentDevice.isExpandable) ...[
           ZoomControls(
-            scale: mediaQueryProvider.screenScale,
-            updateScale: (value) => _updateScale(value, mediaQueryProvider),
+            scale: offsetProvider.screenScale,
+            updateScale: (value) => _updateScale(value, offsetProvider),
           ),
           IconButton(
             icon: Icon(mediaQueryProvider.currentMediaQuery.disableAnimations
@@ -223,7 +232,7 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
           children: [
             Flexible(
               fit: FlexFit.tight,
-              child: buildIcons(context, media),
+              child: buildIcons(context, media, context.offsetProvider),
             ),
             if (context.isMobile)
               SizedBox(

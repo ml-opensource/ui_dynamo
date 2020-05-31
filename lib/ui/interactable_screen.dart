@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_storybook/mediaquery/offset_plugin.dart';
 import 'package:flutter_storybook/mediaquery/override_media_query_plugin.dart';
 import 'package:flutter_storybook/ui/page_wrapper.dart';
 import 'package:flutter_storybook/ui/screen.dart';
@@ -38,16 +39,16 @@ class _InteractableScreenState extends State<InteractableScreen> {
 
   CompositeSubscription _subscription = CompositeSubscription();
 
-  double _calculateOffsetTop(
-      MediaQueryData realQuery, OverrideMediaQueryProvider provider) {
+  double _calculateOffsetTop(MediaQueryData realQuery,
+      OverrideMediaQueryProvider provider, OffsetProvider offsetProvider) {
     return calculateTop(Offset(0, provider.viewPortOffsetTop(realQuery)),
-        provider.currentOffset, 1.0);
+        offsetProvider.currentOffset, 1.0);
   }
 
-  double _calculateOffsetLeft(
-      MediaQueryData realQuery, OverrideMediaQueryProvider provider) {
+  double _calculateOffsetLeft(MediaQueryData realQuery,
+      OverrideMediaQueryProvider provider, OffsetProvider offsetProvider) {
     final offsetLeft = Offset(provider.viewPortOffsetLeft(realQuery), 0);
-    return calculateLeft(offsetLeft, provider.currentOffset, 1.0);
+    return calculateLeft(offsetLeft, offsetProvider.currentOffset, 1.0);
   }
 
   @override
@@ -59,7 +60,7 @@ class _InteractableScreenState extends State<InteractableScreen> {
       (offset, isScrolling) => OffsetScrollEvent(offset, isScrolling),
     ).where((event) => !event.isScrolling).listen((event) {
       if (event.offset != null && !event.isScrolling) {
-        context.mediaQueryProvider.offsetChange(event.offset);
+        context.offsetProvider.offsetChange(event.offset);
       }
     }).addTo(_subscription);
     _notScrollingThrottle
@@ -79,19 +80,20 @@ class _InteractableScreenState extends State<InteractableScreen> {
   @override
   Widget build(BuildContext context) {
     final query = context.mediaQueryProvider;
+    final offset = context.offsetProvider;
     final realQuery = MediaQuery.of(context);
     // if window, move back to center and do not allow panning.
-    final widthSmaller =
-        query.scaledWidth <= query.viewPortWidthCalculate(realQuery.size.width);
-    final heightSmaller = query.scaledHeight <=
+    final widthSmaller = query.scaledWidth(offset) <=
+        query.viewPortWidthCalculate(realQuery.size.width);
+    final heightSmaller = query.scaledHeight(offset) <=
         query.viewPortHeightCalculate(realQuery.size.height);
     final isExpandableWidth = query.currentDevice.isExpandableWidth;
     final isExpandableHeight = query.currentDevice.isExpandableHeight;
     double topCalculated = isExpandableHeight
         ? query.toolbarHeight
-        : _calculateOffsetTop(realQuery, query);
+        : _calculateOffsetTop(realQuery, query, offset);
     double leftCalculated =
-        isExpandableWidth ? 0 : _calculateOffsetLeft(realQuery, query);
+        isExpandableWidth ? 0 : _calculateOffsetLeft(realQuery, query, offset);
     return NotificationListener<ScrollNotification>(
       onNotification: _sendScrollNotification,
       child: PanScrollDetector(
@@ -118,7 +120,7 @@ class _InteractableScreenState extends State<InteractableScreen> {
                         showBorder: !query.currentDevice.isExpandable,
                         isStoryBoard: false,
                         viewPortSize: query.viewportSize,
-                        screenScale: query.screenScale,
+                        screenScale: offset.screenScale,
                         boundedMediaQuery: query.boundedMediaQuery,
                         base: widget.widget.base,
                         child: widget.widget.builder(context,

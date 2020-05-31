@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_storybook/mediaquery/offset_plugin.dart';
 import 'package:flutter_storybook/mediaquery/override_media_query_plugin.dart';
 import 'package:flutter_storybook/ui/screen.dart';
 import 'package:flutter_storybook/ui/storyboard/flow_start.dart';
@@ -37,7 +38,7 @@ class StoryboardController extends State<StoryBoard> {
   }
 
   double _calculateOffsetTop(Offset offset, MediaQueryData realQuery,
-      OverrideMediaQueryProvider provider) {
+      OverrideMediaQueryProvider provider, OffsetProvider offsetProvider) {
     final offsetTop = Offset(
         0,
         offset.dy +
@@ -45,17 +46,17 @@ class StoryboardController extends State<StoryBoard> {
                 2 -
             provider.toolbarHeight);
     return calculateTop(
-        offsetTop, provider.currentOffset, provider.screenScale);
+        offsetTop, offsetProvider.currentOffset, offsetProvider.screenScale);
   }
 
   double _calculateOffsetLeft(Offset offset, MediaQueryData realQuery,
-      OverrideMediaQueryProvider provider) {
+      OverrideMediaQueryProvider provider, OffsetProvider offsetProvider) {
     final offsetLeft = Offset(
         offset.dx +
             (realQuery.size.width - provider.boundedMediaQuery.size.width) / 2,
         0);
     return calculateLeft(
-        offsetLeft, provider.currentOffset, provider.screenScale);
+        offsetLeft, offsetProvider.currentOffset, offsetProvider.screenScale);
   }
 
   @override
@@ -65,9 +66,10 @@ class StoryboardController extends State<StoryBoard> {
     final mediaQueryData = query.boundedMediaQuery;
     final base = widget.child;
     final size = mediaQueryData.size;
+    final offsetProvider = context.offsetProvider;
     return Scaffold(
       body: PanScrollDetector(
-        onOffsetChange: (offset) => query.offsetChange(offset),
+        onOffsetChange: (offset) => offsetProvider.offsetChange(offset),
         child: Container(
           width: double.infinity,
           height: double.infinity,
@@ -77,6 +79,7 @@ class StoryboardController extends State<StoryBoard> {
               children: [
                 if (base?.home != null && widget.routesMapping == null)
                   _addChild(
+                    offsetProvider: offsetProvider,
                     base: base,
                     provider: query,
                     realQuery: realQuery,
@@ -89,6 +92,7 @@ class StoryboardController extends State<StoryBoard> {
                   ),
                 if (base?.initialRoute != null && widget.routesMapping == null)
                   _addChild(
+                    offsetProvider: offsetProvider,
                     base: base,
                     provider: query,
                     realQuery: realQuery,
@@ -100,7 +104,7 @@ class StoryboardController extends State<StoryBoard> {
                         base?.home != null ? size.width + _kSpacing : 0, 10),
                     label: 'Initial Route',
                   ),
-                ..._renderRoutes(query, realQuery),
+                ..._renderRoutes(query, realQuery, offsetProvider),
               ],
             ),
           ),
@@ -119,9 +123,12 @@ class StoryboardController extends State<StoryBoard> {
     String label,
     @required MediaQueryData realQuery,
     @required OverrideMediaQueryProvider provider,
+    @required OffsetProvider offsetProvider,
   }) {
-    final top = _calculateOffsetTop(offset, realQuery, provider);
-    final left = _calculateOffsetLeft(offset, realQuery, provider);
+    final top =
+        _calculateOffsetTop(offset, realQuery, provider, offsetProvider);
+    final left =
+        _calculateOffsetLeft(offset, realQuery, provider, offsetProvider);
     return Positioned(
       top: top,
       left: left,
@@ -131,7 +138,7 @@ class StoryboardController extends State<StoryBoard> {
         label: label,
         routeName: routeName,
         viewPortSize: provider.viewportSize,
-        screenScale: provider.screenScale,
+        screenScale: offsetProvider.screenScale,
         boundedMediaQuery: provider.boundedMediaQuery,
       ),
     );
@@ -144,9 +151,12 @@ class StoryboardController extends State<StoryBoard> {
     @required MediaQueryData realQuery,
     @required OverrideMediaQueryProvider provider,
     @required String nextRoute,
+    @required OffsetProvider offsetProvider,
   }) {
-    final top = _calculateOffsetTop(offset, realQuery, provider);
-    final left = _calculateOffsetLeft(offset, realQuery, provider);
+    final top =
+        _calculateOffsetTop(offset, realQuery, provider, offsetProvider);
+    final left =
+        _calculateOffsetLeft(offset, realQuery, provider, offsetProvider);
     return Positioned(
       top: top,
       left: left,
@@ -158,12 +168,13 @@ class StoryboardController extends State<StoryBoard> {
         routeName: nextRoute,
         viewPortSize: provider.viewportSize,
         boundedMediaQuery: provider.boundedMediaQuery,
-        screenScale: provider.screenScale,
+        screenScale: offsetProvider.screenScale,
       ),
     );
   }
 
-  _renderRoutes(OverrideMediaQueryProvider provider, MediaQueryData realQuery) {
+  _renderRoutes(OverrideMediaQueryProvider provider, MediaQueryData realQuery,
+      OffsetProvider offsetProvider) {
     final List<Widget> routesList = [];
     final base = widget.child;
     final _size = provider.boundedMediaQuery.size;
@@ -173,6 +184,7 @@ class StoryboardController extends State<StoryBoard> {
       mapping.entries.forEach((entry) {
         var offsetIndex = 0;
         routesList.add(_addSectionStart(
+          offsetProvider: offsetProvider,
           provider: provider,
           realQuery: realQuery,
           base: base,
@@ -191,6 +203,7 @@ class StoryboardController extends State<StoryBoard> {
             return true;
           }());
           routesList.add(_addChild(
+            offsetProvider: offsetProvider,
             base: base,
             provider: provider,
             realQuery: realQuery,
@@ -209,6 +222,7 @@ class StoryboardController extends State<StoryBoard> {
     } else if (base?.routes != null) {
       for (var r = 0; r < base.routes.keys.length; r++) {
         routesList.add(_addChild(
+          offsetProvider: offsetProvider,
           provider: provider,
           realQuery: realQuery,
           base: base,
