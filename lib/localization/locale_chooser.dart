@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_storybook/localization/locale_item.dart';
 import 'package:flutter_storybook/localization/localizations_plugin.dart';
 
 const defaultLocales = [
@@ -19,29 +20,18 @@ class LocaleChooser extends StatelessWidget {
       tooltip: 'Choose current Locale',
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: buildLocaleItem(selectedLocale.overrideLocale),
+        child: LocaleItem(selectedLocale: selectedLocale.overrideLocale),
       ),
       onSelected: (l) => selectedLocale.localeChanged(l),
       itemBuilder: (context) => selectedLocale.supportedLocales
           .map((e) => CheckedPopupMenuItem(
                 value: e,
-                child: buildLocaleItem(e),
+                child: LocaleItem(
+                  selectedLocale: e,
+                ),
                 checked: selectedLocale.overrideLocale == e,
               ))
           .toList(),
     );
   }
-
-  Row buildLocaleItem(Locale selectedLocale) => Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(Icons.language),
-          SizedBox(
-            width: 8.0,
-          ),
-          Text(buildLocaleText(selectedLocale)),
-        ],
-      );
-
-  String buildLocaleText(Locale selectedLocale) => selectedLocale.toString();
 }
