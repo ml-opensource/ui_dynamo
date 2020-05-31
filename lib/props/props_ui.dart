@@ -170,13 +170,12 @@ class CheckablePropField extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
         constraints: maxWidth,
-        child: Row(
-          children: <Widget>[
-            Text(prop.label),
-            Checkbox(
-                value: prop.value,
-                onChanged: (value) => checkboxChanged(prop, value)),
-          ],
+        child: ListTileTheme.merge(
+          contentPadding: EdgeInsets.only(),
+          child: CheckboxListTile(
+              title: Text(prop.label),
+              value: prop.value,
+              onChanged: (value) => checkboxChanged(prop, value)),
         ),
       );
 }
@@ -194,11 +193,13 @@ class RangePropField extends StatelessWidget {
     return Row(
       children: <Widget>[
         Text(prop.label),
-        Slider(
-          value: prop.value.currentValue,
-          max: prop.value.max,
-          min: prop.value.min,
-          onChanged: (value) => rangeChanged(prop, value),
+        Flexible(
+          child: Slider(
+            value: prop.value.currentValue,
+            max: prop.value.max,
+            min: prop.value.min,
+            onChanged: (value) => rangeChanged(prop, value),
+          ),
         ),
       ],
     );
@@ -217,22 +218,24 @@ class ValueSelectorField<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: <Widget>[
-        Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(prop.label),
-            DropdownButton(
-              value: prop.value.selectedValue,
-              onChanged: (value) => valueChanged(prop, value),
-              items: [
-                ...prop.value.values.map((e) => DropdownMenuItem(
-                      value: e,
-                      child: Text("$e"),
-                    )),
-              ],
-            )
-          ],
+        Flexible(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(prop.label),
+              DropdownButton(
+                value: prop.value.selectedValue,
+                onChanged: (value) => valueChanged(prop, value),
+                items: [
+                  ...prop.value.values.map((e) => DropdownMenuItem(
+                        value: e,
+                        child: Text("$e"),
+                      )),
+                ],
+              )
+            ],
+          ),
         ),
       ],
     );
@@ -251,23 +254,25 @@ class RadioSelectorField<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: <Widget>[
-        Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(prop.label),
-            ...prop.value.values.map((e) => Container(
-                  constraints: BoxConstraints(maxWidth: 300),
-                  child: RadioListTile(
-                    title: Text(e.toString()),
-                    groupValue: prop.value.selectedValue,
-                    onChanged: (value) {
-                      valueChanged(prop, value);
-                    },
-                    value: e,
-                  ),
-                )),
-          ],
+        Flexible(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(prop.label),
+              ...prop.value.values.map((e) => Container(
+                    constraints: BoxConstraints(maxWidth: 300),
+                    child: RadioListTile(
+                      title: Text(e.toString()),
+                      groupValue: prop.value.selectedValue,
+                      onChanged: (value) {
+                        valueChanged(prop, value);
+                      },
+                      value: e,
+                    ),
+                  )),
+            ],
+          ),
         ),
       ],
     );
