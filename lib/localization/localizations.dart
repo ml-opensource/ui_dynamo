@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_storybook/localization/localizations_file.dart';
 import 'package:flutter_storybook/localization/locale_chooser.dart';
+import 'package:flutter_storybook/localization/localizations_file.dart';
+import 'package:flutter_storybook/localization/localizations_plugin.dart';
 
-class StoryBookLocalizations {
+class StoryBookLocalizations implements Localizable {
   final Locale locale;
 
   StoryBookLocalizations(this.locale);
@@ -36,6 +37,12 @@ class StoryBookLocalizations {
   String get description4 {
     return localizedValue('description4');
   }
+
+  @override
+  Map<String, String> localizations() => localizedValues[locale.languageCode];
+
+  @override
+  String get name => 'Storybook Localizations';
 }
 
 extension LocalizedParam on String {

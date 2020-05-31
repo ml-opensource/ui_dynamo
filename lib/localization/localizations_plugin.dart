@@ -5,6 +5,15 @@ import 'package:flutter_storybook/localization/localizations_ui.dart';
 import 'package:flutter_storybook/plugins/plugin.dart';
 import 'package:provider/provider.dart';
 
+/// Implement this class to provide the set of localizations
+/// for a map.
+class Localizable {
+
+  String get name => '';
+
+  Map<String, String> localizations() => {};
+}
+
 class LocalizationsPlugin extends ChangeNotifier {
   final List<Locale> supportedLocales;
 
