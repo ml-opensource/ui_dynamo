@@ -54,8 +54,6 @@ String deviceDisplay(
 class _StoryBookPageWrapperState extends State<StoryBookPageWrapper> {
   @override
   Widget build(BuildContext context) {
-    final query = context.mediaQueryProvider;
-    final localizations = context.locales;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -64,26 +62,46 @@ class _StoryBookPageWrapperState extends State<StoryBookPageWrapper> {
             alignment: AlignmentDirectional.topCenter,
             children: <Widget>[
               !widget.shouldScroll
-                  ? widget.base.isolatedCopy(
-                      context,
-                      home: widget.builder(
-                          context, query.currentMediaQuery, widget.base),
-                      data: query.currentMediaQuery,
-                      overrideLocale: localizations.overrideLocale,
-                      supportedLocales: localizations.supportedLocales,
-                    )
+                  ? _NonScrollableScreen(
+                      base: widget.base, builder: widget.builder)
                   : InteractableScreen(widget: widget),
-              buildMediaQueryToolbar(context, query),
+              _MediaQueryWrapper(),
             ],
           ),
         ),
       ],
     );
   }
+}
 
-  buildMediaQueryToolbar(
-          BuildContext context, OverrideMediaQueryProvider provider) =>
-      MeasureSize(
-          onChange: (size) => provider.toolbarHeightChanged(size.height),
-          child: MediaQueryToolbar());
+class _MediaQueryWrapper extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final provider = context.mediaQueryProvider;
+    return MeasureSize(
+        onChange: (size) => provider.toolbarHeightChanged(size.height),
+        child: MediaQueryToolbar());
+  }
+}
+
+class _NonScrollableScreen extends StatelessWidget {
+  final MaterialApp base;
+  final StorybookWidgetBuilder builder;
+
+  const _NonScrollableScreen(
+      {Key key, @required this.base, @required this.builder})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final query = context.mediaQueryProvider;
+    final localizations = context.locales;
+    return base.isolatedCopy(
+      context,
+      home: builder(context, query.currentMediaQuery, base),
+      data: query.currentMediaQuery,
+      overrideLocale: localizations.overrideLocale,
+      supportedLocales: localizations.supportedLocales,
+    );
+  }
 }

@@ -49,25 +49,13 @@ class ScalableScreen extends StatelessWidget {
               child: SizedBox(
                 width: viewPortSize.width,
                 height: viewPortSize.height,
-                child: Material(
-                  elevation: 4,
-                  child: ClipRect(
-                    clipper: CustomRect(Offset(0, 0)),
-                    child: base.isolatedCopy(
-                      context,
-                      data: mediaQueryData,
-                      // patch when you use a home route with /, dont use child
-                      home: isStoryBoard
-                          ? MediaQuery(
-                              child: child,
-                              data: mediaQueryData,
-                            )
-                          : child,
-                      overrideLocale: localizations.overrideLocale,
-                      supportedLocales: localizations.supportedLocales,
-                    ),
-                  ),
-                ),
+                child: _IsolatedCopy(
+                    base: base,
+                    mediaQueryData: mediaQueryData,
+                    isStoryBoard: isStoryBoard,
+                    overrideLocale: localizations.overrideLocale,
+                    supportedLocales: localizations.supportedLocales,
+                    child: child),
               )),
           if (label != null)
             Center(
@@ -77,6 +65,48 @@ class ScalableScreen extends StatelessWidget {
               routeName: routeName,
             )),
         ],
+      ),
+    );
+  }
+}
+
+class _IsolatedCopy extends StatelessWidget {
+  final MaterialApp base;
+  final MediaQueryData mediaQueryData;
+  final bool isStoryBoard;
+  final Locale overrideLocale;
+  final List<Locale> supportedLocales;
+  final Widget child;
+
+  const _IsolatedCopy(
+      {Key key,
+      @required this.base,
+      @required this.mediaQueryData,
+      @required this.isStoryBoard,
+      @required this.overrideLocale,
+      @required this.supportedLocales,
+      @required this.child})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      elevation: 4,
+      child: ClipRect(
+        clipper: CustomRect(Offset(0, 0)),
+        child: base.isolatedCopy(
+          context,
+          data: mediaQueryData,
+          // patch when you use a home route with /, dont use child
+          home: isStoryBoard
+              ? MediaQuery(
+                  child: child,
+                  data: mediaQueryData,
+                )
+              : child,
+          overrideLocale: overrideLocale,
+          supportedLocales: supportedLocales,
+        ),
       ),
     );
   }

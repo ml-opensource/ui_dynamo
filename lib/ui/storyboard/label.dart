@@ -13,7 +13,6 @@ class StoryBookLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final device = context.mediaQueryProvider.currentDevice;
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
@@ -34,17 +33,33 @@ class StoryBookLabel extends StatelessWidget {
                 fontSize: 20,
               ),
             ),
-            IconButton(
-              icon: Icon(
-                  !isFlowStart ? device.iconForCategory : Icons.arrow_forward),
-              onPressed: () {
-                drawer(context)
-                    .select(context, ValueKey('Routes'), ValueKey(routeName));
-              },
-            )
+            CurrentDeviceIcon(isFlowStart: isFlowStart, routeName: routeName)
           ],
         ),
       ),
+    );
+  }
+}
+
+class CurrentDeviceIcon extends StatelessWidget {
+  const CurrentDeviceIcon({
+    Key key,
+    @required this.isFlowStart,
+    @required this.routeName,
+  }) : super(key: key);
+
+  final bool isFlowStart;
+  final String routeName;
+
+  @override
+  Widget build(BuildContext context) {
+    final device = context.mediaQueryProvider.currentDevice;
+    return IconButton(
+      icon: Icon(!isFlowStart ? device.iconForCategory : Icons.arrow_forward),
+      onPressed: () {
+        drawer(context)
+            .select(context, ValueKey('Routes'), ValueKey(routeName));
+      },
     );
   }
 }
