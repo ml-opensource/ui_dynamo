@@ -2,6 +2,8 @@ import 'package:example/pages/company_listing.dart';
 import 'package:example/pages/main_page.dart';
 import 'package:example/pages/person_detail.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_storybook/flutter_storybook.dart';
 
 void main() => runApp(MyApp());
 
@@ -58,6 +60,12 @@ MaterialApp buildApp() => MaterialApp(
       supportedLocales: [
         Locale('en', 'US'),
         Locale('es'),
+      ],
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        StoryBookLocalizations.delegate,
       ],
       onGenerateRoute: (settings) {
         if (settings.name == '/detail') {

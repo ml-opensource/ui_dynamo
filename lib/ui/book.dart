@@ -110,7 +110,7 @@ class StoryBook extends StatefulWidget {
             extraDevices: extraDevices, useDefaults: useDeviceSizeDefaults),
         localizationsPlugin(
             supportedLocales: app.supportedLocales,
-            localizationDisplay: app.localizationsDelegates),
+            localizationDisplay: app.localizationsDelegates ?? []),
         if (useDefaultPlugins) ...[
           propsPlugin(),
           actionsPlugin(),
