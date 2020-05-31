@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_storybook/localization/localizations_plugin.dart';
 import 'package:flutter_storybook/mediaquery/device_sizes.dart';
 import 'package:flutter_storybook/mediaquery/media_query_toolbar.dart';
-import 'package:flutter_storybook/mediaquery/override_media_query_provider.dart';
+import 'package:flutter_storybook/mediaquery/override_media_query_plugin.dart';
 import 'package:flutter_storybook/ui/interactable_screen.dart';
 import 'package:flutter_storybook/ui/materialapp+extensions.dart';
 import 'package:flutter_storybook/ui/model/widget.dart';

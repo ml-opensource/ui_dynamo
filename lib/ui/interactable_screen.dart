@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_storybook/mediaquery/override_media_query_provider.dart';
+import 'package:flutter_storybook/mediaquery/override_media_query_plugin.dart';
 import 'package:flutter_storybook/ui/page_wrapper.dart';
 import 'package:flutter_storybook/ui/screen.dart';
 import 'package:flutter_storybook/ui/storyboard/utils.dart';

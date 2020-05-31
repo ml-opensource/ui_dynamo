@@ -6,7 +6,7 @@ import 'package:flutter_storybook/localization/localizations_plugin.dart';
 import 'package:flutter_storybook/media_utils.dart';
 import 'package:flutter_storybook/mediaquery/device_size_plugin.dart';
 import 'package:flutter_storybook/mediaquery/device_sizes.dart';
-import 'package:flutter_storybook/mediaquery/override_media_query_provider.dart';
+import 'package:flutter_storybook/mediaquery/override_media_query_plugin.dart';
 import 'package:flutter_storybook/models.dart';
 import 'package:flutter_storybook/plugins/plugin.dart';
 import 'package:flutter_storybook/props/props_plugin.dart';
@@ -111,6 +111,7 @@ class StoryBook extends StatefulWidget {
         localizationsPlugin(
             supportedLocales: app.supportedLocales,
             localizationDisplay: app.localizationsDelegates ?? []),
+        overrideMediaQueryPlugin(defaultDevice: data.defaultDevice),
         if (useDefaultPlugins) ...[
           propsPlugin(),
           actionsPlugin(),
@@ -157,11 +158,6 @@ class _StoryBookState extends State<StoryBook> {
         providers: [
           ChangeNotifierProvider(
             create: (context) => DrawerProvider(),
-          ),
-          ChangeNotifierProvider(
-            create: (context) => OverrideMediaQueryProvider(
-              widget.data.defaultDevice ?? deviceSizes[0],
-            ),
           ),
           ...widget.plugins.map(
             (e) => e.provider,

@@ -2,7 +2,7 @@ import 'package:example/widgets/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_storybook/flutter_storybook.dart';
-import 'package:flutter_storybook/mediaquery/override_media_query_provider.dart';
+import 'package:flutter_storybook/mediaquery/override_media_query_plugin.dart';
 
 StoryBookPage buildToastPage() => StoryBookPage.list(
       title: 'Toasts',

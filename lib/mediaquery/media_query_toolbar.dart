@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_storybook/localization/locale_chooser.dart';
 import 'package:flutter_storybook/media_utils.dart';
 import 'package:flutter_storybook/mediaquery/device_sizes.dart';
-import 'package:flutter_storybook/mediaquery/override_media_query_provider.dart';
+import 'package:flutter_storybook/mediaquery/override_media_query_plugin.dart';
 import 'package:flutter_storybook/mediaquery/screen_size_chooser.dart';
 import 'package:flutter_storybook/mediaquery/text_scale.dart';
 import 'package:flutter_storybook/mediaquery/zoom_controls.dart';

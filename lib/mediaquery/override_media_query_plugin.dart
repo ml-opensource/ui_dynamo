@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_storybook/mediaquery/device_sizes.dart';
+import 'package:flutter_storybook/plugins/plugin.dart';
 import 'package:flutter_storybook/ui/utils/size+extensions.dart';
 import 'package:provider/provider.dart';
 
@@ -187,7 +188,6 @@ class OverrideMediaQueryProvider extends ChangeNotifier {
       (realQuery.size.width - boundedMediaQuery.size.width - pluginsWidth) / 2;
 
   Orientation get orientation => _orientation;
-
 }
 
 OverrideMediaQueryProvider mediaQuery(BuildContext context) {
@@ -211,3 +211,11 @@ OverrideMediaQueryProvider mediaQuery(BuildContext context) {
 extension OverrideMediaQueryProviderExtension on BuildContext {
   OverrideMediaQueryProvider get mediaQueryProvider => mediaQuery(this);
 }
+
+StoryBookPlugin overrideMediaQueryPlugin({DeviceInfo defaultDevice}) =>
+    StoryBookPlugin(
+      provider: ChangeNotifierProvider<OverrideMediaQueryProvider>(
+        create: (context) =>
+            OverrideMediaQueryProvider(defaultDevice ?? deviceSizes[0]),
+      ),
+    );
