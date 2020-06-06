@@ -8,10 +8,7 @@ const defaultLocales = [
 ];
 
 class LocaleChooser extends StatelessWidget {
-  final List<Locale> supportedLocales;
-
-  const LocaleChooser({Key key, @required this.supportedLocales})
-      : super(key: key);
+  const LocaleChooser({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

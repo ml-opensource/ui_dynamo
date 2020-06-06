@@ -24,178 +24,11 @@ class MediaQueryToolbar extends StatefulWidget {
 class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
   bool isExpanded = false;
 
-  void _deviceSelected(
-      BuildContext context,
-      DeviceInfo device,
-      OverrideMediaQueryProvider mediaQueryProvider,
-      MediaQueryData realQuery,
-      OffsetProvider offsetProvider) {
-    // reset scale, offset back to 100% when changing device
-    if (device != mediaQueryProvider.currentDevice) {
-      mediaQueryProvider.resetScreenAdjustments(
-        offsetProvider,
-        newDevice: device,
-        overrideData: mediaQueryProvider.currentMediaQuery.copyWith(
-          size: device.logicalSize.boundedSize(context),
-        ),
-        realQuery: realQuery,
-        overrideOrientation: device.isExpandable ? Orientation.portrait : null,
-        shouldFlip: !device.isExpandable &&
-            mediaQueryProvider.orientation == Orientation.landscape,
-      );
-    }
-  }
-
-  void _toggleBrightness(OverrideMediaQueryProvider mediaQueryProvider) {
-    mediaQueryProvider
-        .selectMediaQuery(mediaQueryProvider.currentMediaQuery.copyWith(
-      platformBrightness:
-          mediaQueryProvider.currentMediaQuery.platformBrightness ==
-                  Brightness.light
-              ? Brightness.dark
-              : Brightness.light,
-    ));
-  }
-
-  void _toggleHighContrast(OverrideMediaQueryProvider mediaQueryProvider) {
-    mediaQueryProvider
-        .selectMediaQuery(mediaQueryProvider.currentMediaQuery.copyWith(
-      highContrast: !mediaQueryProvider.currentMediaQuery.highContrast,
-    ));
-  }
-
-  void _toggleInvertColors(OverrideMediaQueryProvider mediaQueryProvider) {
-    mediaQueryProvider
-        .selectMediaQuery(mediaQueryProvider.currentMediaQuery.copyWith(
-      invertColors: !mediaQueryProvider.currentMediaQuery.invertColors,
-    ));
-  }
-
-  void _textScaleFactorChanged(
-      double value, OverrideMediaQueryProvider mediaQueryProvider) {
-    mediaQueryProvider
-        .selectMediaQuery(mediaQueryProvider.currentMediaQuery.copyWith(
-      textScaleFactor: value,
-    ));
-  }
-
-  void _toggleAnimations(OverrideMediaQueryProvider mediaQueryProvider) {
-    mediaQueryProvider
-        .selectMediaQuery(mediaQueryProvider.currentMediaQuery.copyWith(
-      disableAnimations:
-          !mediaQueryProvider.currentMediaQuery.disableAnimations,
-    ));
-  }
-
-  void _updateScale(double scale, OffsetProvider provider) {
-    provider.selectScreenScale(scale);
-  }
-
-  List<Widget> topBarList(OverrideMediaQueryProvider mediaQueryProvider,
-      MediaQueryData realQuery, OffsetProvider offsetProvider) {
-    return [
-      IconButton(
-        icon: Icon(mediaQueryProvider.currentMediaQuery.platformBrightness ==
-                Brightness.light
-            ? Icons.brightness_7
-            : Icons.brightness_3),
-        tooltip: 'Make Brightness ' +
-            (mediaQueryProvider.currentMediaQuery.platformBrightness ==
-                    Brightness.light
-                ? 'Dark'
-                : 'Light'),
-        onPressed: () {
-          _toggleBrightness(mediaQueryProvider);
-        },
-      ),
-      _MediaQueryDivider(),
-      IconButton(
-        tooltip: 'Size to Fit',
-        icon: Icon(Icons.center_focus_strong),
-        onPressed: () => mediaQueryProvider
-            .resetScreenAdjustments(offsetProvider, realQuery: realQuery),
-      ),
-      _MediaQueryDivider(),
-      IconButton(
-        tooltip: !mediaQueryProvider.currentDevice.isExpandable
-            ? "Rotate"
-            : "Rotate not available for expandable windows.",
-        icon: Icon(mediaQueryProvider.orientation == Orientation.portrait
-            ? Icons.screen_lock_portrait
-            : Icons.screen_lock_landscape),
-        onPressed: !mediaQueryProvider.currentDevice.isExpandable
-            ? () => mediaQueryProvider.rotate(context)
-            : null,
-      ),
-      _MediaQueryDivider(),
-      LocaleChooser(),
-    ];
-  }
-
-  buildIcons(
-      BuildContext context,
-      OverrideMediaQueryProvider mediaQueryProvider,
-      OffsetProvider offsetProvider) {
-    final expandable = context.isMobile;
-    final realQuery = MediaQuery.of(context);
-    if (expandable && !isExpanded) {
-      return Wrap(
-        crossAxisAlignment: WrapCrossAlignment.center,
-        children: [
-          ...topBarList(mediaQueryProvider, realQuery, offsetProvider)
-        ],
-      );
-    }
-    final currentMediaQuery = mediaQueryProvider.currentMediaQuery;
-    return Wrap(
-      direction: Axis.horizontal,
-      crossAxisAlignment: WrapCrossAlignment.center,
-      children: <Widget>[
-        ...topBarList(mediaQueryProvider, realQuery, offsetProvider),
-        _MediaQueryDivider(),
-        AdjustableNumberScaleWidget(
-          scaleFactor: currentMediaQuery.textScaleFactor,
-          scaleFactorChanged: (value) =>
-              _textScaleFactorChanged(value, mediaQueryProvider),
-          displayIcon: Icons.text_fields,
-          tooltip: 'Select a Text Scale',
-        ),
-        _MediaQueryDivider(),
-        MediaChooserButton(
-          deviceSelected: (value) => _deviceSelected(
-              context, value, mediaQueryProvider, realQuery, offsetProvider),
-          selectedDevice: mediaQueryProvider.currentDevice,
-        ),
-        if (!mediaQueryProvider.currentDevice.isExpandable) ...[
-          ZoomControls(
-            scale: offsetProvider.screenScale,
-            updateScale: (value) => _updateScale(value, offsetProvider),
-          ),
-          _AnimationsIcon(
-            currentMediaQuery: currentMediaQuery,
-            toggle: () => _toggleAnimations(mediaQueryProvider),
-          ),
-          _MediaQueryDivider(),
-          _InvertColorsButton(
-            currentMediaQuery: currentMediaQuery,
-            toggle: () => _toggleInvertColors(mediaQueryProvider),
-          ),
-          _MediaQueryDivider(),
-          _HighContrastIcon(
-            currentMediaQuery: currentMediaQuery,
-            toggle: () => _toggleHighContrast(mediaQueryProvider),
-          ),
-        ],
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final cardmargin = context.isTablet
         ? EdgeInsets.only(left: 4.0, right: 4.0)
         : EdgeInsets.all(0);
-    final media = context.mediaQueryProvider;
     return Builder(
       builder: (context) => Card(
         margin: cardmargin,
@@ -211,7 +44,9 @@ class _MediaQueryToolbarState extends State<MediaQueryToolbar> {
           children: [
             Flexible(
               fit: FlexFit.tight,
-              child: buildIcons(context, media, context.offsetProvider),
+              child: _Icons(
+                isExpanded: isExpanded,
+              ),
             ),
             if (context.isMobile)
               SizedBox(
@@ -324,4 +159,179 @@ class _AnimationsIcon extends _ToggleIcon {
 
   @override
   bool get isActivated => !currentMediaQuery.disableAnimations;
+}
+
+class _Icons extends StatelessWidget {
+  final bool isExpanded;
+
+  const _Icons({Key key, @required this.isExpanded}) : super(key: key);
+
+  void _toggleBrightness(OverrideMediaQueryProvider mediaQueryProvider) {
+    mediaQueryProvider
+        .selectMediaQuery(mediaQueryProvider.currentMediaQuery.copyWith(
+      platformBrightness:
+          mediaQueryProvider.currentMediaQuery.platformBrightness ==
+                  Brightness.light
+              ? Brightness.dark
+              : Brightness.light,
+    ));
+  }
+
+  void _toggleHighContrast(OverrideMediaQueryProvider mediaQueryProvider) {
+    mediaQueryProvider
+        .selectMediaQuery(mediaQueryProvider.currentMediaQuery.copyWith(
+      highContrast: !mediaQueryProvider.currentMediaQuery.highContrast,
+    ));
+  }
+
+  void _toggleInvertColors(OverrideMediaQueryProvider mediaQueryProvider) {
+    mediaQueryProvider
+        .selectMediaQuery(mediaQueryProvider.currentMediaQuery.copyWith(
+      invertColors: !mediaQueryProvider.currentMediaQuery.invertColors,
+    ));
+  }
+
+  void _textScaleFactorChanged(
+      double value, OverrideMediaQueryProvider mediaQueryProvider) {
+    mediaQueryProvider
+        .selectMediaQuery(mediaQueryProvider.currentMediaQuery.copyWith(
+      textScaleFactor: value,
+    ));
+  }
+
+  void _toggleAnimations(OverrideMediaQueryProvider mediaQueryProvider) {
+    mediaQueryProvider
+        .selectMediaQuery(mediaQueryProvider.currentMediaQuery.copyWith(
+      disableAnimations:
+          !mediaQueryProvider.currentMediaQuery.disableAnimations,
+    ));
+  }
+
+  void _updateScale(double scale, OffsetProvider provider) {
+    provider.selectScreenScale(scale);
+  }
+
+  void _deviceSelected(
+      BuildContext context,
+      DeviceInfo device,
+      OverrideMediaQueryProvider mediaQueryProvider,
+      MediaQueryData realQuery,
+      OffsetProvider offsetProvider) {
+    // reset scale, offset back to 100% when changing device
+    if (device != mediaQueryProvider.currentDevice) {
+      mediaQueryProvider.resetScreenAdjustments(
+        offsetProvider,
+        newDevice: device,
+        overrideData: mediaQueryProvider.currentMediaQuery.copyWith(
+          size: device.logicalSize.boundedSize(context),
+        ),
+        realQuery: realQuery,
+        overrideOrientation: device.isExpandable ? Orientation.portrait : null,
+        shouldFlip: !device.isExpandable &&
+            mediaQueryProvider.orientation == Orientation.landscape,
+      );
+    }
+  }
+
+  List<Widget> topBarList(
+      BuildContext context,
+      OverrideMediaQueryProvider mediaQueryProvider,
+      MediaQueryData realQuery,
+      OffsetProvider offsetProvider) {
+    return [
+      IconButton(
+        icon: Icon(mediaQueryProvider.currentMediaQuery.platformBrightness ==
+                Brightness.light
+            ? Icons.brightness_7
+            : Icons.brightness_3),
+        tooltip: 'Make Brightness ' +
+            (mediaQueryProvider.currentMediaQuery.platformBrightness ==
+                    Brightness.light
+                ? 'Dark'
+                : 'Light'),
+        onPressed: () {
+          _toggleBrightness(mediaQueryProvider);
+        },
+      ),
+      _MediaQueryDivider(),
+      IconButton(
+        tooltip: 'Size to Fit',
+        icon: Icon(Icons.center_focus_strong),
+        onPressed: () => mediaQueryProvider
+            .resetScreenAdjustments(offsetProvider, realQuery: realQuery),
+      ),
+      _MediaQueryDivider(),
+      IconButton(
+        tooltip: !mediaQueryProvider.currentDevice.isExpandable
+            ? "Rotate"
+            : "Rotate not available for expandable windows.",
+        icon: Icon(mediaQueryProvider.orientation == Orientation.portrait
+            ? Icons.screen_lock_portrait
+            : Icons.screen_lock_landscape),
+        onPressed: !mediaQueryProvider.currentDevice.isExpandable
+            ? () => mediaQueryProvider.rotate(context)
+            : null,
+      ),
+      _MediaQueryDivider(),
+      LocaleChooser(),
+    ];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final expandable = context.isMobile;
+    final realQuery = MediaQuery.of(context);
+    final offsetProvider = context.offsetProvider;
+    final mediaQueryProvider = context.mediaQueryProvider;
+    if (expandable && !isExpanded) {
+      return Wrap(
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: [
+          ...topBarList(context, mediaQueryProvider, realQuery, offsetProvider)
+        ],
+      );
+    }
+    final currentMediaQuery = mediaQueryProvider.currentMediaQuery;
+    return Wrap(
+      direction: Axis.horizontal,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      children: <Widget>[
+        ...topBarList(context, mediaQueryProvider, realQuery, offsetProvider),
+        _MediaQueryDivider(),
+        AdjustableNumberScaleWidget(
+          scaleFactor: currentMediaQuery.textScaleFactor,
+          scaleFactorChanged: (value) =>
+              _textScaleFactorChanged(value, mediaQueryProvider),
+          displayIcon: Icons.text_fields,
+          tooltip: 'Select a Text Scale',
+        ),
+        _MediaQueryDivider(),
+        MediaChooserButton(
+          deviceSelected: (value) => _deviceSelected(
+              context, value, mediaQueryProvider, realQuery, offsetProvider),
+          selectedDevice: mediaQueryProvider.currentDevice,
+        ),
+        if (!mediaQueryProvider.currentDevice.isExpandable) ...[
+          ZoomControls(
+            scale: offsetProvider.screenScale,
+            updateScale: (value) => _updateScale(value, offsetProvider),
+          ),
+          _AnimationsIcon(
+            currentMediaQuery: currentMediaQuery,
+            toggle: () => _toggleAnimations(mediaQueryProvider),
+          ),
+          _MediaQueryDivider(),
+          _InvertColorsButton(
+            currentMediaQuery: currentMediaQuery,
+            toggle: () => _toggleInvertColors(mediaQueryProvider),
+          ),
+          _MediaQueryDivider(),
+          _HighContrastIcon(
+            currentMediaQuery: currentMediaQuery,
+            toggle: () => _toggleHighContrast(mediaQueryProvider),
+          ),
+        ],
+      ],
+    );
+  }
 }
