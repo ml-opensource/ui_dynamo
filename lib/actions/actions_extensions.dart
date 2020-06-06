@@ -50,7 +50,7 @@ class ActionsProvider extends ChangeNotifier {
           {GestureTapCallback through}) =>
       () {
         this.add(ActionType('Tap -> $buttonName', icon: Icons.touch_app));
-        through();
+        through?.call();
       };
 
   /// Utilize this for handling value change events from a [RadioListTile]
@@ -61,7 +61,7 @@ class ActionsProvider extends ChangeNotifier {
       (value) {
         this.add(ActionType('Value Changed -> $widgetName',
             data: value, icon: Icons.track_changes));
-        through(value);
+        through?.call(value);
       };
 }
 
