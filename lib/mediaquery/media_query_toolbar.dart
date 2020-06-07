@@ -168,9 +168,9 @@ class _Icons extends StatelessWidget {
 
   void _toggleBrightness(OverrideMediaQueryProvider mediaQueryProvider) {
     mediaQueryProvider
-        .selectMediaQuery(mediaQueryProvider.currentMediaQuery.copyWith(
+        .selectMediaQuery(mediaQueryProvider.boundedMediaQuery.copyWith(
       platformBrightness:
-          mediaQueryProvider.currentMediaQuery.platformBrightness ==
+          mediaQueryProvider.boundedMediaQuery.platformBrightness ==
                   Brightness.light
               ? Brightness.dark
               : Brightness.light,
@@ -179,31 +179,31 @@ class _Icons extends StatelessWidget {
 
   void _toggleHighContrast(OverrideMediaQueryProvider mediaQueryProvider) {
     mediaQueryProvider
-        .selectMediaQuery(mediaQueryProvider.currentMediaQuery.copyWith(
-      highContrast: !mediaQueryProvider.currentMediaQuery.highContrast,
+        .selectMediaQuery(mediaQueryProvider.boundedMediaQuery.copyWith(
+      highContrast: !mediaQueryProvider.boundedMediaQuery.highContrast,
     ));
   }
 
   void _toggleInvertColors(OverrideMediaQueryProvider mediaQueryProvider) {
     mediaQueryProvider
-        .selectMediaQuery(mediaQueryProvider.currentMediaQuery.copyWith(
-      invertColors: !mediaQueryProvider.currentMediaQuery.invertColors,
+        .selectMediaQuery(mediaQueryProvider.boundedMediaQuery.copyWith(
+      invertColors: !mediaQueryProvider.boundedMediaQuery.invertColors,
     ));
   }
 
   void _textScaleFactorChanged(
       double value, OverrideMediaQueryProvider mediaQueryProvider) {
     mediaQueryProvider
-        .selectMediaQuery(mediaQueryProvider.currentMediaQuery.copyWith(
+        .selectMediaQuery(mediaQueryProvider.boundedMediaQuery.copyWith(
       textScaleFactor: value,
     ));
   }
 
   void _toggleAnimations(OverrideMediaQueryProvider mediaQueryProvider) {
     mediaQueryProvider
-        .selectMediaQuery(mediaQueryProvider.currentMediaQuery.copyWith(
+        .selectMediaQuery(mediaQueryProvider.boundedMediaQuery.copyWith(
       disableAnimations:
-          !mediaQueryProvider.currentMediaQuery.disableAnimations,
+          !mediaQueryProvider.boundedMediaQuery.disableAnimations,
     ));
   }
 
@@ -311,26 +311,27 @@ class _Icons extends StatelessWidget {
               context, value, mediaQueryProvider, realQuery, offsetProvider),
           selectedDevice: mediaQueryProvider.currentDevice,
         ),
-        if (!mediaQueryProvider.currentDevice.isExpandable) ...[
+        if (mediaQueryProvider.currentDevice.expansionAxis != ExpansionAxis.Both) ...[
           ZoomControls(
             scale: offsetProvider.screenScale,
             updateScale: (value) => _updateScale(value, offsetProvider),
           ),
-          _AnimationsIcon(
-            currentMediaQuery: currentMediaQuery,
-            toggle: () => _toggleAnimations(mediaQueryProvider),
-          ),
           _MediaQueryDivider(),
-          _InvertColorsButton(
-            currentMediaQuery: currentMediaQuery,
-            toggle: () => _toggleInvertColors(mediaQueryProvider),
-          ),
-          _MediaQueryDivider(),
-          _HighContrastIcon(
-            currentMediaQuery: currentMediaQuery,
-            toggle: () => _toggleHighContrast(mediaQueryProvider),
-          ),
         ],
+        _AnimationsIcon(
+          currentMediaQuery: currentMediaQuery,
+          toggle: () => _toggleAnimations(mediaQueryProvider),
+        ),
+        _MediaQueryDivider(),
+        _InvertColorsButton(
+          currentMediaQuery: currentMediaQuery,
+          toggle: () => _toggleInvertColors(mediaQueryProvider),
+        ),
+        _MediaQueryDivider(),
+        _HighContrastIcon(
+          currentMediaQuery: currentMediaQuery,
+          toggle: () => _toggleHighContrast(mediaQueryProvider),
+        ),
       ],
     );
   }
