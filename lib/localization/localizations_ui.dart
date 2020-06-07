@@ -46,7 +46,6 @@ class _LocationsDisplayState extends State<LocationsDisplay> {
     return DefaultTabController(
       length: locales.supportedLocales.length,
       child: Container(
-        margin: EdgeInsets.only(top: 16),
         child: Scaffold(
           appBar: TabBar(
             isScrollable: true,
