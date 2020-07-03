@@ -5,7 +5,7 @@ import 'package:ui_dynamo/ui_dynamo.dart';
 DynamoPage buildRadiosPage() => DynamoPage.list(
       title: "Radios",
       icon: Icon(Icons.radio_button_checked),
-      widgets: (context) {
+      children: (context) {
         final radio = context.props.twoWay.radio(
             'Radios',
             PropValues(

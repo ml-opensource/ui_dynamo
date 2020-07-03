@@ -3,7 +3,7 @@ import 'package:ui_dynamo/ui_dynamo.dart';
 
 DynamoPage buildButtonsPage() => DynamoPage.list(
       title: 'Button States',
-      widgets: (context) {
+      children: (context) {
         final prop = context.props;
         final action = context.actions;
         return [

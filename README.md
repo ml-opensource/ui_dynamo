@@ -22,6 +22,8 @@ __Actions__: use actions to display logs of component actions.
 
 __Localizations__: display translations for your application and see them in different languages. 
 
+__Plugins__: Add plugins to appear in the plugins bar, or behind the scenes, to provide greater flexibility in your workflow.
+
 
 ## Getting Started
 
@@ -98,8 +100,112 @@ class AppDynamo extends StatelessWidget {
 ### Add your Dynamo data
 
 By default, UIDynamo will traverse your application routes, creating a 
-`Storyboard` and `Routes/` folder in the nav bar. 
+`Storyboard` and `Routes/` folder in the nav bar. `Home` is just a placeholder (and configureable).
 
 ![Default Setup](/assets/default_setup.png)
 
+You can add 3 kinds of items in the sidebar:
+
+1. __Storyboard__: A pinch-zoom and pannable experience that allows you to easily add custom flows within your application all 
+on one screen.
+
+```dart
+DynamoPage.storyBoard(title: 'Your Title', flowMapping: {
+   'home': [
+    '/home',
+    '/company'
+   ]
+});
+```
+
+__flowMapping__ a key-value-list mapping that specifies flows that display on screen from left to right.
+If you specify multiple, each mapping goes from top to bottom in order. 
+
+![Storyboard Example](/assets/storyboard_example.png)
+
+
+2. __Folder__: A collapsible section that contains more items. Can nest as many as you like.
+
+```dart
+DynamoFolder.of(title: 'Widgets', pages: [
+    buildTextStylePage(),
+    buildButtonsPage(),
+    buildToastPage(),
+    buildRadiosPage(),
+    buildInputsPage(),
+]);
+```
+
+![Folder Example](/assets/folder_example.png)
+
+3. __Page__: A single, focusable page that you can preview.
+
+Simplest builder is:
+
+```dart
+DynamoPage.of(
+    title: 'Title',
+    icon: Icon(Icons.home),
+    child: (context) =>
+        MyWidget(),
+);
+```
+
+Specify the `title`, `icon`, and `child` builder. The child builder only runs if you the widget is on screen.
+
+Also we support a list:
+
+```dart
+DynamoPage.list(
+  title: 'Alerts',
+  icon: Icon(Icons.error),
+  children: (context) => [
+    Organization.container(
+      title: Text('Network Alert'),
+      children: <Widget>[
+        NetworkAlertDialog(
+          onOkPressed: context.actions.onPressed('Alert Ok Button'),
+        ),
+      ],
+    ),
+    Organization.container(
+      title: Text('Confirmation Dialog'),
+      children: <Widget>[
+        ConfirmationAlertDialog(
+          title: context.props.text(
+              'Title', 'Are you sure you want to get Pizza?',
+              group: confirmationGroup),
+          content: context.props.text(
+              'Content', 'You can always order later',
+              group: confirmationGroup),
+          onYesPressed: context.actions.onPressed('Alert Yes Button'),
+          onNoPressed: context.actions.onPressed('Alert No Button'),
+        ),
+      ],
+    )
+  ],
+)
+```
+
+`title`, `icon`, and `children` builder. The `children` builder only is used when on screen as well. 
+
+The list builder just displays content in a list.
+
+
+## Storyboard Configuration
+
+## UI Documentation
+
+## Adding Props
+
+## Configuring Actions
+
+## Localizations
+
+## Custom Plugins  
+
+
+## Maintainers
+
+Andrew Grosner [@agrosner](https://www.github.com/agrosner)
 

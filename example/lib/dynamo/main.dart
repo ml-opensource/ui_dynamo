@@ -35,13 +35,13 @@ class AppDynamo extends StatelessWidget {
       data: DynamoData(
         defaultDevice: DeviceSizes.iphoneX,
         items: [
-          DynamoPage.storyboard(title: 'Home Flow', routesMapping: {
+          DynamoPage.storyboard(title: 'Home Flow', flowMapping: {
             'home': [
               '/home',
               '/company',
             ],
           }),
-          DynamoPage.storyboard(title: 'Company Details', routesMapping: {
+          DynamoPage.storyboard(title: 'Company Details', flowMapping: {
             'home': [
               '/company',
               '/details/:item',

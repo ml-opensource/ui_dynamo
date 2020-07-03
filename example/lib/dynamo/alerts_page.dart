@@ -7,7 +7,7 @@ PropGroup confirmationGroup = PropGroup('Confirmation', 'confirmation');
 DynamoPage buildAlertsPage() => DynamoPage.list(
       title: 'Alerts',
       icon: Icon(Icons.error),
-      widgets: (context) => [
+      children: (context) => [
         Organization.container(
           title: Text('Network Alert'),
           children: <Widget>[

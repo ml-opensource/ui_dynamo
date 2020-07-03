@@ -6,7 +6,7 @@ import 'package:ui_dynamo/ui_dynamo.dart';
 DynamoPage buildInputsPage() => DynamoPage.list(
     title: 'Inputs',
     icon: Icon(Icons.input),
-    widgets: (context) {
+    children: (context) {
       final input = context.props.twoWay.text('Input', 'Primary Input');
       final errorInput = context.props.twoWay.text('Error Input', '');
       final counterInput =

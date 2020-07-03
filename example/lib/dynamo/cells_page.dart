@@ -7,7 +7,7 @@ final groupMainCellLong = PropGroup('Main Cell Long', 'mainCellLong');
 
 DynamoPage buildCellsPage() => DynamoPage.list(
       title: 'Cells',
-      widgets: (context) => [
+      children: (context) => [
         Organization.container(
           title: Text('Main Cell Widget'),
           children: <Widget>[

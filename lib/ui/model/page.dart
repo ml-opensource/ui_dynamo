@@ -20,7 +20,7 @@ class DynamoPage extends DynamoItem {
 
   factory DynamoPage.storyboard(
       {@required String title,
-      Map<String, List<String>> routesMapping,
+      Map<String, List<String>> flowMapping,
 
       /// supplied to override the default app passed into the storyboard widget
       /// Used to add previewRoutes to the storyboard.
@@ -30,7 +30,7 @@ class DynamoPage extends DynamoItem {
       title: Text(title),
       widget: DynamoWidget((context, data, app) => StoryBoard(
             child: appOverride ?? app,
-            routesMapping: routesMapping,
+            routesMapping: flowMapping,
           )),
     );
     // disable scrolling since our storyboard will handle it for us!
@@ -43,13 +43,13 @@ class DynamoPage extends DynamoItem {
     Key key,
     @required String title,
     Icon icon,
-    @required List<Widget> Function(BuildContext context) widgets,
+    @required List<Widget> Function(BuildContext context) children,
   }) =>
       DynamoPage(
           key: key ?? ValueKey(title),
           title: Text(title),
           icon: icon,
-          widget: DynamoWidgetList(widgets));
+          widget: DynamoWidgetList(children));
 
   factory DynamoPage.of({
     Key key,

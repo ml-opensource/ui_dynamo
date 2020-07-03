@@ -7,7 +7,7 @@ import 'package:ui_dynamo/mediaquery/override_media_query_plugin.dart';
 DynamoPage buildToastPage() => DynamoPage.list(
       title: 'Toasts',
       icon: Icon(Icons.check_circle),
-      widgets: (context) {
+      children: (context) {
         final currentMediaQuery = context.mediaQueryProvider.currentMediaQuery;
         final isLight =
             currentMediaQuery.platformBrightness == Brightness.light;

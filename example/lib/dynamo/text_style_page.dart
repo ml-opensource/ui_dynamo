@@ -4,7 +4,7 @@ import 'package:ui_dynamo/ui_dynamo.dart';
 
 DynamoPage buildTextStylePage() => DynamoPage.list(
       title: 'Text Style Widgets',
-      widgets: (context) => [
+      children: (context) => [
         Organization.expandable(
             initiallyExpanded: true,
             title: 'Main Title',
