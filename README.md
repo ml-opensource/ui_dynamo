@@ -76,7 +76,7 @@ This is needed to use the main app in `dynamo`.
 In your `dynamo/main.dart`, first add the run configuration and `AppDynamo`:
 
 ```dart
-void main() => runApp(AppStoryBook());
+void main() => runApp(AppDynamo());
 
 class AppDynamo extends StatelessWidget {
   const AppDynamo({
@@ -87,6 +87,9 @@ class AppDynamo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Dynamo.withApp(
       buildApp(),
+      data: DynamoData(
+        defaultDevice: DeviceSizes.iphoneX,
+      ),
     );
   }
 }
@@ -94,4 +97,9 @@ class AppDynamo extends StatelessWidget {
 
 ### Add your Dynamo data
 
-By default, UIDynamo 
+By default, UIDynamo will traverse your application routes, creating a 
+`Storyboard` and `Routes/` folder in the nav bar. 
+
+![Default Setup](/assets/default_setup.png)
+
+
