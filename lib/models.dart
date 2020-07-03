@@ -1,25 +1,25 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_storybook/flutter_storybook.dart';
-import 'package:flutter_storybook/mediaquery/device_sizes.dart';
+import 'package:ui_dynamo/ui_dynamo.dart';
+import 'package:ui_dynamo/mediaquery/device_sizes.dart';
 
-abstract class StoryBookItem {
+abstract class DynamoItem {
   final Key key;
   final Widget title;
   final Icon icon;
 
-  StoryBookItem(this.key, this.title, this.icon);
+  DynamoItem(this.key, this.title, this.icon);
 
   /// Find the selected page from key.
-  StoryBookPage pageFromKey(Key key);
+  DynamoPage pageFromKey(Key key);
 
-  Widget buildWidget(StoryBookPage selectedPage,
-      Function(StoryBookItem, StoryBookPage) onSelectPage);
+  Widget buildWidget(DynamoPage selectedPage,
+      Function(DynamoItem, DynamoPage) onSelectPage);
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is StoryBookItem &&
+      other is DynamoItem &&
           runtimeType == other.runtimeType &&
           key == other.key &&
           title == other.title &&
@@ -29,12 +29,12 @@ abstract class StoryBookItem {
   int get hashCode => key.hashCode ^ title.hashCode ^ icon.hashCode;
 }
 
-class StoryBookData {
-  /// Customize the title of the storybook.
+class DynamoData {
+  /// Customize the title of UIDynamo.
   final Widget title;
 
-  /// The list of menu items appearing as pages, folders, or storybooks.
-  final List<StoryBookItem> items;
+  /// The list of menu items appearing as pages, folders, or storyboards.
+  final List<DynamoItem> items;
 
   /// Customize the header on the drawer. Default is DrawerHeader widget.
   final Widget customDrawerHeader;
@@ -42,16 +42,16 @@ class StoryBookData {
   /// the initial preview size for all nested windows.
   final DeviceInfo defaultDevice;
 
-    StoryBookData(
+    DynamoData(
       {this.title,
-      @required this.items,
+      this.items = const [],
       this.customDrawerHeader,
       this.defaultDevice});
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is StoryBookData &&
+      other is DynamoData &&
           runtimeType == other.runtimeType &&
           title == other.title &&
           items == other.items &&
@@ -65,8 +65,8 @@ class StoryBookData {
       customDrawerHeader.hashCode ^
       defaultDevice.hashCode;
 
-  StoryBookData merge(
-          {List<StoryBookItem> items = const [],
+  DynamoData merge(
+          {List<DynamoItem> items = const [],
           Widget title,
 
           /// if true, we merge the items at start.
@@ -77,13 +77,13 @@ class StoryBookData {
         if (!mergeFirst) ...items,
       ]);
 
-  StoryBookData copyWith({
+  DynamoData copyWith({
     Widget title,
-    List<StoryBookItem> items,
+    List<DynamoItem> items,
     Widget customDrawerHeader,
     DeviceInfo defaultDevice,
   }) =>
-      StoryBookData(
+      DynamoData(
           items: items ?? this.items,
           title: title ?? this.title,
           customDrawerHeader: customDrawerHeader ?? this.customDrawerHeader,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_storybook/media_utils.dart';
+import 'package:ui_dynamo/media_utils.dart';
 
 class MainCell extends StatelessWidget {
   final String iconText;

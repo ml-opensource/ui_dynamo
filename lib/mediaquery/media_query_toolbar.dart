@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_storybook/localization/locale_chooser.dart';
-import 'package:flutter_storybook/media_utils.dart';
-import 'package:flutter_storybook/mediaquery/device_sizes.dart';
-import 'package:flutter_storybook/mediaquery/offset_plugin.dart';
-import 'package:flutter_storybook/mediaquery/override_media_query_plugin.dart';
-import 'package:flutter_storybook/mediaquery/screen_size_chooser.dart';
-import 'package:flutter_storybook/mediaquery/text_scale.dart';
-import 'package:flutter_storybook/mediaquery/zoom_controls.dart';
-import 'package:flutter_storybook/ui/utils/size+extensions.dart';
-import 'package:flutter_storybook/ui/widgets/measuresize.dart';
+import 'package:ui_dynamo/localization/locale_chooser.dart';
+import 'package:ui_dynamo/media_utils.dart';
+import 'package:ui_dynamo/mediaquery/device_sizes.dart';
+import 'package:ui_dynamo/mediaquery/offset_plugin.dart';
+import 'package:ui_dynamo/mediaquery/override_media_query_plugin.dart';
+import 'package:ui_dynamo/mediaquery/screen_size_chooser.dart';
+import 'package:ui_dynamo/mediaquery/text_scale.dart';
+import 'package:ui_dynamo/mediaquery/zoom_controls.dart';
+import 'package:ui_dynamo/ui/utils/size+extensions.dart';
+import 'package:ui_dynamo/ui/widgets/measuresize.dart';
 
 class MediaQueryToolbar extends StatefulWidget {
   const MediaQueryToolbar({

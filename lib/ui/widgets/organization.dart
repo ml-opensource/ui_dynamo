@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_storybook/ui/widgets/text.dart';
+import 'package:ui_dynamo/ui/widgets/text.dart';
 
 const double kMaxOrgSize = 1000.0;
 const kDefaultPadding = EdgeInsets.all(16.0);

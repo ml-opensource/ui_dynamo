@@ -1,10 +1,10 @@
 import 'package:example/widgets/cells.dart';
-import 'package:flutter_storybook/flutter_storybook.dart';
+import 'package:ui_dynamo/ui_dynamo.dart';
 
 const PropGroup item1 = PropGroup('Item 1', 'item-1');
 const PropGroup item2 = PropGroup('Item 2', 'item-2');
 
-StoryBookPage buildMainCellListPage() => StoryBookPage.of(
+DynamoPage buildMainCellListPage() => DynamoPage.of(
       title: 'Main Cell List',
       child: (context) => MainCellList(
         onTap: (item) {

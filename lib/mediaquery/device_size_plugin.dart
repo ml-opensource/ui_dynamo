@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_storybook/mediaquery/device_sizes.dart';
-import 'package:flutter_storybook/plugins/plugin.dart';
+import 'package:ui_dynamo/mediaquery/device_sizes.dart';
+import 'package:ui_dynamo/plugins/plugin.dart';
 import 'package:provider/provider.dart';
 
-/// Provides the [DeviceInfo] to Storybook.
+/// Provides the [DeviceInfo] to UIDynamo.
 /// Use this plugin to add more of your own.
 class DeviceSizesPlugin extends ChangeNotifier {
   final List<DeviceInfo> _devices;
@@ -29,10 +29,10 @@ extension DeviceSizesPluginExtension on BuildContext {
   DeviceSizesPlugin get deviceSizes => DeviceSizesPlugin.of(this);
 }
 
-StoryBookPlugin deviceSizesPlugin(
+DynamoPlugin deviceSizesPlugin(
         {Iterable<DeviceInfo> extraDevices = const [],
         bool useDefaults = true}) =>
-    StoryBookPlugin<DeviceSizesPlugin>(
+    DynamoPlugin<DeviceSizesPlugin>(
       provider: ChangeNotifierProvider(
           create: (context) => DeviceSizesPlugin(extraDevices, useDefaults)),
     );

@@ -1,11 +1,11 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_storybook/mediaquery/offset_plugin.dart';
-import 'package:flutter_storybook/mediaquery/override_media_query_plugin.dart';
-import 'package:flutter_storybook/ui/screen.dart';
-import 'package:flutter_storybook/ui/storyboard/flow_start.dart';
-import 'package:flutter_storybook/ui/storyboard/utils.dart';
-import 'package:flutter_storybook/ui/widgets/panscroll.dart';
+import 'package:ui_dynamo/mediaquery/offset_plugin.dart';
+import 'package:ui_dynamo/mediaquery/override_media_query_plugin.dart';
+import 'package:ui_dynamo/ui/screen.dart';
+import 'package:ui_dynamo/ui/storyboard/flow_start.dart';
+import 'package:ui_dynamo/ui/storyboard/utils.dart';
+import 'package:ui_dynamo/ui/widgets/panscroll.dart';
 
 const _kSpacing = 80.0;
 
@@ -13,7 +13,7 @@ class StoryBoard extends StatefulWidget {
   /// Wrap your Material App with this widget
   final MaterialApp child;
 
-  /// Specify a set of Flows to display within the default storybook
+  /// Specify a set of Flows to display within the default Dynamo
   /// instead of every application route. Each key is the name of the Flow
   /// and each value is the ordered list of screens shown.
   final Map<String, List<String>> routesMapping;

@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_storybook/plugins/plugin.dart';
+import 'package:ui_dynamo/plugins/plugin.dart';
 import 'package:provider/provider.dart';
 
 class OffsetProvider extends ChangeNotifier {
@@ -44,7 +44,7 @@ extension OffsetPluginExtension on BuildContext {
   OffsetProvider get offsetProvider => Provider.of<OffsetProvider>(this);
 }
 
-StoryBookPlugin offsetPlugin() => StoryBookPlugin(
+DynamoPlugin offsetPlugin() => DynamoPlugin(
         provider: ChangeNotifierProvider<OffsetProvider>(
       create: (context) => OffsetProvider(),
     ));

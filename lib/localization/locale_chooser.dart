@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_storybook/localization/locale_item.dart';
-import 'package:flutter_storybook/localization/localizations_plugin.dart';
+import 'package:ui_dynamo/localization/locale_item.dart';
+import 'package:ui_dynamo/localization/localizations_plugin.dart';
 
 const defaultLocales = [
   Locale('en'),

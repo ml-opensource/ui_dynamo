@@ -1,34 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_storybook/flutter_storybook.dart';
-import 'package:flutter_storybook/media_utils.dart';
-import 'package:flutter_storybook/ui/model/widget.dart';
-import 'package:flutter_storybook/ui/styles/text_styles.dart';
+import 'package:ui_dynamo/ui_dynamo.dart';
+import 'package:ui_dynamo/media_utils.dart';
+import 'package:ui_dynamo/ui/model/widget.dart';
+import 'package:ui_dynamo/ui/styles/text_styles.dart';
 
-class StoryBookPage extends StoryBookItem {
+class DynamoPage extends DynamoItem {
   /// Returns the widgets to render in a page. These are loaded when page clicked.
-  final StoryBookWidget widget;
+  final DynamoWidget widget;
   bool shouldScroll = true;
   bool usesToolbar = true;
 
-  StoryBookPage(
+  DynamoPage(
       {@required Key key,
       @required Widget title,
       Icon icon,
       @required this.widget})
       : super(key, title, icon);
 
-  factory StoryBookPage.storyboard(
+  factory DynamoPage.storyboard(
       {@required String title,
       Map<String, List<String>> routesMapping,
 
       /// supplied to override the default app passed into the storyboard widget
       /// Used to add previewRoutes to the storyboard.
       MaterialApp appOverride}) {
-    final page = StoryBookPage(
+    final page = DynamoPage(
       key: ValueKey(title),
       title: Text(title),
-      widget: StoryBookWidget((context, data, app) => StoryBoard(
+      widget: DynamoWidget((context, data, app) => StoryBoard(
             child: appOverride ?? app,
             routesMapping: routesMapping,
           )),
@@ -39,35 +39,35 @@ class StoryBookPage extends StoryBookItem {
     return page;
   }
 
-  factory StoryBookPage.list({
+  factory DynamoPage.list({
     Key key,
     @required String title,
     Icon icon,
     @required List<Widget> Function(BuildContext context) widgets,
   }) =>
-      StoryBookPage(
+      DynamoPage(
           key: key ?? ValueKey(title),
           title: Text(title),
           icon: icon,
-          widget: StoryBookWidgetList(widgets));
+          widget: DynamoWidgetList(widgets));
 
-  factory StoryBookPage.of({
+  factory DynamoPage.of({
     Key key,
     @required String title,
     Icon icon,
     @required Widget Function(BuildContext context) child,
   }) =>
-      StoryBookPage(
+      DynamoPage(
           key: key ?? ValueKey(title),
           title: Text(title),
           icon: icon,
-          widget: StoryBookWidget.widgetBuilder(child));
+          widget: DynamoWidget.widgetBuilder(child));
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       super == other &&
-          other is StoryBookPage &&
+          other is DynamoPage &&
           runtimeType == other.runtimeType &&
           widget == other.widget;
 
@@ -75,12 +75,12 @@ class StoryBookPage extends StoryBookItem {
   int get hashCode => super.hashCode ^ widget.hashCode;
 
   @override
-  StoryBookPage pageFromKey(Key key) => this;
+  DynamoPage pageFromKey(Key key) => this;
 
   @override
-  Widget buildWidget(StoryBookPage selectedPage,
-      Function(StoryBookItem p1, StoryBookPage p2) onSelectPage) {
-    return StoryBookPageWidget(
+  Widget buildWidget(DynamoPage selectedPage,
+      Function(DynamoItem p1, DynamoPage p2) onSelectPage) {
+    return DynamoPageWidget(
       page: this,
       selectedPage: selectedPage,
       onSelectPage: (page) => onSelectPage(page, page),
@@ -88,12 +88,12 @@ class StoryBookPage extends StoryBookItem {
   }
 }
 
-class StoryBookPageWidget extends StatelessWidget {
-  final StoryBookPage page;
-  final StoryBookPage selectedPage;
-  final Function(StoryBookPage) onSelectPage;
+class DynamoPageWidget extends StatelessWidget {
+  final DynamoPage page;
+  final DynamoPage selectedPage;
+  final Function(DynamoPage) onSelectPage;
 
-  const StoryBookPageWidget(
+  const DynamoPageWidget(
       {Key key, @required this.page, this.selectedPage, this.onSelectPage})
       : super(key: key);
 

@@ -1,6 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_storybook/ui/utils/gesture_recognizer.dart';
+import 'package:ui_dynamo/ui/utils/gesture_recognizer.dart';
 
 /// Copied from: https://github.com/gildaswise/holding_gesture
 /// A widget that detects a holding gesture.

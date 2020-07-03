@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_storybook/localization/localizations.dart';
+import 'package:ui_dynamo/localization/localizations.dart';
 
 extension MaterialAppCopy on MaterialApp {
   MaterialApp isolatedCopy(
@@ -112,7 +112,7 @@ extension MaterialAppCopy on MaterialApp {
 
   List<LocalizationsDelegate> get delegates {
     return [
-      StoryBookLocalizations.delegate,
+      DynamoLocalizations.delegate,
       if (localizationsDelegates != null) ...localizationsDelegates,
     ];
   }

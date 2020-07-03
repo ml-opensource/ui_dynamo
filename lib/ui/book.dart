@@ -1,39 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_storybook/actions/actions_plugin.dart';
-import 'package:flutter_storybook/flutter_storybook.dart';
-import 'package:flutter_storybook/localization/localizations_plugin.dart';
-import 'package:flutter_storybook/media_utils.dart';
-import 'package:flutter_storybook/mediaquery/device_size_plugin.dart';
-import 'package:flutter_storybook/mediaquery/device_sizes.dart';
-import 'package:flutter_storybook/mediaquery/offset_plugin.dart';
-import 'package:flutter_storybook/mediaquery/override_media_query_plugin.dart';
-import 'package:flutter_storybook/models.dart';
-import 'package:flutter_storybook/plugins/plugin.dart';
-import 'package:flutter_storybook/props/props_plugin.dart';
-import 'package:flutter_storybook/ui/drawer/drawer.dart';
-import 'package:flutter_storybook/ui/drawer/drawer_provider.dart';
-import 'package:flutter_storybook/ui/home_page.dart';
-import 'package:flutter_storybook/ui/materialapp+extensions.dart';
-import 'package:flutter_storybook/ui/model/page.dart';
-import 'package:flutter_storybook/ui/page_wrapper.dart';
-import 'package:flutter_storybook/ui/toolbar.dart';
+import 'package:ui_dynamo/actions/actions_plugin.dart';
+import 'package:ui_dynamo/ui_dynamo.dart';
+import 'package:ui_dynamo/localization/localizations_plugin.dart';
+import 'package:ui_dynamo/media_utils.dart';
+import 'package:ui_dynamo/mediaquery/device_size_plugin.dart';
+import 'package:ui_dynamo/mediaquery/device_sizes.dart';
+import 'package:ui_dynamo/mediaquery/offset_plugin.dart';
+import 'package:ui_dynamo/mediaquery/override_media_query_plugin.dart';
+import 'package:ui_dynamo/models.dart';
+import 'package:ui_dynamo/plugins/plugin.dart';
+import 'package:ui_dynamo/props/props_plugin.dart';
+import 'package:ui_dynamo/ui/drawer/drawer.dart';
+import 'package:ui_dynamo/ui/drawer/drawer_provider.dart';
+import 'package:ui_dynamo/ui/home_page.dart';
+import 'package:ui_dynamo/ui/materialapp+extensions.dart';
+import 'package:ui_dynamo/ui/model/page.dart';
+import 'package:ui_dynamo/ui/page_wrapper.dart';
+import 'package:ui_dynamo/ui/toolbar.dart';
 import 'package:provider/provider.dart';
 
-class StoryBook extends StatefulWidget {
-  final StoryBookData data;
+class Dynamo extends StatefulWidget {
+  final DynamoData data;
   final MaterialApp app;
 
-  /// an extra set of Provider to inject into the storybook hierarchy.
-  final List<StoryBookPlugin> plugins;
+  /// an extra set of Provider to inject into the dynamo hierarchy.
+  final List<DynamoPlugin> plugins;
 
-  /// Constructs a new StoryBook with
+  /// Constructs a new Dynamo with
   /// 1. default storyboard with all app routes. If routesMapping specified,
   /// use that.
   /// 2. A folder with all top-level page routes as a page.
-  /// 3. Also, a default Home page using the default Storybook home page. If home
+  /// 3. Also, a default Home page using the default Dynamo home page. If home
   /// is specified, render that widget instead.
-  factory StoryBook.withApp(MaterialApp app,
+  factory Dynamo.withApp(MaterialApp app,
       {
 
       /// use this to replace the default home widget.
@@ -46,12 +46,12 @@ class StoryBook extends StatefulWidget {
       /// If true, a default "Storyboard" containing all of the app's routes
       /// (including preview routes) get added to one board. This can grow
       /// large if the app has many screens. You can set this to false, and
-      /// alternatively create a custom [StoryBookPage.storyboard] instead with
+      /// alternatively create a custom [DynamoPage.storyboard] instead with
       /// a provided [StoryBoard.routesMapping].
       bool createAppStoryBoard = true,
 
-      /// The data to render each page and define how storybook operates.
-      @required StoryBookData data,
+      /// The data to render each page and define how UIDynamo operates.
+      @required DynamoData data,
 
       /// Preview Routes are useful to add preview-able content to a route that
       /// typically does not exist in the normal application
@@ -62,7 +62,7 @@ class StoryBook extends StatefulWidget {
       bool allowPreviewRouteOverrides = false,
 
       /// Define extra plugins for this app to use in inherited widgets.
-      List<StoryBookPlugin> plugins = const [],
+      List<DynamoPlugin> plugins = const [],
 
       /// if true, props and actions are provided. if false, it requires using
       /// [plugins] manually
@@ -80,7 +80,7 @@ class StoryBook extends StatefulWidget {
         if (routes.containsKey(key)) {
           throw FlutterError("Duplicate route $key found in application. "
               "Overridding an existing route will replace the functionality "
-              "in StoryBook. If this was intentional, set allowPreviewRouteOverrides "
+              "in UIDynamo. If this was intentional, set allowPreviewRouteOverrides "
               "to true.");
         }
         return true;
@@ -93,17 +93,17 @@ class StoryBook extends StatefulWidget {
     final updatedData =
         data.merge(title: data.title ?? Text(app.title), items: [
       if (createAppStoryBoard)
-        StoryBookPage.storyboard(appOverride: copiedApp, title: 'Storyboard'),
+        DynamoPage.storyboard(appOverride: copiedApp, title: 'Storyboard'),
       if (createRoutePages)
-        StoryBookFolder.of(
+        DynamoFolder.of(
           title: 'Routes',
           pages: [
             ...app.routes.entries.map((entry) =>
-                StoryBookPage.of(title: entry.key, child: entry.value)),
+                DynamoPage.of(title: entry.key, child: entry.value)),
           ],
         ),
     ]);
-    return StoryBook(
+    return Dynamo(
       app: copiedApp,
       plugins: [
         ...plugins,
@@ -121,19 +121,19 @@ class StoryBook extends StatefulWidget {
       ],
       data: updatedData.merge(items: [
         // merge with the folder routes so the home page can capture the data.
-        StoryBookPage.of(
+        DynamoPage.of(
             title: 'Home',
             icon: Icon(Icons.home),
             child: (context) =>
                 home ??
-                StoryBookHomePage(
+                DynamoHomePage(
                   data: updatedData,
                 )),
       ], mergeFirst: true),
     );
   }
 
-  const StoryBook(
+  const Dynamo(
       {Key key,
       @required this.data,
       @required this.app,
@@ -141,14 +141,14 @@ class StoryBook extends StatefulWidget {
       : super(key: key);
 
   @override
-  _StoryBookState createState() => _StoryBookState();
+  _DynamoState createState() => _DynamoState();
 }
 
-class _StoryBookState extends State<StoryBook> {
+class _DynamoState extends State<Dynamo> {
   bool isDrawerOpen = false;
 
   void _selectPage(
-      StoryBookPage page, StoryBookItem folder, BuildContext context) {
+      DynamoPage page, DynamoItem folder, BuildContext context) {
     drawer(context).select(context, folder.key, page.key, popDrawer: true);
   }
 
@@ -200,7 +200,7 @@ class _StoryBookState extends State<StoryBook> {
                       selectedPage != null ? selectedPage.title : Text('Home'),
                 ),
                 drawer: Builder(
-                  builder: (context) => StoryBookDrawer(
+                  builder: (context) => DynamoDrawer(
                     data: widget.data,
                     selectedPage: selectedPage,
                     onSelectPage: (folder, page) =>
@@ -213,7 +213,7 @@ class _StoryBookState extends State<StoryBook> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Flexible(
-                      child: StoryBookPageWrapper(
+                      child: DynamoPageWrapper(
                         base: app,
                         shouldScroll: selectedPage.shouldScroll,
                         builder: selectedPage.widget.builder,

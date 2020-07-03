@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_storybook/props/props_models.dart';
-import 'package:flutter_storybook/props/props_plugin.dart';
+import 'package:ui_dynamo/props/props_models.dart';
+import 'package:ui_dynamo/props/props_plugin.dart';
 
 extension TwoWayBindingExtension on PropsProvider {
   TwoWayBindingGenerator get twoWay => TwoWayBindingGenerator(this);

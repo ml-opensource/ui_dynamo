@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_storybook/ui/styles/text_styles.dart';
+import 'package:ui_dynamo/ui/styles/text_styles.dart';
 
 class HeaderTextWidget extends StatelessWidget {
   final Widget title;

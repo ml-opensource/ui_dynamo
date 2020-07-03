@@ -14,7 +14,7 @@ enum ExpansionAxis {
   None,
 }
 
-/// Holds necessary information to display the device and tell Storybook
+/// Holds necessary information to display the device and tell UIDynamo
 /// what size of device and its category to render.
 class DeviceInfo {
   final String name;
@@ -74,8 +74,8 @@ class DeviceInfo {
   }
 }
 
-/// List of prebundled devices. Useful for reference when initing
-/// Storybook and you want to default to a particular size.
+/// List of pre-bundled devices. Useful for reference when init-ing
+/// UIDynamo and you want to default to a particular size.
 class DeviceSizes {
   static const viewPort = DeviceInfo(
       'Viewport', Size.infinite, Size.infinite, DeviceCategory.Expand);

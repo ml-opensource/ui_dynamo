@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_storybook/flutter_storybook.dart';
-import 'package:flutter_storybook/ui/toolbar.dart';
+import 'package:ui_dynamo/ui_dynamo.dart';
+import 'package:ui_dynamo/ui/toolbar.dart';
 import 'package:provider/provider.dart';
 
 class PropsDisplay extends StatelessWidget {

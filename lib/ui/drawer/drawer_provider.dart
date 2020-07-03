@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_storybook/actions/actions_extensions.dart';
-import 'package:flutter_storybook/mediaquery/offset_plugin.dart';
-import 'package:flutter_storybook/mediaquery/override_media_query_plugin.dart';
-import 'package:flutter_storybook/models.dart';
-import 'package:flutter_storybook/props/props_plugin.dart';
-import 'package:flutter_storybook/ui/model/page.dart';
+import 'package:ui_dynamo/actions/actions_extensions.dart';
+import 'package:ui_dynamo/mediaquery/offset_plugin.dart';
+import 'package:ui_dynamo/mediaquery/override_media_query_plugin.dart';
+import 'package:ui_dynamo/models.dart';
+import 'package:ui_dynamo/props/props_plugin.dart';
+import 'package:ui_dynamo/ui/model/page.dart';
 import 'package:provider/provider.dart';
 
 class DrawerProvider extends ChangeNotifier {
@@ -33,7 +33,7 @@ class DrawerProvider extends ChangeNotifier {
 DrawerProvider drawer(BuildContext context) =>
     Provider.of<DrawerProvider>(context);
 
-StoryBookPage selectedPageFromWidget(StoryBookData data, BuildContext context) {
+DynamoPage selectedPageFromWidget(DynamoData data, BuildContext context) {
   final drawer = context.drawerProvider;
   final selectedFolderKey = drawer.folderKey;
   final selectedPageKey = drawer.pageKey;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_storybook/flutter_storybook.dart';
+import 'package:ui_dynamo/ui_dynamo.dart';
 
-StoryBookPage buildButtonsPage() => StoryBookPage.list(
+DynamoPage buildButtonsPage() => DynamoPage.list(
       title: 'Button States',
       widgets: (context) {
         final prop = context.props;

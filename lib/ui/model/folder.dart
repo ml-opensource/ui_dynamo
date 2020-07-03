@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_storybook/media_utils.dart';
-import 'package:flutter_storybook/models.dart';
-import 'package:flutter_storybook/ui/model/page.dart';
-import 'package:flutter_storybook/ui/styles/text_styles.dart';
+import 'package:ui_dynamo/media_utils.dart';
+import 'package:ui_dynamo/models.dart';
+import 'package:ui_dynamo/ui/model/page.dart';
+import 'package:ui_dynamo/ui/styles/text_styles.dart';
 
-class StoryBookFolder extends StoryBookItem {
-  final List<StoryBookPage> pages;
+class DynamoFolder extends DynamoItem {
+  final List<DynamoPage> pages;
 
-  StoryBookFolder(
+  DynamoFolder(
       {@required Key key,
       @required Widget title,
       this.pages = const [],
       Icon icon})
       : super(key, title, icon);
 
-  factory StoryBookFolder.of({
+  factory DynamoFolder.of({
     Key key,
     String title,
-    @required List<StoryBookPage> pages,
+    @required List<DynamoPage> pages,
   }) =>
-      StoryBookFolder(
+      DynamoFolder(
         key: key ?? ValueKey(title),
         title: Text(title),
         pages: pages,
@@ -30,7 +30,7 @@ class StoryBookFolder extends StoryBookItem {
   bool operator ==(Object other) =>
       identical(this, other) ||
       super == other &&
-          other is StoryBookFolder &&
+          other is DynamoFolder &&
           runtimeType == other.runtimeType &&
           pages == other.pages;
 
@@ -38,25 +38,25 @@ class StoryBookFolder extends StoryBookItem {
   int get hashCode => super.hashCode ^ pages.hashCode;
 
   @override
-  StoryBookPage pageFromKey(Key key) =>
+  DynamoPage pageFromKey(Key key) =>
       pages.firstWhere((element) => element.key == key, orElse: () => null);
 
   @override
-  Widget buildWidget(StoryBookPage selectedPage,
-          Function(StoryBookItem p1, StoryBookPage p2) onSelectPage) =>
-      StoryBookFolderWidget(
+  Widget buildWidget(DynamoPage selectedPage,
+          Function(DynamoItem p1, DynamoPage p2) onSelectPage) =>
+      DynamoFolderWidget(
         folder: this,
         selectedPage: selectedPage,
         onSelectPage: onSelectPage,
       );
 }
 
-class StoryBookFolderWidget extends StatelessWidget {
-  final StoryBookFolder folder;
-  final StoryBookPage selectedPage;
-  final Function(StoryBookItem, StoryBookPage) onSelectPage;
+class DynamoFolderWidget extends StatelessWidget {
+  final DynamoFolder folder;
+  final DynamoPage selectedPage;
+  final Function(DynamoItem, DynamoPage) onSelectPage;
 
-  const StoryBookFolderWidget(
+  const DynamoFolderWidget(
       {Key key,
       @required this.folder,
       this.selectedPage,
@@ -72,7 +72,7 @@ class StoryBookFolderWidget extends StatelessWidget {
         ),
         initiallyExpanded: folder.pages.contains(selectedPage),
         children: <Widget>[
-          ...folder.pages.map((page) => StoryBookPageWidget(
+          ...folder.pages.map((page) => DynamoPageWidget(
                 page: page,
                 selectedPage: selectedPage,
                 onSelectPage: (page) => onSelectPage(folder, page),

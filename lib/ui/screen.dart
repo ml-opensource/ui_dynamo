@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_storybook/localization/localizations_plugin.dart';
-import 'package:flutter_storybook/ui/materialapp+extensions.dart';
-import 'package:flutter_storybook/ui/storyboard/custom_rect.dart';
-import 'package:flutter_storybook/ui/storyboard/label.dart';
+import 'package:ui_dynamo/localization/localizations_plugin.dart';
+import 'package:ui_dynamo/ui/materialapp+extensions.dart';
+import 'package:ui_dynamo/ui/storyboard/custom_rect.dart';
+import 'package:ui_dynamo/ui/storyboard/label.dart';
 
 class ScalableScreen extends StatelessWidget {
   final MaterialApp base;
@@ -59,7 +59,7 @@ class ScalableScreen extends StatelessWidget {
               )),
           if (label != null)
             Center(
-                child: StoryBookLabel(
+                child: DynamoLabel(
               isFlowStart: isFlowStart,
               label: label,
               routeName: routeName,

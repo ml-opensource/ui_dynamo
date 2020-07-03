@@ -1,6 +1,6 @@
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_storybook/plugins/safe_provider.dart';
+import 'package:ui_dynamo/plugins/safe_provider.dart';
 import 'package:provider/provider.dart';
 
 typedef void OnWidgetSizeChange(Size size);

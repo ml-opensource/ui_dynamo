@@ -3,7 +3,7 @@ import 'package:example/pages/main_page.dart';
 import 'package:example/pages/person_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_storybook/flutter_storybook.dart';
+import 'package:ui_dynamo/ui_dynamo.dart';
 
 void main() => runApp(MyApp());
 
@@ -65,7 +65,7 @@ MaterialApp buildApp() => MaterialApp(
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
-        StoryBookLocalizations.delegate,
+        DynamoLocalizations.delegate,
       ],
       onGenerateRoute: (settings) {
         if (settings.name == '/detail') {

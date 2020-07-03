@@ -2,12 +2,12 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_storybook/mediaquery/override_media_query_plugin.dart';
-import 'package:flutter_storybook/plugins/plugin.dart';
-import 'package:flutter_storybook/ui/widgets/measuresize.dart';
+import 'package:ui_dynamo/mediaquery/override_media_query_plugin.dart';
+import 'package:ui_dynamo/plugins/plugin.dart';
+import 'package:ui_dynamo/ui/widgets/measuresize.dart';
 
 class ToolbarPane extends StatefulWidget {
-  final List<StoryBookPlugin> plugins;
+  final List<DynamoPlugin> plugins;
   final bool onBottom;
 
   const ToolbarPane({
@@ -137,7 +137,7 @@ class _ToolbarPaneState extends State<ToolbarPane> {
   }
 
   Expanded buildTabBar(
-      List<StoryBookPlugin<ChangeNotifier>> plugins, TextStyle tabTextColor) {
+      List<DynamoPlugin<ChangeNotifier>> plugins, TextStyle tabTextColor) {
     return Expanded(
       child: TabBar(
         onTap: (index) {

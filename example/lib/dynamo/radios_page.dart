@@ -1,8 +1,8 @@
 import 'package:example/widgets/radios.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_storybook/flutter_storybook.dart';
+import 'package:ui_dynamo/ui_dynamo.dart';
 
-StoryBookPage buildRadiosPage() => StoryBookPage.list(
+DynamoPage buildRadiosPage() => DynamoPage.list(
       title: "Radios",
       icon: Icon(Icons.radio_button_checked),
       widgets: (context) {

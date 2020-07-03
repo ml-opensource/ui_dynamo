@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_storybook/mediaquery/override_media_query_plugin.dart';
-import 'package:flutter_storybook/ui/drawer/drawer_provider.dart';
+import 'package:ui_dynamo/mediaquery/override_media_query_plugin.dart';
+import 'package:ui_dynamo/ui/drawer/drawer_provider.dart';
 
-class StoryBookLabel extends StatelessWidget {
+class DynamoLabel extends StatelessWidget {
   final String label;
   final String routeName;
   final bool isFlowStart;
 
-  const StoryBookLabel({Key key, this.label, this.routeName, this.isFlowStart})
+  const DynamoLabel({Key key, this.label, this.routeName, this.isFlowStart})
       : super(key: key);
 
   @override

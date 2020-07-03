@@ -1,8 +1,8 @@
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_storybook/localization/localizations_ui.dart';
-import 'package:flutter_storybook/plugins/plugin.dart';
+import 'package:ui_dynamo/localization/localizations_ui.dart';
+import 'package:ui_dynamo/plugins/plugin.dart';
 import 'package:provider/provider.dart';
 
 /// Implement this class to provide the set of localizations
@@ -38,10 +38,10 @@ extension LocalizationsPluginExtension on BuildContext {
   LocalizationsPlugin get locales => LocalizationsPlugin.of(this);
 }
 
-StoryBookPlugin localizationsPlugin(
+DynamoPlugin localizationsPlugin(
         {List<Locale> supportedLocales = const [],
         List<LocalizationsDelegate<dynamic>> localizationDisplay = const []}) =>
-    StoryBookPlugin<LocalizationsPlugin>(
+    DynamoPlugin<LocalizationsPlugin>(
       tabPane: (context) => LocationsDisplay(
         localizationDisplay: localizationDisplay,
       ),

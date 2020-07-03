@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_storybook/flutter_storybook.dart';
-import 'package:flutter_storybook/plugins/plugin.dart';
-import 'package:flutter_storybook/plugins/safe_provider.dart';
-import 'package:flutter_storybook/props/props_models.dart';
-import 'package:flutter_storybook/props/props_ui.dart';
+import 'package:ui_dynamo/ui_dynamo.dart';
+import 'package:ui_dynamo/plugins/plugin.dart';
+import 'package:ui_dynamo/plugins/safe_provider.dart';
+import 'package:ui_dynamo/props/props_models.dart';
+import 'package:ui_dynamo/props/props_ui.dart';
 import 'package:provider/provider.dart';
 
-StoryBookPlugin propsPlugin() => StoryBookPlugin<PropsProvider>(
+DynamoPlugin propsPlugin() => DynamoPlugin<PropsProvider>(
       provider: ChangeNotifierProvider(create: (context) => PropsProvider()),
       tabText: 'Props',
       tabPane: (context) => PropsDisplay(),

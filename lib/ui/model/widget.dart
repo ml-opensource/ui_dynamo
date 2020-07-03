@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-typedef StorybookWidgetBuilder = Widget Function(
+typedef DynamoWidgetBuilder = Widget Function(
     BuildContext context, MediaQueryData queryData, MaterialApp app);
 
-class StoryBookWidget {
-  final StorybookWidgetBuilder builder;
+class DynamoWidget {
+  final DynamoWidgetBuilder builder;
 
-  StoryBookWidget(this.builder);
+  DynamoWidget(this.builder);
 
-  factory StoryBookWidget.widgetBuilder(WidgetBuilder builder) =>
-      StoryBookWidget((context, data, app) =>
+  factory DynamoWidget.widgetBuilder(WidgetBuilder builder) =>
+      DynamoWidget((context, data, app) =>
           MediaQuery(data: data, child: builder(context)));
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is StoryBookWidget &&
+      other is DynamoWidget &&
           runtimeType == other.runtimeType &&
           builder == other.builder;
 
@@ -24,10 +24,10 @@ class StoryBookWidget {
   int get hashCode => builder.hashCode;
 }
 
-class StoryBookWidgetList extends StoryBookWidget {
+class DynamoWidgetList extends DynamoWidget {
   final List<Widget> Function(BuildContext context) widgets;
 
-  StoryBookWidgetList(this.widgets)
+  DynamoWidgetList(this.widgets)
       : super(
           (context, data, app) => MediaQuery(
             data: data,

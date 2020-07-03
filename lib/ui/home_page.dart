@@ -1,28 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_storybook/localization/localizations.dart';
-import 'package:flutter_storybook/media_utils.dart';
-import 'package:flutter_storybook/mediaquery/media_query_toolbar.dart';
-import 'package:flutter_storybook/models.dart';
-import 'package:flutter_storybook/ui/drawer/drawer.dart';
-import 'package:flutter_storybook/ui/drawer/drawer_provider.dart';
-import 'package:flutter_storybook/ui/model/page.dart';
+import 'package:ui_dynamo/localization/localizations.dart';
+import 'package:ui_dynamo/media_utils.dart';
+import 'package:ui_dynamo/mediaquery/media_query_toolbar.dart';
+import 'package:ui_dynamo/models.dart';
+import 'package:ui_dynamo/ui/drawer/drawer.dart';
+import 'package:ui_dynamo/ui/drawer/drawer_provider.dart';
+import 'package:ui_dynamo/ui/model/page.dart';
 
-class StoryBookHomePage extends StatelessWidget {
-  final StoryBookData data;
+class DynamoHomePage extends StatelessWidget {
+  final DynamoData data;
 
-  const StoryBookHomePage({
+  const DynamoHomePage({
     Key key,
     @required this.data,
   }) : super(key: key);
 
   void _selectPage(
-      StoryBookPage page, StoryBookItem folder, BuildContext context) {
+      DynamoPage page, DynamoItem folder, BuildContext context) {
     context.drawerProvider
         .select(context, folder.key, page.key, popDrawer: true);
   }
 
-  buildRoutesListing(StoryBookPage selectedPage, BuildContext context,
-          StoryBookData data) =>
+  buildRoutesListing(DynamoPage selectedPage, BuildContext context,
+          DynamoData data) =>
       Row(
         children: [
           Flexible(
@@ -48,7 +48,7 @@ class StoryBookHomePage extends StatelessWidget {
     final selectedPage = selectedPageFromWidget(data, context);
     final watch = context.isWatch;
     final padding = watch ? 8.0 : 32.0;
-    final localizations = StoryBookLocalizations.of(context);
+    final localizations = DynamoLocalizations.of(context);
     return Container(
       padding: EdgeInsets.only(left: padding, right: padding),
       alignment: AlignmentDirectional.center,

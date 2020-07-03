@@ -1,15 +1,15 @@
 import 'package:example/main.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_storybook/flutter_storybook.dart';
-import 'package:flutter_storybook/mediaquery/device_sizes.dart';
-import 'package:flutter_storybook/ui/book.dart';
+import 'package:ui_dynamo/ui_dynamo.dart';
+import 'package:ui_dynamo/mediaquery/device_sizes.dart';
+import 'package:ui_dynamo/ui/book.dart';
 
-void main() => runApp(AppStoryBook());
+void main() => runApp(AppDynamo());
 
-class AppStoryBook extends StatelessWidget {
+class AppDynamo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return StoryBook.withApp(
+    return Dynamo.withApp(
       buildApp(),
       useDeviceSizeDefaults: false,
       extraDevices: [
@@ -18,7 +18,7 @@ class AppStoryBook extends StatelessWidget {
         DeviceSizes.appleWatchSeries5_44,
       ],
       useDefaultPlugins: false,
-      data: StoryBookData(
+      data: DynamoData(
         items: [],
       ),
     );

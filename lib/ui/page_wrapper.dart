@@ -1,38 +1,38 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_storybook/localization/localizations_plugin.dart';
-import 'package:flutter_storybook/mediaquery/device_sizes.dart';
-import 'package:flutter_storybook/mediaquery/media_query_toolbar.dart';
-import 'package:flutter_storybook/mediaquery/override_media_query_plugin.dart';
-import 'package:flutter_storybook/ui/interactable_screen.dart';
-import 'package:flutter_storybook/ui/materialapp+extensions.dart';
-import 'package:flutter_storybook/ui/model/widget.dart';
-import 'package:flutter_storybook/ui/utils/size+extensions.dart';
-import 'package:flutter_storybook/ui/widgets/measuresize.dart';
+import 'package:ui_dynamo/localization/localizations_plugin.dart';
+import 'package:ui_dynamo/mediaquery/device_sizes.dart';
+import 'package:ui_dynamo/mediaquery/media_query_toolbar.dart';
+import 'package:ui_dynamo/mediaquery/override_media_query_plugin.dart';
+import 'package:ui_dynamo/ui/interactable_screen.dart';
+import 'package:ui_dynamo/ui/materialapp+extensions.dart';
+import 'package:ui_dynamo/ui/model/widget.dart';
+import 'package:ui_dynamo/ui/utils/size+extensions.dart';
+import 'package:ui_dynamo/ui/widgets/measuresize.dart';
 
-class StoryBookPageWrapper extends StatefulWidget {
-  final StorybookWidgetBuilder builder;
+class DynamoPageWrapper extends StatefulWidget {
+  final DynamoWidgetBuilder builder;
   final bool shouldScroll;
   final MaterialApp base;
 
-  const StoryBookPageWrapper(
+  const DynamoPageWrapper(
       {Key key,
       @required this.builder,
       this.shouldScroll = true,
       @required this.base})
       : super(key: key);
 
-  factory StoryBookPageWrapper.mediaQuery(
+  factory DynamoPageWrapper.mediaQuery(
           {WidgetBuilder builder, MaterialApp base}) =>
-      StoryBookPageWrapper(
+      DynamoPageWrapper(
         builder: (context, data, app) =>
             MediaQuery(data: data, child: builder(context)),
         base: base,
       );
 
   @override
-  _StoryBookPageWrapperState createState() => _StoryBookPageWrapperState();
+  _DynamoPageWrapperState createState() => _DynamoPageWrapperState();
 }
 
 String deviceDisplay(
@@ -51,7 +51,7 @@ String deviceDisplay(
   return "${deviceInfo.name} (${width.truncate()}x${height.truncate()})";
 }
 
-class _StoryBookPageWrapperState extends State<StoryBookPageWrapper> {
+class _DynamoPageWrapperState extends State<DynamoPageWrapper> {
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -86,7 +86,7 @@ class _MediaQueryWrapper extends StatelessWidget {
 
 class _NonScrollableScreen extends StatelessWidget {
   final MaterialApp base;
-  final StorybookWidgetBuilder builder;
+  final DynamoWidgetBuilder builder;
 
   const _NonScrollableScreen(
       {Key key, @required this.base, @required this.builder})

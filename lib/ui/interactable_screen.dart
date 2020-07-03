@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_storybook/mediaquery/offset_plugin.dart';
-import 'package:flutter_storybook/mediaquery/override_media_query_plugin.dart';
-import 'package:flutter_storybook/ui/model/widget.dart';
-import 'package:flutter_storybook/ui/page_wrapper.dart';
-import 'package:flutter_storybook/ui/screen.dart';
-import 'package:flutter_storybook/ui/storyboard/utils.dart';
-import 'package:flutter_storybook/ui/widgets/panscroll.dart';
+import 'package:ui_dynamo/mediaquery/offset_plugin.dart';
+import 'package:ui_dynamo/mediaquery/override_media_query_plugin.dart';
+import 'package:ui_dynamo/ui/model/widget.dart';
+import 'package:ui_dynamo/ui/page_wrapper.dart';
+import 'package:ui_dynamo/ui/screen.dart';
+import 'package:ui_dynamo/ui/storyboard/utils.dart';
+import 'package:ui_dynamo/ui/widgets/panscroll.dart';
 import 'package:rxdart/rxdart.dart';
 
 class InteractableScreen extends StatefulWidget {
@@ -14,7 +14,7 @@ class InteractableScreen extends StatefulWidget {
     @required this.widget,
   }) : super(key: key);
 
-  final StoryBookPageWrapper widget;
+  final DynamoPageWrapper widget;
 
   @override
   _InteractableScreenState createState() => _InteractableScreenState();
@@ -149,7 +149,7 @@ class _OverflowSizedScreen extends StatelessWidget {
   final OverrideMediaQueryProvider query;
   final OffsetProvider offset;
   final MaterialApp base;
-  final StorybookWidgetBuilder builder;
+  final DynamoWidgetBuilder builder;
 
   @override
   Widget build(BuildContext context) {

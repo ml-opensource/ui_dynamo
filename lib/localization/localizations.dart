@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_storybook/localization/locale_chooser.dart';
-import 'package:flutter_storybook/localization/localizations_file.dart';
-import 'package:flutter_storybook/localization/localizations_plugin.dart';
+import 'package:ui_dynamo/localization/locale_chooser.dart';
+import 'package:ui_dynamo/localization/localizations_file.dart';
+import 'package:ui_dynamo/localization/localizations_plugin.dart';
 
-class StoryBookLocalizations implements Localizable {
+class DynamoLocalizations implements Localizable {
   final Locale locale;
 
-  StoryBookLocalizations(this.locale);
+  DynamoLocalizations(this.locale);
 
-  static StoryBookLocalizationsDelegate get delegate =>
-      StoryBookLocalizationsDelegate();
+  static DynamoLocalizationsDelegate get delegate =>
+      DynamoLocalizationsDelegate();
 
-  factory StoryBookLocalizations.of(BuildContext context) =>
-      Localizations.of(context, StoryBookLocalizations);
+  factory DynamoLocalizations.of(BuildContext context) =>
+      Localizations.of(context, DynamoLocalizations);
 
   String localizedValue(String key) =>
       localizedValues[locale.languageCode][key] ??
@@ -42,7 +42,7 @@ class StoryBookLocalizations implements Localizable {
   Map<String, String> localizations() => localizedValues[locale.languageCode];
 
   @override
-  String get name => 'Storybook Localizations';
+  String get name => 'Dynamo Localizations';
 }
 
 extension LocalizedParam on String {
@@ -88,16 +88,16 @@ extension LocalizedParam on String {
   }
 }
 
-class StoryBookLocalizationsDelegate
-    extends LocalizationsDelegate<StoryBookLocalizations> {
-  const StoryBookLocalizationsDelegate();
+class DynamoLocalizationsDelegate
+    extends LocalizationsDelegate<DynamoLocalizations> {
+  const DynamoLocalizationsDelegate();
 
   @override
-  bool shouldReload(LocalizationsDelegate<StoryBookLocalizations> old) => false;
+  bool shouldReload(LocalizationsDelegate<DynamoLocalizations> old) => false;
 
   @override
-  Future<StoryBookLocalizations> load(Locale locale) async {
-    return StoryBookLocalizations(locale);
+  Future<DynamoLocalizations> load(Locale locale) async {
+    return DynamoLocalizations(locale);
   }
 
   @override

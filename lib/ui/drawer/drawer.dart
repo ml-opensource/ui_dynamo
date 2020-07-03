@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_storybook/flutter_storybook.dart';
-import 'package:flutter_storybook/ui/model/page.dart';
+import 'package:ui_dynamo/ui_dynamo.dart';
+import 'package:ui_dynamo/ui/model/page.dart';
 
 import '../../models.dart';
 
-class StoryBookDrawer extends StatelessWidget {
-  final StoryBookData data;
-  final Function(StoryBookItem, StoryBookPage) onSelectPage;
-  final StoryBookPage selectedPage;
+class DynamoDrawer extends StatelessWidget {
+  final DynamoData data;
+  final Function(DynamoItem, DynamoPage) onSelectPage;
+  final DynamoPage selectedPage;
 
-  const StoryBookDrawer({
+  const DynamoDrawer({
     Key key,
     @required this.data,
     @required this.onSelectPage,
@@ -63,9 +63,9 @@ class RoutesList extends StatelessWidget {
     this.shrinkWrap = false,
   }) : super(key: key);
 
-  final StoryBookData data;
-  final StoryBookPage selectedPage;
-  final Function(StoryBookItem p1, StoryBookPage p2) onSelectPage;
+  final DynamoData data;
+  final DynamoPage selectedPage;
+  final Function(DynamoItem p1, DynamoPage p2) onSelectPage;
   final bool shrinkWrap;
 
   @override

@@ -1,8 +1,8 @@
 import 'package:example/title_widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_storybook/flutter_storybook.dart';
+import 'package:ui_dynamo/ui_dynamo.dart';
 
-StoryBookPage buildTextStylePage() => StoryBookPage.list(
+DynamoPage buildTextStylePage() => DynamoPage.list(
       title: 'Text Style Widgets',
       widgets: (context) => [
         Organization.expandable(

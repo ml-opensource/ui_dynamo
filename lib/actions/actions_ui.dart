@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_storybook/actions/actions_extensions.dart';
-import 'package:flutter_storybook/ui/styles/text_styles.dart';
-import 'package:flutter_storybook/ui/toolbar.dart';
+import 'package:ui_dynamo/actions/actions_extensions.dart';
+import 'package:ui_dynamo/ui/styles/text_styles.dart';
+import 'package:ui_dynamo/ui/toolbar.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 

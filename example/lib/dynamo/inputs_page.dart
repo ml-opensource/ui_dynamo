@@ -1,9 +1,9 @@
 import 'package:example/widgets/inputs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_storybook/flutter_storybook.dart';
+import 'package:ui_dynamo/ui_dynamo.dart';
 
-StoryBookPage buildInputsPage() => StoryBookPage.list(
+DynamoPage buildInputsPage() => DynamoPage.list(
     title: 'Inputs',
     icon: Icon(Icons.input),
     widgets: (context) {

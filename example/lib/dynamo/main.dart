@@ -1,30 +1,30 @@
 import 'package:example/main.dart';
 import 'package:example/pages/person_detail.dart';
-import 'package:example/storybook/alerts_page.dart';
-import 'package:example/storybook/buttons_page.dart';
-import 'package:example/storybook/cells_page.dart';
-import 'package:example/storybook/inputs_page.dart';
-import 'package:example/storybook/main_cell_list_page.dart';
-import 'package:example/storybook/radios_page.dart';
-import 'package:example/storybook/text_style_page.dart';
-import 'package:example/storybook/toasts_page.dart';
+import 'package:example/dynamo/alerts_page.dart';
+import 'package:example/dynamo/buttons_page.dart';
+import 'package:example/dynamo/cells_page.dart';
+import 'package:example/dynamo/inputs_page.dart';
+import 'package:example/dynamo/main_cell_list_page.dart';
+import 'package:example/dynamo/radios_page.dart';
+import 'package:example/dynamo/text_style_page.dart';
+import 'package:example/dynamo/toasts_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_storybook/flutter_storybook.dart';
-import 'package:flutter_storybook/mediaquery/device_sizes.dart';
+import 'package:ui_dynamo/ui_dynamo.dart';
+import 'package:ui_dynamo/mediaquery/device_sizes.dart';
 
 import '../widgets/cells.dart';
 
-void main() => runApp(AppStoryBook());
+void main() => runApp(AppDynamo());
 
-class AppStoryBook extends StatelessWidget {
-  const AppStoryBook({
+class AppDynamo extends StatelessWidget {
+  const AppDynamo({
     Key key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return StoryBook.withApp(
+    return Dynamo.withApp(
       buildApp(),
       previewRoutes: {
         '/details/:item': (context) => PersonDetail(
@@ -32,29 +32,29 @@ class AppStoryBook extends StatelessWidget {
                   'P', 'Preview Item', 'This is a preview Route', 0),
             )
       },
-      data: StoryBookData(
+      data: DynamoData(
         defaultDevice: DeviceSizes.iphoneX,
         items: [
-          StoryBookPage.storyboard(title: 'Home Flow', routesMapping: {
+          DynamoPage.storyboard(title: 'Home Flow', routesMapping: {
             'home': [
               '/home',
               '/company',
             ],
           }),
-          StoryBookPage.storyboard(title: 'Company Details', routesMapping: {
+          DynamoPage.storyboard(title: 'Company Details', routesMapping: {
             'home': [
               '/company',
               '/details/:item',
             ],
           }),
-          StoryBookFolder.of(title: 'Widgets', pages: [
+          DynamoFolder.of(title: 'Widgets', pages: [
             buildTextStylePage(),
             buildButtonsPage(),
             buildToastPage(),
             buildRadiosPage(),
             buildInputsPage(),
           ]),
-          StoryBookFolder.of(title: 'Composite', pages: [
+          DynamoFolder.of(title: 'Composite', pages: [
             buildAlertsPage(),
             buildCellsPage(),
             buildMainCellListPage(),

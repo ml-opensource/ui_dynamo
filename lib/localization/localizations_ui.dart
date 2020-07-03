@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_storybook/flutter_storybook.dart';
-import 'package:flutter_storybook/localization/locale_item.dart';
-import 'package:flutter_storybook/localization/localizations_plugin.dart';
-import 'package:flutter_storybook/ui/toolbar.dart';
-import 'package:flutter_storybook/ui/utils/collection+extensions.dart';
+import 'package:ui_dynamo/ui/toolbar.dart';
+import 'package:ui_dynamo/ui/utils/collection+extensions.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:ui_dynamo/ui_dynamo.dart';
+import 'package:ui_dynamo/localization/locale_item.dart';
+import 'package:ui_dynamo/localization/localizations_plugin.dart';
 
 class LocalizationRow {
   final String key;

@@ -1,11 +1,11 @@
 import 'package:example/widgets/cells.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_storybook/flutter_storybook.dart';
+import 'package:ui_dynamo/ui_dynamo.dart';
 
 final groupMainCell = PropGroup('Main Cell', 'mainCell');
 final groupMainCellLong = PropGroup('Main Cell Long', 'mainCellLong');
 
-StoryBookPage buildCellsPage() => StoryBookPage.list(
+DynamoPage buildCellsPage() => DynamoPage.list(
       title: 'Cells',
       widgets: (context) => [
         Organization.container(

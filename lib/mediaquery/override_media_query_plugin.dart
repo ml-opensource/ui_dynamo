@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_storybook/mediaquery/device_sizes.dart';
-import 'package:flutter_storybook/mediaquery/offset_plugin.dart';
-import 'package:flutter_storybook/plugins/plugin.dart';
-import 'package:flutter_storybook/ui/utils/size+extensions.dart';
+import 'package:ui_dynamo/mediaquery/device_sizes.dart';
+import 'package:ui_dynamo/mediaquery/offset_plugin.dart';
+import 'package:ui_dynamo/plugins/plugin.dart';
+import 'package:ui_dynamo/ui/utils/size+extensions.dart';
 import 'package:provider/provider.dart';
 
 class OverrideMediaQueryProvider extends ChangeNotifier {
@@ -184,8 +184,8 @@ extension OverrideMediaQueryProviderExtension on BuildContext {
   OverrideMediaQueryProvider get mediaQueryProvider => mediaQuery(this);
 }
 
-StoryBookPlugin overrideMediaQueryPlugin({DeviceInfo defaultDevice}) =>
-    StoryBookPlugin(
+DynamoPlugin overrideMediaQueryPlugin({DeviceInfo defaultDevice}) =>
+    DynamoPlugin(
       provider: ChangeNotifierProvider<OverrideMediaQueryProvider>(
         create: (context) =>
             OverrideMediaQueryProvider(defaultDevice ?? deviceSizes[0]),

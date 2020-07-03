@@ -1,10 +1,10 @@
 import 'package:example/widgets/alerts.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_storybook/flutter_storybook.dart';
+import 'package:ui_dynamo/ui_dynamo.dart';
 
 PropGroup confirmationGroup = PropGroup('Confirmation', 'confirmation');
 
-StoryBookPage buildAlertsPage() => StoryBookPage.list(
+DynamoPage buildAlertsPage() => DynamoPage.list(
       title: 'Alerts',
       icon: Icon(Icons.error),
       widgets: (context) => [

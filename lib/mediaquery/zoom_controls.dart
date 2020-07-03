@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_storybook/ui/utils/hold_detector.dart';
+import 'package:ui_dynamo/ui/utils/hold_detector.dart';
 
 class ZoomControls extends StatelessWidget {
   final Function(double) updateScale;
