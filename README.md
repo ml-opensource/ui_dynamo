@@ -26,6 +26,7 @@ __Plugins__: Add plugins to appear in the plugins bar, or behind the scenes, to 
 
 ![Preview](/assets/preview.png)
 
+![Preview2](/assets/preview_2.png)
 
 ## Getting Started
 
@@ -194,11 +195,54 @@ DynamoPage.list(
 The list builder just displays content in a list.
 
 
-## Storyboard Configuration
+## UI Documentation Widgets
 
-## UI Documentation
+UIDynamo comes with a few widgets to support documentation.
+
+`PresentationWidget`: Centers, contrains and adds padding around the edges of the view. 
+Use `Organization.presentation()` 
+
+`ExpandableWidgetSection`: Displays content in an expandable container to keep documentation small and tidy. 
+Use `Organization.expandable()`
+
+![Expandable Example](/assets/expandable_example.png)
+
+`WidgetContainer`: Wraps content in a `Card` with a `title` and visual separation. 
+Use `Organization.container()`
+
+
+
+![Container Example](/assets/container_example.png)
+
+
+`PropTable`: A `Table` useful for displaying documentation for props on a `Widget`.
+
+Setting up the table is not quite automatic yet (using reflection in future could automate it):
+
+```dart
+PropTable(
+    items: [
+      PropTableItem(
+          name: 'Message',
+          description: 'Displays a message for this toast'),
+      PropTableItem(
+        name: 'Mode',
+        description: 'Displays a different UI mode',
+        defaultValue: ToastMode.Success.toString(),
+      ),
+      PropTableItem(
+        name: 'OnClose',
+        description: 'Closes the Toast before the scheduled timeout',
+        defaultValue: 'null',
+      ),
+    ],
+);
+```
+
+![PropTable](/assets/prop_table_example.png)
 
 ## Adding Props
+
 
 ## Configuring Actions
 
