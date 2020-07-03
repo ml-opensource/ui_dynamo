@@ -24,6 +24,8 @@ __Localizations__: display translations for your application and see them in dif
 
 __Plugins__: Add plugins to appear in the plugins bar, or behind the scenes, to provide greater flexibility in your workflow.
 
+![Preview](/assets/preview.png)
+
 
 ## Getting Started
 
